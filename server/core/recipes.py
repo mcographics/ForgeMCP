@@ -1,6 +1,8 @@
+# SPDX-License-Identifier: MIT
 """Typed, bounded native recipes. No script text or unrestricted evaluation."""
 
 import math
+import re
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, FiniteFloat, model_validator
@@ -333,10 +335,20 @@ class ActorOperation(RecipeModel):
     actor_path: Annotated[str, Field(max_length=512)] = ""
     class_path: Annotated[str, Field(max_length=240)] = ""
     label: Annotated[str, Field(max_length=64)] = ""
+    mesh_path: Annotated[str, Field(max_length=240)] = ""
     location: Vector | None = None
     rotation: Vector | None = None
     scale: Vector | None = None
     hidden: bool | None = None
+
+    @model_validator(mode="after")
+    def validate_mesh_placement(self):
+        if self.mesh_path:
+            if self.op != "spawn" or self.class_path != "/Script/Engine.StaticMeshActor":
+                raise ValueError("mesh_path requires native StaticMeshActor spawning")
+            if not re.fullmatch(r"/Game/(?:[A-Za-z_][A-Za-z0-9_]*/)*([A-Za-z_][A-Za-z0-9_]*)\.\1", self.mesh_path):
+                raise ValueError("mesh_path must be an exact /Game/ static-mesh object path")
+        return self
 
 
 class ActorRecipe(RecipeModel):
@@ -369,6 +381,31 @@ class RigBoneSpec(RecipeModel):
         return self
 
 
+class SkinWeight(RecipeModel):
+    vertex: Annotated[int, Field(strict=True, ge=0, le=9999)]
+    bone: Identifier
+    weight: Annotated[FiniteFloat, Field(strict=True, gt=0, le=1)]
+
+
+class IKConstraintSpec(RecipeModel):
+    bone: Identifier
+    constraint: Identifier
+    target: Identifier
+    chain_count: Annotated[int, Field(strict=True, ge=1, le=16)]
+    iterations: Annotated[int, Field(strict=True, ge=1, le=256)] = 64
+    pole_target: Identifier | None = None
+    pole_angle: Annotated[FiniteFloat, Field(strict=True, ge=-math.pi, le=math.pi)] = 0.0
+
+    @model_validator(mode="after")
+    def validate_pole(self):
+        if self.pole_target is not None:
+            if self.pole_target == self.target or self.chain_count < 2:
+                raise ValueError("Pole IK needs a distinct target and at least two bones")
+        elif self.pole_angle != 0:
+            raise ValueError("Pole angle requires a pole target")
+        return self
+
+
 class SceneOperation(RecipeModel):
     op: Literal[
         "create_mesh",
@@ -383,6 +420,13 @@ class SceneOperation(RecipeModel):
         "set_material_input",
         "create_armature",
         "bone_keyframe",
+        "bind_mesh",
+        "reweight_mesh",
+        "auto_bind_mesh",
+        "patch_skin_weights",
+        "create_ik_constraint",
+        "create_empty",
+        "set_frame",
     ]
     name: Annotated[str, Field(min_length=1, max_length=64)] = ""
     vertices: Annotated[list[Vector], Field(max_length=128)] = Field(default_factory=list)
@@ -401,13 +445,60 @@ class SceneOperation(RecipeModel):
     socket: Annotated[str, Field(max_length=64)] = ""
     value: FiniteFloat | Annotated[list[FiniteFloat], Field(min_length=3, max_length=4)] | None = None
     data_path: Literal["location", "rotation_euler", "rotation_quaternion", "scale"] = "location"
-    frame: Annotated[int, Field(ge=-100000, le=100000)] = 1
+    frame: Annotated[int, Field(strict=True, ge=-100000, le=100000)] = 1
     fps: Annotated[int, Field(ge=1, le=240)] = 30
     frame_start: Annotated[int, Field(ge=-100000, le=100000)] = 1
     frame_end: Annotated[int, Field(ge=-100000, le=100000)] = 250
     shader_nodes: Annotated[list[ShaderNode], Field(max_length=32)] = Field(default_factory=list)
     shader_links: Annotated[list[ShaderLink], Field(max_length=64)] = Field(default_factory=list)
     bones: Annotated[list[RigBoneSpec], Field(max_length=64)] = Field(default_factory=list)
+    armature: Annotated[str, Field(max_length=64)] = ""
+    weights: Annotated[list[SkinWeight], Field(max_length=512)] = Field(default_factory=list)
+    weight_method: Literal["", "blender_heat_top4"] = ""
+    ik: IKConstraintSpec | None = None
+
+    @model_validator(mode="after")
+    def validate_ik_setup(self):
+        if (self.op == "create_ik_constraint") != (self.ik is not None):
+            raise ValueError("IK setup requires an explicit spec only on create_ik_constraint")
+        return self
+
+    @model_validator(mode="after")
+    def validate_timeline_target(self):
+        if self.op == "set_frame" and self.name:
+            raise ValueError("set_frame targets the scene timeline; omit object name")
+        return self
+
+    @model_validator(mode="after")
+    def validate_skin_binding(self):
+        if self.op == "auto_bind_mesh":
+            if not self.source or not self.armature or self.weights or self.weight_method != "blender_heat_top4":
+                raise ValueError("Automatic binding requires mesh, armature and explicit blender_heat_top4 method")
+            return self
+        if self.weight_method:
+            raise ValueError("Automatic weight method belongs only to auto_bind_mesh")
+        if self.op in {"bind_mesh", "reweight_mesh", "patch_skin_weights"}:
+            if not self.source or not self.armature or not self.weights:
+                raise ValueError("Binding requires a source mesh, target armature and explicit weights")
+            assignments = set()
+            totals = {}
+            influences = {}
+            for item in self.weights:
+                if self.op != "patch_skin_weights" and item.vertex >= 128:
+                    raise ValueError("Full explicit skin recipes support vertex indices below 128")
+                key = (item.vertex, item.bone)
+                if key in assignments:
+                    raise ValueError("Skin assignments must be unique")
+                assignments.add(key)
+                totals[item.vertex] = totals.get(item.vertex, 0) + item.weight
+                influences[item.vertex] = influences.get(item.vertex, 0) + 1
+            if any(abs(total - 1) > 1e-5 for total in totals.values()) or any(count > 4 for count in influences.values()):
+                raise ValueError("Each vertex needs normalized weights and at most four influences")
+            if self.op == "patch_skin_weights" and len(totals) > 128:
+                raise ValueError("A weight patch supports at most 128 selected vertices")
+        elif self.armature or self.weights:
+            raise ValueError("Armature binding fields belong only to skin binding/weight operations")
+        return self
 
     @model_validator(mode="after")
     def validate_bone_keyframe(self):
@@ -429,6 +520,11 @@ class SceneOperation(RecipeModel):
             raise ValueError("Bone names are supported only for bone_keyframe operations")
         elif self.op == "keyframe" and self.data_path == "rotation_quaternion":
             raise ValueError("Object transform keyframes do not support rotation_quaternion")
+        if self.op == "keyframe" and self.value is not None:
+            if not isinstance(self.value,list) or len(self.value) != 3:
+                raise ValueError("Object keyframe values require three components")
+            if self.data_path == "scale" and any(abs(value)<1e-8 for value in self.value):
+                raise ValueError("Object scale keyframes cannot use zero scale")
         return self
 
 

@@ -8,7 +8,8 @@ public class MajesticForge : ModuleRules
         PrivateDependencyModuleNames.AddRange(new string[] {
             "Core", "CoreUObject", "Engine", "UnrealEd", "Json", "Sockets", "Networking",
             "Slate", "SlateCore", "ToolMenus", "BlueprintGraph", "KismetCompiler", "AssetRegistry",
-            "GameplayAbilities", "GameplayTags", "GameplayTasks", "MajesticForgeRuntime"
+            "GameplayAbilities", "GameplayTags", "GameplayTasks", "MajesticForgeRuntime",
+            "MeshDescription", "StaticMeshDescription", "InterchangeEngine"
         });
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {

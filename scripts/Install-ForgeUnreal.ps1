@@ -1,15 +1,31 @@
 [CmdletBinding()]
 param(
     [string]$ProjectFile,
-    [string]$PackageDirectory
+    [string]$PackageDirectory,
+    [string]$PackageArchive
 )
 $ErrorActionPreference = 'Stop'
 $workspaceRoot = Split-Path -Parent $PSScriptRoot
 if (-not $ProjectFile) { $ProjectFile = Join-Path $workspaceRoot 'ForgeMCPDev.uproject' }
-if (-not $PackageDirectory) { $PackageDirectory = Join-Path $workspaceRoot 'Artifacts\ForgeMCP-development-0.2.0\MajesticForge' }
+if ($PackageDirectory -and $PackageArchive) { throw 'Choose PackageDirectory or PackageArchive, not both.' }
 $projectPath = (Resolve-Path -LiteralPath $ProjectFile).Path
 $projectRoot = Split-Path -Parent $projectPath
 if ([IO.Path]::GetExtension($projectPath) -ne '.uproject') { throw 'Select an Unreal .uproject file.' }
+$openEditors = @(Get-CimInstance Win32_Process | Where-Object {
+    $_.Name -in @('UnrealEditor.exe', 'UnrealEditor-Cmd.exe') -and $_.CommandLine -and
+    $_.CommandLine.Replace('/', '\').IndexOf(($projectRoot.TrimEnd('\') + '\'), [StringComparison]::OrdinalIgnoreCase) -ge 0
+})
+if ($openEditors.Count) { throw 'Save your work and close this project in Unreal first. Its plugin cannot be replaced while the editor is running.' }
+if (-not $PackageDirectory) {
+    if (-not $PackageArchive) { $PackageArchive = Join-Path $workspaceRoot 'Artifacts\ForgeMCP-Unreal-Development-0.2.0-UE5.6.1-Win64.zip' }
+    $archivePath = (Resolve-Path -LiteralPath $PackageArchive).Path
+    $python = Join-Path $workspaceRoot '.venv\Scripts\python.exe'
+    if (-not (Test-Path -LiteralPath $python)) { throw 'The ForgeMCP Python environment is required to validate this archive. Set it up first, or use an independently verified extracted PackageDirectory.' }
+    $staging = Join-Path $projectRoot ('Saved\ForgeInstallStaging\' + [Guid]::NewGuid().ToString('N'))
+    & $python (Join-Path $PSScriptRoot 'extract_unreal_package.py') --archive $archivePath --destination $staging
+    if ($LASTEXITCODE -ne 0) { throw 'Archive validation failed; the project plugin was not modified.' }
+    $PackageDirectory = Join-Path $staging 'MajesticForge'
+}
 $packageRoot = (Resolve-Path -LiteralPath $PackageDirectory).Path
 $pluginDescriptor = Join-Path $packageRoot 'MajesticForge.uplugin'
 $pluginDll = Join-Path $packageRoot 'Binaries\Win64\UnrealEditor-MajesticForge.dll'
@@ -23,12 +39,6 @@ if ($pluginInfo.FriendlyName -ne 'ForgeMCP') {
 $project = Get-Content -LiteralPath $projectPath -Raw | ConvertFrom-Json
 if ($project.EngineAssociation -ne '5.6') {
     throw 'This binary package was built for Unreal 5.6.1. Build it for your engine version before installing.'
-}
-$openEditors = @(Get-CimInstance Win32_Process -Filter "Name = 'UnrealEditor.exe'" | Where-Object {
-    $_.CommandLine -and $_.CommandLine.Replace('/', '\').IndexOf(($projectRoot.TrimEnd('\') + '\'), [StringComparison]::OrdinalIgnoreCase) -ge 0
-})
-if ($openEditors.Count) {
-    throw 'Save your work and close this project in Unreal first. Its loaded plugin DLL cannot be replaced while the editor is running.'
 }
 $destination = Join-Path $projectRoot 'Plugins\MajesticForge'
 if ($packageRoot.TrimEnd('\') -eq $destination.TrimEnd('\')) { throw 'Package and destination must be separate directories.' }

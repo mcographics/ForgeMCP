@@ -4,6 +4,31 @@ from pydantic import ValidationError
 from server.core.recipes import ActorRecipe, BlueprintEditRecipe, BlueprintRecipe, SceneRecipe
 
 
+def test_actor_mesh_placement_requires_exact_native_mesh_object_path():
+    recipe = ActorRecipe(operations=[{
+        "op": "spawn", "class_path": "/Script/Engine.StaticMeshActor",
+        "mesh_path": "/Game/ForgeTransfer/SM_Cube.SM_Cube", "location": [100, 200, 300],
+    }])
+    assert recipe.operations[0].mesh_path == "/Game/ForgeTransfer/SM_Cube.SM_Cube"
+    for mesh_path in (
+        "/Engine/Cube.Cube", "/Game/../Cube.Cube", "/Game/Cube.Other",
+        "/Game/Cube", "/Game/Cube.Cube:Component", "C:/Cube.fbx",
+    ):
+        with pytest.raises(ValidationError):
+            ActorRecipe(operations=[{
+                "op": "spawn", "class_path": "/Script/Engine.StaticMeshActor", "mesh_path": mesh_path,
+            }])
+    with pytest.raises(ValidationError, match="StaticMeshActor"):
+        ActorRecipe(operations=[{
+            "op": "spawn", "class_path": "/Script/Engine.PointLight",
+            "mesh_path": "/Game/Cube.Cube",
+        }])
+    with pytest.raises(ValidationError, match="StaticMeshActor"):
+        ActorRecipe(operations=[{
+            "op": "transform", "actor_path": "Existing", "mesh_path": "/Game/Cube.Cube",
+        }])
+
+
 @pytest.mark.parametrize(
     "path", ["/Engine/BP", "/Game/../BP", "/Game/BP.BP", "C:/file", "/Game/Bad Name"]
 )

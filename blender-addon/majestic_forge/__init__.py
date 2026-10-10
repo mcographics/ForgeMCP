@@ -1,25 +1,39 @@
+# SPDX-License-Identifier: MIT
 """Original ForgeMCP Blender adapter, using only bpy and stdlib."""
 
 import atexit
+import importlib
 import hmac
 import json
 import os
 import secrets
 import socket
+import sys
 import time
 from pathlib import Path
 
 import bpy
 
+# Blender can replace an installed package while retaining its child modules.
+# Reload dependencies first so updates cannot mix old helpers with new imports.
+# Blender unregisters an enabled add-on before reloading its package.
+for _module_name in ("security", "materials", "automation", "skinning", "rigging", "exporting", "transfer_ui"):
+    _cached_module = sys.modules.get(f"{__name__}.{_module_name}")
+    if _cached_module is not None:
+        importlib.reload(_cached_module)
+
 from .automation import RecipeError, SceneAutomation, object_info
+from .exporting import StaticMeshExporter
 from .materials import material_info
 from .rigging import rig_info
 from .security import protect_path
+from .skinning import skin_info
+from . import transfer_ui
 
 bl_info = {
     "name": "ForgeMCP",
     "author": "Majestic Creations",
-    "version": (0, 2, 0),
+    "version": (0, 2, 12),
     "blender": (4, 2, 0),
     "location": "3D Viewport > Sidebar > ForgeMCP; Preferences > Add-ons",
     "description": "Authenticated native inspection and reviewed scene recipes for ForgeMCP",
@@ -29,7 +43,7 @@ _bridge = None
 _ui_registered = False
 _exit_registered = False
 _next_redraw = 0.0
-ADDON_VERSION = "0.2.0"
+ADDON_VERSION = "0.2.12"
 
 
 def parse_request(raw):
@@ -100,6 +114,7 @@ class Bridge:
             self.listener.close()
             raise
         self.registration = root / f"{self.session_id}.json"
+        self.exporter = StaticMeshExporter(root / "transfers" / self.session_id)
         data = {
             "protocol_version": 1,
             "session_id": self.session_id,
@@ -142,10 +157,11 @@ class Bridge:
             if command == "health":
                 data = {
                     "adapter": "ForgeMCP Blender",
+                    "transfer_contract_version": 1,
                     "version": ADDON_VERSION,
                     "blender_version": bpy.app.version_string,
                     "read_only": False,
-                    "capabilities": ["scene_info", "object_info", "material_info", "rig_info", "scene_preview", "scene_apply"],
+                    "capabilities": ["scene_info", "object_info", "material_info", "rig_info", "skin_info", "scene_preview", "scene_apply", "export_preview", "export_apply"],
                 }
             elif command == "scene_info":
                 scene = bpy.context.scene
@@ -179,9 +195,14 @@ class Bridge:
                 data = object_info(request.get("args", {}).get("name"))
             elif command == "rig_info":
                 args = request.get("args", {})
-                if set(args) - {"name", "include_weights"} or "name" not in args:
+                if set(args) - {"name", "include_weights", "include_evaluated"} or "name" not in args:
                     raise RecipeError("invalid_arguments", "Expected an armature name and optional include_weights.")
-                data = rig_info(args["name"], args.get("include_weights", False))
+                data = rig_info(args["name"], args.get("include_weights", False), args.get("include_evaluated", False))
+            elif command == "skin_info":
+                args = request.get("args", {})
+                if "name" not in args or set(args) - {"name", "vertex_start", "vertex_count"}:
+                    raise RecipeError("invalid_arguments", "Expected a mesh name and bounded vertex range.")
+                data = skin_info(args["name"], args.get("vertex_start", 0), args.get("vertex_count", 128))
             elif command == "material_info":
                 args = request.get("args", {})
                 if set(args) != {"name"}:
@@ -195,6 +216,16 @@ class Bridge:
             elif command == "scene_apply":
                 args = request.get("args", {})
                 data = self.automation.apply(args.get("preview_id"), args.get("confirmation"))
+            elif command == "export_preview":
+                args = request.get("args", {})
+                if set(args) != {"name"}:
+                    raise RecipeError("invalid_arguments", "Expected only an exact source mesh name.")
+                data = self.exporter.preview(args["name"])
+            elif command == "export_apply":
+                args = request.get("args", {})
+                if set(args) != {"preview_id", "confirmation"}:
+                    raise RecipeError("invalid_arguments", "Expected export preview ID and confirmation.")
+                data = self.exporter.apply(args["preview_id"], args["confirmation"])
             else:
                 return self.error(request_id, "command_not_allowed", "Command is not allowlisted.")
             return {"ok": True, "request_id": request_id, "data": data}
@@ -354,6 +385,9 @@ class MAJESTICFORGE_OT_Stop(bpy.types.Operator):
     bl_description = "Stop this Blender session's Forge bridge without changing the scene"
 
     def execute(self, context):
+        if transfer_ui.busy():
+            self.report({"ERROR"}, "Finish or cancel the transfer before stopping the bridge.")
+            return {"CANCELLED"}
         stop_bridge()
         return {"FINISHED"}
 
@@ -395,7 +429,7 @@ _CLASSES = (
     MAJESTICFORGE_OT_Start,
     MAJESTICFORGE_OT_Stop,
     MAJESTICFORGE_PT_Connection,
-)
+) + transfer_ui.CLASSES
 
 
 def _exit_cleanup():
@@ -411,6 +445,9 @@ def register():
     if not _ui_registered:
         for cls in _CLASSES:
             bpy.utils.register_class(cls)
+        bpy.types.WindowManager.forge_transfer = bpy.props.PointerProperty(
+            type=transfer_ui.MAJESTICFORGE_TransferSettings
+        )
         _ui_registered = True
     preferences = _preferences(bpy.context)
     if preferences is None or preferences.auto_start:
@@ -422,8 +459,10 @@ def register():
 
 def unregister():
     global _ui_registered
+    transfer_ui.shutdown()
     stop_bridge()
     if _ui_registered:
+        del bpy.types.WindowManager.forge_transfer
         for cls in reversed(_CLASSES):
             if cls.is_registered:
                 bpy.utils.unregister_class(cls)

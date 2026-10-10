@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import asyncio
@@ -25,10 +26,15 @@ COMMANDS = {
         "gas_info",
         "actor_preview",
         "actor_apply",
+        "level_save_preview",
+        "level_save_apply",
         "blueprint_edit_preview",
         "blueprint_edit_apply",
+        "mesh_import_preview",
+        "mesh_import_apply",
+        "mesh_info",
     },
-    "blender": {"health", "scene_info", "object_info", "material_info", "rig_info", "scene_preview", "scene_apply"},
+    "blender": {"health", "scene_info", "object_info", "material_info", "rig_info", "skin_info", "scene_preview", "scene_apply", "export_preview", "export_apply"},
 }
 
 
@@ -66,7 +72,8 @@ class ConnectionManager:
                 ),
             )
         )
-        return cls([project / "Saved" / "MajesticForge", blender_root])
+        unreal_root = Path(os.environ.get("FORGE_UNREAL_SESSION_DIR", str(project / "Saved" / "MajesticForge")))
+        return cls([unreal_root, blender_root])
 
     def discover(self) -> list[Session]:
         sessions = {}

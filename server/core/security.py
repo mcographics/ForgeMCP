@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Restrict Forge runtime secrets to their owner and the operating system."""
 
 import ctypes

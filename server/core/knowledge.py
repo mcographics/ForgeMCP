@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Version-scoped local API retrieval. Indexing never imports or executes source text."""
 
 import json

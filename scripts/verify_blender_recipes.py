@@ -82,8 +82,31 @@ scene = bpy.context.scene
 original_frame = scene.frame_current
 scene.frame_set(20)
 assert abs(pose_bone.location.x - 1.0) < 1e-6
+evaluated_end = rig_info(rig.name, include_evaluated=True)
+assert evaluated_end["evaluated_frame"] == 20 and scene.frame_current == 20
+end_head = evaluated_end["bones"][0]["evaluated_pose"]["head_world"]
+assert abs(end_head[0] - 1.0) < 1e-6
 scene.frame_set(1)
 assert abs(pose_bone.location.x) < 1e-6
+evaluated_start = rig_info(rig.name, include_evaluated=True)
+assert evaluated_start["evaluated_frame"] == 1 and scene.frame_current == 1
+start_head = evaluated_start["bones"][0]["evaluated_pose"]["head_world"]
+assert abs(start_head[0]) < 1e-6 and start_head != end_head
+assert evaluated_start["bones"][0]["evaluated_pose"]["matrix_world"] != evaluated_end["bones"][0]["evaluated_pose"]["matrix_world"]
+rig.location = (4.0, -3.0, 2.0)
+rig.scale = (2.0, 0.5, 1.5)
+scene.frame_set(20)
+transformed_pose = rig_info(rig.name, include_evaluated=True)
+assert all(abs(a - b) < 1e-6 for a, b in zip(
+    transformed_pose["bones"][0]["evaluated_pose"]["head_world"], [6.0, -3.0, 2.0]))
+assert scene.frame_current == 20
+try:
+    rig_info(rig.name, include_evaluated="true")
+except RecipeError as error:
+    assert error.code == "invalid_arguments"
+else:
+    raise AssertionError("Evaluated inspection requires an exact boolean")
+print("FORGEMCP_NATIVE_EVALUATED_POSE_FRAME_ENDPOINTS_PASS")
 scene.frame_set(original_frame)
 assert rig_info(rig.name)["bones"][0]["pose"]["location"] == list(pose_bone.location)
 

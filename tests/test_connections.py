@@ -119,6 +119,8 @@ async def test_bridge_failures(tmp_path, mode, code):
 
     async with await asyncio.start_server(handle, "127.0.0.1", 0) as listener:
         registration(tmp_path, port=listener.sockets[0].getsockname()[1])
-        manager = ConnectionManager([tmp_path], timeout=0.1)
+        # Parsing/correlation cases need scheduling headroom on shared CI runners.
+        # The dedicated timeout case still exercises the short deadline.
+        manager = ConnectionManager([tmp_path], timeout=0.1 if mode == "timeout" else 2.0)
         result = await manager.dispatch("unreal", "project_info", None)
         assert result["error"]["code"] == code

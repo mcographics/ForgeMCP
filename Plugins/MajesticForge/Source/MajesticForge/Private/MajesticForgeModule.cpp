@@ -31,7 +31,9 @@
 #include "ForgeBlueprints.h"
 #include "ForgeAssets.h"
 #include "ForgeActors.h"
+#include "ForgeLevels.h"
 #include "ForgeBlueprintEdits.h"
+#include "ForgeMeshImport.h"
 #if PLATFORM_WINDOWS
 #include "Windows/WindowsHWrapper.h"
 #include "Windows/AllowWindowsPlatformTypes.h"
@@ -64,7 +66,9 @@ class FMajesticForgeModule : public IModuleInterface
     TWeakPtr<SDockTab> PanelTab;
     FForgeBlueprints BlueprintAutomation;
     FForgeActors ActorAutomation;
+    FForgeLevels LevelAutomation;
     FForgeBlueprintEdits BlueprintEdits;
+    FForgeMeshImport MeshImporter;
 
     static bool ProtectSessionPath(const FString& Path)
     {
@@ -238,6 +242,7 @@ class FMajesticForgeModule : public IModuleInterface
         if (Command == TEXT("health"))
         {
             Data->SetStringField(TEXT("adapter"), TEXT("ForgeMCP Unreal"));
+            Data->SetNumberField(TEXT("transfer_contract_version"), 1);
             Data->SetStringField(TEXT("version"), TEXT("0.2.0"));
             Data->SetStringField(TEXT("engine_version"), FEngineVersion::Current().ToString());
             Data->SetBoolField(TEXT("read_only"), false);
@@ -248,8 +253,13 @@ class FMajesticForgeModule : public IModuleInterface
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("actor_info")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("actor_preview")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("actor_apply")));
+            Capabilities.Add(MakeShared<FJsonValueString>(TEXT("level_save_preview")));
+            Capabilities.Add(MakeShared<FJsonValueString>(TEXT("level_save_apply")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_edit_preview")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_edit_apply")));
+            Capabilities.Add(MakeShared<FJsonValueString>(TEXT("mesh_import_preview")));
+            Capabilities.Add(MakeShared<FJsonValueString>(TEXT("mesh_import_apply")));
+            Capabilities.Add(MakeShared<FJsonValueString>(TEXT("mesh_info")));
             Data->SetArrayField(TEXT("capabilities"), Capabilities);
         }
         else if (Command == TEXT("project_info") || Command == TEXT("list_actors"))
@@ -301,6 +311,12 @@ class FMajesticForgeModule : public IModuleInterface
             auto Args = ValidatedArgs ? ValidatedArgs->ToSharedRef() : MakeShared<FJsonObject>();
             if (!FForgeAssets::Handle(Command, Args, Data, Code, Message)) return Fail(Code, Message);
         }
+        else if (Command == TEXT("level_save_preview") || Command == TEXT("level_save_apply"))
+        {
+            FString Code, Message;
+            auto Args = ValidatedArgs ? ValidatedArgs->ToSharedRef() : MakeShared<FJsonObject>();
+            if (!LevelAutomation.Handle(Command, Args, Data, Code, Message)) return Fail(Code, Message);
+        }
         else if (Command == TEXT("actor_info") || Command == TEXT("gas_info") || Command == TEXT("actor_preview") || Command == TEXT("actor_apply"))
         {
             FString Code, Message;
@@ -318,6 +334,12 @@ class FMajesticForgeModule : public IModuleInterface
             FString Code, Message;
             auto Args = ValidatedArgs ? ValidatedArgs->ToSharedRef() : MakeShared<FJsonObject>();
             if (!BlueprintEdits.Handle(Command, Args, Data, Code, Message)) return Fail(Code, Message);
+        }
+        else if (Command == TEXT("mesh_import_preview") || Command == TEXT("mesh_import_apply") || Command == TEXT("mesh_info"))
+        {
+            FString Code, Message;
+            auto Args = ValidatedArgs ? ValidatedArgs->ToSharedRef() : MakeShared<FJsonObject>();
+            if (!MeshImporter.Handle(Command, Args, Data, Code, Message)) return Fail(Code, Message);
         }
         else return Fail(TEXT("command_not_allowed"), TEXT("Command is not in the native allowlist."));
         Result->SetBoolField(TEXT("ok"), true);
@@ -441,7 +463,9 @@ class FMajesticForgeModule : public IModuleInterface
         Token.Empty();
         BlueprintAutomation.Reset();
         ActorAutomation.Reset();
+        LevelAutomation.Reset();
         BlueprintEdits.Reset();
+        MeshImporter.Reset();
         Port = 0;
         LastAuthenticatedRequest = 0;
     }

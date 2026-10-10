@@ -12,7 +12,7 @@ if ((Test-Path -LiteralPath $destination) -and
     Copy-Item -LiteralPath $destination -Destination ($destination + '.backup-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
 }
 New-Item -ItemType Directory -Path $addonDirectory -Force | Out-Null
-foreach ($module in @('__init__.py', 'security.py', 'automation.py', 'materials.py', 'rigging.py')) {
+foreach ($module in @('__init__.py', 'security.py', 'automation.py', 'materials.py', 'rigging.py', 'exporting.py', 'transfer_ui.py', 'skinning.py', 'LICENSE.txt')) {
     $moduleSource = Join-Path $addonRoot $module
     $moduleDestination = Join-Path $addonDirectory $module
     if ($module -ne '__init__.py' -and (Test-Path -LiteralPath $moduleDestination) -and

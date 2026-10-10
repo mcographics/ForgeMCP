@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Native shader graph facts and construction; no scripts, files or existing graph edits."""
 
 import math
@@ -229,3 +230,69 @@ def material_info(name):
     result["total_links"] = len(tree.links) if tree else 0
     result["truncated"] = result["total_nodes"] > 64 or result["total_links"] > 128
     return result
+
+
+def transfer_surface(material):
+    """Describe the explicit constant-PBR transfer profile without changing data.
+
+    Unsupported surfaces stay identifiable in standalone geometry exports. A
+    material-transfer workflow must reject them rather than approximate a graph.
+    This maps parameters, not an assertion of identical renderer appearance.
+    """
+    def unsupported(reason):
+        return {"model": "unsupported", "reason": reason}
+
+    if material.animation_data or (material.node_tree and material.node_tree.animation_data):
+        return unsupported("animation")
+    if material.use_nodes:
+        tree = material.node_tree
+        if tree is None or len(tree.nodes) != 2 or len(tree.links) != 1:
+            return unsupported("shader_graph")
+        shaders = [n for n in tree.nodes if n.bl_idname == "ShaderNodeBsdfPrincipled"]
+        outputs = [n for n in tree.nodes if n.bl_idname == "ShaderNodeOutputMaterial" and n.is_active_output]
+        if len(shaders) != 1 or len(outputs) != 1:
+            return unsupported("shader_graph")
+        shader, output = shaders[0], outputs[0]
+        link = tree.links[0]
+        if (
+            not link.is_valid or link.from_node != shader or link.to_node != output
+            or link.from_socket.name != "BSDF" or link.to_socket.name != "Surface"
+            or any(pin.is_linked for pin in shader.inputs)
+        ):
+            return unsupported("shader_graph")
+        if output.target != "ALL":
+            return unsupported("shader_graph")
+        # Features that this opaque Default Lit mapping cannot reproduce.
+        neutral = {
+            "IOR": 1.5, "Specular IOR Level": 0.5, "Subsurface Weight": 0.0,
+            "Transmission Weight": 0.0, "Coat Weight": 0.0, "Sheen Weight": 0.0,
+            "Emission Strength": 0.0, "Anisotropic IOR Level": 0.0,
+            "Anisotropic": 0.0, "Diffuse Roughness": 0.0,
+            "Weight": 0.0,
+            "Thin Film Thickness": 0.0,
+        }
+        for name, expected in neutral.items():
+            pin = shader.inputs.get(name)
+            if pin is not None and abs(float(pin.default_value) - expected) > 1e-6:
+                return unsupported("non_default_bsdf")
+        tint = shader.inputs.get("Specular Tint")
+        if tint is not None and any(abs(float(v) - 1.0) > 1e-6 for v in tint.default_value):
+            return unsupported("non_default_bsdf")
+        normal = shader.inputs.get("Normal")
+        if normal is not None and any(abs(float(v)) > 1e-6 for v in normal.default_value):
+            return unsupported("non_default_bsdf")
+        color = list(shader.inputs["Base Color"].default_value)
+        alpha = float(shader.inputs["Alpha"].default_value)
+        roughness = float(shader.inputs["Roughness"].default_value)
+        metallic = float(shader.inputs["Metallic"].default_value)
+    else:
+        color = list(material.diffuse_color)
+        alpha = color[3]
+        roughness, metallic = float(material.roughness), float(material.metallic)
+    if abs(alpha - 1.0) > 1e-6 or abs(color[3] - 1.0) > 1e-6:
+        return unsupported("transparency")
+    if any(not math.isfinite(v) or not 0 <= v <= 1 for v in color + [roughness, metallic]):
+        return unsupported("out_of_range")
+    return {"model": "pbr_constants", "color_space": "scene_linear",
+            "base_color": color[:3], "roughness": roughness, "metallic": metallic,
+            "two_sided": not material.use_backface_culling}

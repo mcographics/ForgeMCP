@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 from __future__ import annotations
 
 import logging
@@ -10,9 +11,13 @@ from mcp.server.fastmcp import FastMCP
 from mcp.types import ToolAnnotations
 from pydantic import Field
 
-from server.core.connections import ConnectionManager
+from server.core.connections import BridgeError, ConnectionManager
 from server.core.knowledge import search_api
+from server.core.levels import LevelSaves
 from server.core.recipes import ActorRecipe, BlueprintEditRecipe, BlueprintRecipe, SceneRecipe
+from server.core.recovery import AssetRecovery
+from server.core.workflow_journal import JournalError, WorkflowJournal
+from server.core.workflows import TransferCoordinator, TransferRequest, WorkflowError
 
 mcp = FastMCP(
     "ForgeMCP",
@@ -22,6 +27,13 @@ mcp = FastMCP(
     "Check operation state and compiler diagnostics; a transport response alone is not success.",
 )
 connections = ConnectionManager.configured()
+workflow_journal = WorkflowJournal(
+    Path(os.environ.get("FORGE_PROJECT_ROOT", Path(__file__).resolve().parents[1]))
+    / "Saved" / "ForgeWorkflows"
+)
+transfers = TransferCoordinator(connections, workflow_journal)
+asset_recovery = AssetRecovery(transfers)
+level_saves = LevelSaves(transfers)
 READ_ONLY = ToolAnnotations(
     readOnlyHint=True, destructiveHint=False, idempotentHint=True, openWorldHint=False
 )
@@ -54,6 +66,122 @@ async def forge_status() -> dict[str, Any]:
 async def forge_list_sessions() -> dict[str, Any]:
     """Discover authorized application sessions and check whether they are responding."""
     return {"ok": True, "data": {"sessions": await connections.inspect_sessions()}}
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def forge_inspect_transfer(
+    operation_id: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")],
+) -> dict[str, Any]:
+    """Read a private transfer/recovery/level-save receipt without replaying operations.
+
+    A pending native step is uncertain after restart. Recorded completion does not
+    prove current application state; inspect the target before recovery or retry.
+    """
+    try:
+        return {"ok": True, "data": workflow_journal.inspect(operation_id, active=operation_id in transfers.active)}
+    except FileNotFoundError:
+        return {"ok": False, "error": {"code": "operation_not_found",
+                                         "message": "No transfer receipt was found for this operation."}}
+    except JournalError as error:
+        return {"ok": False, "error": {"code": error.code,
+                                         "message": "Transfer receipt failed validation; inspect retained storage."}}
+    except OSError:
+        return {"ok": False, "error": {"code": "record_unavailable",
+                                         "message": "Transfer receipt storage is inaccessible."}}
+
+
+@mcp.tool(annotations=PREVIEW)
+async def forge_preview_transfer(request: TransferRequest) -> dict[str, Any]:
+    """Preview native Blender static-mesh export, Unreal import/materials and optional placement.
+
+    Requires explicit sessions and compatible adapters. Saves only new assets when
+    requested; source scenes and levels remain unsaved. No destination overwrite.
+    """
+    try:
+        return {"ok": True, "data": await transfers.preview(request)}
+    except (BridgeError, WorkflowError, ValueError, KeyError, TypeError) as error:
+        return {"ok": False, "error": {"code": getattr(error, "code", "invalid_native_result"),
+                                         "message": "Transfer preflight could not be completed."}}
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def forge_reconcile_transfer(
+    operation_id: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")],
+    target_session_id: Annotated[str, Field(pattern=r"^unreal-[1-9][0-9]{0,9}$")],
+) -> dict[str, Any]:
+    """Compare a retained transfer with an explicit Unreal session without replaying.
+
+    Requires the recorded project. Inspects loaded geometry/materials when present;
+    does not load/save/discard assets, alter receipts or claim completed recovery.
+    """
+    try:
+        return {"ok": True, "data": await transfers.reconcile(operation_id, target_session_id)}
+    except (BridgeError, WorkflowError, JournalError, OSError, ValueError, KeyError, TypeError) as error:
+        return {"ok": False, "error": {"code": getattr(error, "code", "reconciliation_unavailable"),
+                                         "message": "Native reconciliation could not be completed; receipt remains unchanged."}}
+
+
+@mcp.tool(annotations=MUTATION)
+async def forge_apply_transfer(
+    preview_id: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")],
+    confirmation: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")],
+) -> dict[str, Any]:
+    """Apply a reviewed transfer once, retain each stage, and inspect the returned state.
+
+    Timeouts are uncertain; never blindly retry. Completed means the declared
+    native checks passed, not shader compilation, visual equivalence or level save.
+    """
+    try:
+        result = await transfers.apply(preview_id, confirmation)
+        return {"ok": result["state"] == "completed", "data": result}
+    except (BridgeError, WorkflowError, JournalError, OSError, ValueError, KeyError, TypeError) as error:
+        return {"ok": False, "error": {"code": getattr(error, "code", "transfer_unavailable"),
+                                         "message": "Transfer did not start; inspect retained receipts before retrying."}}
+
+
+@mcp.tool(annotations=PREVIEW)
+async def forge_preview_asset_recovery(
+    operation_id: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")],
+    target_session_id: Annotated[str, Field(pattern=r"^unreal-[1-9][0-9]{0,9}$")],
+    new_asset_path: Annotated[str, Field(pattern=r"^/Game/(?:[A-Za-z_][A-Za-z0-9_]*/)+[A-Za-z_][A-Za-z0-9_]*$", max_length=240)],
+) -> dict[str, Any]:
+    """Review restoration from a retained export into a new destination in the same project.
+
+    No Blender session is required. Existing partial assets and original receipts
+    remain intact. This restores assets only; it does not place actors or save levels.
+    """
+    try:
+        return {"ok": True, "data": await asset_recovery.preview(operation_id, target_session_id, new_asset_path)}
+    except (BridgeError, WorkflowError, JournalError, OSError, ValueError, KeyError, TypeError) as error:
+        return {"ok": False, "error": {"code": getattr(error, "code", "recovery_unavailable"),
+                                         "message": "Recovery preview could not be completed."}}
+
+
+@mcp.tool(annotations=MUTATION)
+async def forge_apply_asset_recovery(
+    preview_id: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")],
+    confirmation: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")],
+) -> dict[str, Any]:
+    """Restore reviewed retained assets once; inspect partial/unknown outcomes before retrying."""
+    try:
+        result = await asset_recovery.apply(preview_id, confirmation)
+        return {"ok": result["state"] == "completed", "data": result}
+    except (BridgeError, WorkflowError, JournalError, OSError, ValueError, KeyError, TypeError) as error:
+        return {"ok": False, "error": {"code": getattr(error, "code", "recovery_unavailable"),
+                                         "message": "Recovery did not start; original operation remains unchanged."}}
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def unreal_inspect_static_mesh(
+    asset_path: Annotated[str, Field(pattern=r"^/Game/(?:[A-Za-z_][A-Za-z0-9_]*/)*([A-Za-z_][A-Za-z0-9_]*)\.[A-Za-z_][A-Za-z0-9_]*$", max_length=240)],
+    session_id: str,
+) -> dict[str, Any]:
+    """Inspect a loaded native mesh and materials without loading, saving or retrying.
+
+    Reports bounded geometry, constant material graphs, dirty flags and disk package
+    presence. Disk presence does not verify disk contents or a completed save.
+    """
+    return await connections.dispatch("unreal", "mesh_info", session_id, {"asset_path": asset_path})
 
 
 @mcp.tool(annotations=READ_ONLY)
@@ -120,6 +248,7 @@ async def unreal_preview_actors(recipe: ActorRecipe, session_id: str) -> dict[st
 
     Locations use centimeters; rotation is [pitch, yaw, roll] in degrees.
     Existing actors require exact paths from inspection. No level save or deletion.
+    StaticMeshActor spawns may bind mesh_path to an exact loaded /Game/ mesh object.
     """
     return await connections.dispatch("unreal", "actor_preview", session_id,
                                       {"recipe": recipe.model_dump(exclude_none=True)})
@@ -130,6 +259,67 @@ async def unreal_apply_actors(preview_id: str, confirmation: str, session_id: st
     """Apply a reviewed actor preview once; check completed/rolled_back/partial state."""
     return await connections.dispatch("unreal", "actor_apply", session_id,
                                       {"preview_id": preview_id, "confirmation": confirmation})
+
+
+@mcp.tool(annotations=PREVIEW)
+async def unreal_preview_level_save(
+    asset_path: Annotated[str, Field(pattern=r"^/Game/(?:[A-Za-z][A-Za-z0-9_]*/)+[A-Za-z][A-Za-z0-9_]*$", max_length=200)],
+    session_id: str,
+) -> dict[str, Any]:
+    """Preview saving the persistent editor world as a new map in a fresh folder.
+
+    Saving may change the current world identity; saving a copy need not load it.
+    Streaming/world partition,
+    external packages and existing destinations are unsupported. Other assets are
+    not saved. The returned native preview expires after 300 seconds.
+    """
+    try:
+        result = await level_saves.preview(asset_path, session_id)
+        response = {"ok": result.get("state") != "blocked", "data": result}
+        if not response["ok"]:
+            response["error"] = {"code": "unsaved_dependencies",
+                                 "message": "Save the listed referenced asset packages separately before previewing this map save."}
+        return response
+    except (BridgeError, WorkflowError, ValueError, KeyError, TypeError) as error:
+        return {"ok": False, "error": {"code": getattr(error, "code", "invalid_native_result"),
+                                         "message": "Level save preview could not be completed."}}
+
+
+@mcp.tool(annotations=MUTATION)
+async def unreal_apply_level_save(preview_id: str, confirmation: str, session_id: str) -> dict[str, Any]:
+    """Save a reviewed map once; inspect saved/partial/outcome_unknown explicitly.
+
+    A private durable server receipt precedes the native save request. The native
+    operation also retains intent/result records under Saved/ForgeLevelSaves.
+    Saving does not establish native reopening or rendered appearance.
+    """
+    try:
+        result = await level_saves.apply(preview_id, confirmation, session_id)
+        response = {"ok": result["state"] == "saved", "data": result}
+        if not response["ok"]:
+            response["error"] = {"code": result.get("diagnostic_code", result["state"]),
+                                 "message": "Level save did not establish a completed result; inspect its receipt."}
+        return response
+    except (BridgeError, WorkflowError, JournalError, OSError, ValueError, KeyError, TypeError) as error:
+        return {"ok": False, "error": {"code": getattr(error, "code", "save_unavailable"),
+                                         "message": "Level save could not proceed; no automatic replay is allowed."}}
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def unreal_reconcile_level_save(
+    operation_id: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")], session_id: str,
+) -> dict[str, Any]:
+    """Observe a recorded map save without loading, saving or replaying it.
+
+    Compares derived map-file bytes with recorded checksum evidence where present.
+    Matching world identity is weaker than native saved-content or dirty-state
+    verification. Earlier receipts remain unchanged, including uncertain outcomes.
+    """
+    try:
+        return {"ok": True, "data": await level_saves.reconcile(operation_id, session_id)}
+    except (BridgeError, WorkflowError, JournalError, OSError, ValueError, KeyError, TypeError) as error:
+        return {"ok": False, "error": {"code": getattr(error, "code", "reconciliation_unavailable"),
+                                         "message": "Level reconciliation could not proceed; receipt remains unchanged."}}
 
 
 @mcp.tool(annotations=READ_ONLY)
@@ -241,19 +431,44 @@ async def blender_inspect_object(name: str, session_id: str) -> dict[str, Any]:
 
 @mcp.tool(annotations=READ_ONLY)
 async def blender_inspect_rig(
-    name: str, session_id: str, include_weights: bool = False
+    name: str, session_id: str, include_weights: bool = False, include_evaluated: bool = False
 ) -> dict[str, Any]:
-    """Inspect an armature's hierarchy and related meshes with optional skin-weight summaries."""
-    return await connections.dispatch(
-        "blender", "rig_info", session_id, {"name": name, "include_weights": include_weights}
-    )
+    """Inspect hierarchy, constraints/IK, optional weights and evaluated deformation.
+
+    Reports up to 32 constraints per bone/object with explicit truncation, and
+    rejects rigs with more than 512 pose constraints. Constraint editing is not
+    implied by this read-only inspection.
+
+    Evaluation is bounded to 256 bones, 32 meshes and 100000 total mesh vertices.
+    Reports up to 256 world-space positions per mesh plus full bounds/counts.
+    Includes the modifier stack; output vertex indices need not match source.
+    Does not change the scene frame or retain temporary evaluated mesh data.
+    """
+    args = {"name": name, "include_weights": include_weights}
+    if include_evaluated:
+        args["include_evaluated"] = True
+    return await connections.dispatch("blender", "rig_info", session_id, args)
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def blender_inspect_skin(
+    name: str, session_id: str,
+    vertex_start: Annotated[int, Field(strict=True, ge=0, le=9999)] = 0,
+    vertex_count: Annotated[int, Field(strict=True, ge=1, le=128)] = 128,
+) -> dict[str, Any]:
+    """Read exact source-mesh weights in bounded pages, without changing the scene."""
+    return await connections.dispatch("blender", "skin_info", session_id,
+                                      {"name": name, "vertex_start": vertex_start, "vertex_count": vertex_count})
 
 
 @mcp.tool(annotations=PREVIEW)
 async def blender_preview_scene(recipe: SceneRecipe, session_id: str) -> dict[str, Any]:
     """Preview a bounded native scene recipe. No script execution or file overwrite.
 
-    Create/edit meshes, transforms, collections, materials, transform keyframes and timing.
+    Create/edit meshes, transforms, collections, materials, armatures and keyframes.
+    Bind or replace explicit skin weights on reviewed new mesh copies.
+    Create Empty controls and add a reviewed bounded positional IK constraint.
+    Set the evaluated timeline frame; object keyframes accept explicit vector values.
     Apply rejects stale scene state and rolls back failed batches. Rotation uses radians.
     Existing mesh and Action data are copied before editing, preserving original datablocks.
     """
@@ -275,6 +490,38 @@ async def blender_apply_scene(
         "blender",
         "scene_apply",
         session_id,
+        {"preview_id": preview_id, "confirmation": confirmation},
+    )
+
+
+@mcp.tool(annotations=PREVIEW)
+async def blender_preview_export(
+    name: Annotated[str, Field(min_length=1, max_length=128)], session_id: str
+) -> dict[str, Any]:
+    """Preview binary FBX export of an exact static mesh in an explicit Blender session.
+
+    Returns source snapshot, units, bounds, material slots and operation limits.
+    Does not write files. Modified/animated meshes and texture/group materials
+    require later export stages. Unreal import is not part of this operation.
+    """
+    return await connections.dispatch("blender", "export_preview", session_id, {"name": name})
+
+
+@mcp.tool(annotations=MUTATION)
+async def blender_apply_export(
+    preview_id: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")],
+    confirmation: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")],
+    session_id: str,
+) -> dict[str, Any]:
+    """Export an authorized reviewed static mesh to new private transfer staging.
+
+    Confirmation must equal the expiring single-use preview ID. No arbitrary path
+    or overwrite is accepted and the .blend is not saved. An exported response
+    verifies this stage only; it does not establish Unreal import or placement.
+    Inspect retained export records before retrying uncertain outcomes.
+    """
+    return await connections.dispatch(
+        "blender", "export_apply", session_id,
         {"preview_id": preview_id, "confirmation": confirmation},
     )
 

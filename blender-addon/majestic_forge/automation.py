@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Original bounded scene recipes, executed by the bridge on Blender's main thread."""
 
 import hashlib
@@ -69,10 +70,16 @@ def action_curves(action):
     ]
 
 
+def _set_frame(scene, frame):
+    scene.frame_set(frame)
+    if scene.frame_current != frame:
+        raise RecipeError("native_verification_failed", "Native timeline frame differs from preview.")
+
+
 def fingerprint(operations):
     scene = bpy.context.scene
     touched = {op.get("name") for op in operations} | {
-        op.get("source") for op in operations if op.get("op") == "duplicate_object"
+        op.get("source") for op in operations if op.get("op") in {"duplicate_object", "bind_mesh", "reweight_mesh", "auto_bind_mesh", "patch_skin_weights"}
     }
     state = {
         "scene": scene.as_pointer(),
@@ -86,14 +93,23 @@ def fingerprint(operations):
             scene.frame_start,
             scene.frame_end,
             scene.frame_current,
+            scene.frame_subframe,
         ],
         "targets": [],
         "material_targets": [],
+        "bindings": [],
+        "ik_setups": [],
     }
     geometry = {op.get("name") for op in operations if op.get("op") == "set_vertices"} | {
         op.get("source") for op in operations if op.get("op") == "duplicate_object"
     }
     for op in operations:
+        if op.get("op") == "create_ik_constraint":
+            from .rigging import ik_setup_facts
+            state["ik_setups"].append(ik_setup_facts(op))
+        if op.get("op") in {"bind_mesh", "reweight_mesh", "auto_bind_mesh", "patch_skin_weights"}:
+            from .skinning import binding_facts
+            state["bindings"].append(binding_facts(op))
         if op.get("op") == "set_material_input":
             info = material_info(op["name"])
             pin = editable_input(op["name"], op["node"], op["socket"], op["value"])
@@ -168,6 +184,10 @@ class SceneAutomation:
             "shader_nodes",
             "shader_links",
             "bones",
+            "armature",
+            "weights",
+            "weight_method",
+            "ik",
         }
         for op in operations:
             if not isinstance(op, dict) or set(op) - allowed:
@@ -188,11 +208,24 @@ class SceneAutomation:
                 "set_material_input",
                 "create_armature",
                 "bone_keyframe",
+                "bind_mesh",
+                "reweight_mesh",
+                "auto_bind_mesh",
+                "patch_skin_weights",
+                "create_ik_constraint",
+                "create_empty",
+                "set_frame",
             }:
                 raise RecipeError("command_not_allowed", "Operation is not allowlisted.")
+            if kind != "auto_bind_mesh" and op.get("weight_method"):
+                raise RecipeError("invalid_arguments", "Automatic method belongs only to auto_bind_mesh.")
+            if kind != "create_ik_constraint" and op.get("ik") is not None:
+                raise RecipeError("invalid_arguments", "IK specs belong only to IK setup.")
+            if kind not in {"bind_mesh", "reweight_mesh", "auto_bind_mesh", "patch_skin_weights"} and (op.get("armature") or op.get("weights")):
+                raise RecipeError("invalid_arguments", "Skin binding fields belong only to bind_mesh.")
             if kind != "bone_keyframe" and op.get("bone", "") not in ("", None):
                 raise RecipeError("invalid_arguments", "Bone names belong only to bone_keyframe operations.")
-            if kind != "scene_settings" and (
+            if kind not in {"scene_settings", "set_frame"} and (
                 not isinstance(name, str)
                 or not 1 <= len(name) <= 64
                 or any(ord(c) < 32 for c in name)
@@ -209,7 +242,22 @@ class SceneAutomation:
                     )
             if op.get("scale") is not None and any(abs(x) < 1e-8 for x in op["scale"]):
                 raise RecipeError("invalid_arguments", "Zero scale is not allowed.")
-            if kind == "set_material_input":
+            if kind == "set_frame":
+                if (op.get("name", "") != "" or type(op.get("frame")) is not int
+                        or not -100000 <= op["frame"] <= 100000):
+                    raise RecipeError("invalid_arguments", "Use an integer timeline frame within +/-100000.")
+            elif kind == "create_empty":
+                if name in bpy.data.objects or name in objects:
+                    raise RecipeError("name_conflict", "Empty name already exists.")
+                if op.get("collection") and op["collection"] not in collections:
+                    raise RecipeError("collection_not_found", "Empty collection was not found.")
+                objects[name] = "EMPTY"
+            elif kind == "create_ik_constraint":
+                from .rigging import validate_ik_setup
+                validate_ik_setup(op)
+                if sum(item.get("op") == "create_ik_constraint" for item in operations) > 1:
+                    raise RecipeError("invalid_arguments", "Review one IK setup per batch.")
+            elif kind == "set_material_input":
                 if name not in bpy.data.materials:
                     raise RecipeError("material_not_found", "Inspect an existing material before editing.")
                 if any(not isinstance(op.get(key), str) or not 1 <= len(op[key]) <= 64 for key in ("node", "socket")):
@@ -218,6 +266,14 @@ class SceneAutomation:
                     editable_input(name, op["node"], op["socket"], op.get("value"))
                 except ValueError as error:
                     raise RecipeError("invalid_arguments", str(error)) from error
+            elif kind in {"bind_mesh", "reweight_mesh", "auto_bind_mesh", "patch_skin_weights"}:
+                from .skinning import validate_binding
+                source, _ = validate_binding(op)
+                if name in bpy.data.objects or name in objects:
+                    raise RecipeError("name_conflict", "Binding output name already exists.")
+                if op.get("collection") and op["collection"] not in collections:
+                    raise RecipeError("collection_not_found", "Binding collection was not found.")
+                objects[name], mesh_sizes[name] = "MESH", len(source.data.vertices)
             elif kind == "duplicate_object":
                 source = op.get("source")
                 if not isinstance(source, str) or source not in objects:
@@ -354,6 +410,10 @@ class SceneAutomation:
                     or not -100000 <= op.get("frame", 1) <= 100000
                 ):
                     raise RecipeError("invalid_arguments", "Invalid transform keyframe.")
+                if kind == "keyframe" and op.get("value") is not None:
+                    values = vector(op["value"])
+                    if op.get("data_path", "location") == "scale" and any(abs(value)<1e-8 for value in values):
+                        raise RecipeError("invalid_arguments", "Object scale keyframes cannot use zero scale.")
                 if kind == "bone_keyframe":
                     bone_name = op.get("bone")
                     data_path = op.get("data_path", "location")
@@ -456,8 +516,10 @@ class SceneAutomation:
             scene.frame_start,
             scene.frame_end,
             scene.frame_current,
+            scene.frame_subframe,
         )
         created, snapshots, pose_snapshots, action_copies, material_defaults = [], {}, {}, {}, {}
+        created_constraints = []
         results = []
 
         def remember(obj):
@@ -508,7 +570,20 @@ class SceneAutomation:
         try:
             for op in operations:
                 kind, name = op["op"], op.get("name", "")
-                if kind == "create_collection":
+                if kind == "create_empty":
+                    obj = bpy.data.objects.new(name,None)
+                    created.append(("objects",obj))
+                    col = bpy.data.collections.get(op.get("collection","")) or scene.collection
+                    col.objects.link(obj)
+                    obj.empty_display_type = "ARROWS"
+                    obj.empty_display_size = 0.2
+                    for field,prop in (("location","location"),("rotation","rotation_euler"),("scale","scale")):
+                        if op.get(field) is not None:
+                            setattr(obj,prop,op[field])
+                elif kind == "create_ik_constraint":
+                    from .rigging import create_ik_setup
+                    ik_result = create_ik_setup(op, created_constraints)
+                elif kind == "create_collection":
                     col = bpy.data.collections.new(name)
                     created.append(("collections", col))
                     scene.collection.children.link(col)
@@ -581,6 +656,9 @@ class SceneAutomation:
                     ):
                         if op.get(field) is not None:
                             setattr(obj, prop, op[field])
+                elif kind in {"bind_mesh", "reweight_mesh", "auto_bind_mesh", "patch_skin_weights"}:
+                    from .skinning import bind_copy
+                    bind_copy(op, created)
                 elif kind == "duplicate_object":
                     source = scene.objects[op["source"]]
                     obj = source.copy()
@@ -612,6 +690,8 @@ class SceneAutomation:
                         old = pin.default_value
                         material_defaults[key] = (pin, old if type(old) in (int, float) else list(old))
                     pin.default_value = op["value"]
+                elif kind == "set_frame":
+                    _set_frame(scene,op["frame"])
                 elif kind == "scene_settings":
                     scene.render.fps, scene.render.fps_base = op.get("fps", 30), 1.0
                     scene.frame_start, scene.frame_end = (
@@ -646,6 +726,8 @@ class SceneAutomation:
                             obj.data.materials.append(bpy.data.materials[op["material"]])
                     elif kind == "keyframe":
                         ensure_action_copy(obj)
+                        if op.get("value") is not None:
+                            setattr(obj,op.get("data_path","location"),op["value"])
                         before = set(bpy.data.actions)
                         if not obj.keyframe_insert(
                             data_path=op.get("data_path", "location"), frame=op.get("frame", 1)
@@ -668,6 +750,23 @@ class SceneAutomation:
                             ("actions", action) for action in set(bpy.data.actions) - before
                         )
                 result = {"op": kind, "name": name, "state": "completed"}
+                if kind == "set_frame":
+                    result.update(frame=scene.frame_current,native_frame_verified=True)
+                if kind == "create_ik_constraint":
+                    result.update(ik_result)
+                    result.update(bone=op["ik"]["bone"],constraint=op["ik"]["constraint"],
+                                  target=op["ik"]["target"],native_settings_verified=True,
+                                  requires_deformation_review=True)
+                if kind in {"bind_mesh", "reweight_mesh", "auto_bind_mesh", "patch_skin_weights"}:
+                    result.update(source=op["source"], armature=op["armature"],
+                                  source_preserved=True, weight_assignments=sum(len(vertex.groups) for vertex in scene.objects[name].data.vertices),
+                                  native_weights_verified=True, overwrites_existing_skin=False)
+                    if kind == "auto_bind_mesh":
+                        result["weight_method"] = "blender_heat_top4"
+                        result["requires_deformation_review"] = True
+                    if kind == "patch_skin_weights":
+                        result["changed_vertices"] = sorted({item["vertex"] for item in op["weights"]})
+                        result["untouched_weights_preserved"] = True
                 if kind == "bone_keyframe":
                     result["bone"] = op["bone"]
                     result["data_path"] = op["data_path"]
@@ -688,16 +787,19 @@ class SceneAutomation:
                     data.name for _, data, *rest in snapshots.values() if data
                 ],
             }
-        except Exception:
+        except Exception as operation_error:
             rollback_errors = []
+            for pose_bone, constraint in reversed(created_constraints):
+                try:
+                    pose_bone.constraints.remove(constraint)
+                except Exception:
+                    rollback_errors.append("constraint_cleanup_failed")
             for pin, old in material_defaults.values():
                 try:
                     pin.default_value = old
                 except Exception:
                     rollback_errors.append("material_default_restore_failed")
             scene.render.fps, scene.render.fps_base, scene.frame_start, scene.frame_end = timing[:4]
-            if scene.frame_current != timing[4]:
-                scene.frame_set(timing[4])
             for (
                 obj,
                 data,
@@ -743,12 +845,17 @@ class SceneAutomation:
                     getattr(bpy.data, category).remove(value, do_unlink=True)
                 except Exception:
                     rollback_errors.append("datablock_cleanup_failed")
+            try:
+                # Evaluate only after original Actions/constraints have been restored.
+                scene.frame_set(timing[4],subframe=timing[5])
+            except Exception:
+                rollback_errors.append("scene_frame_restore_failed")
             return {
                 "state": "rolled_back" if not rollback_errors else "partial",
                 "completed_before_failure": results,
                 "rollback_errors": rollback_errors,
                 "error": {
-                    "code": "operation_failed",
+                    "code": getattr(operation_error, "code", "operation_failed"),
                     "message": "Scene operation failed; inspect rollback status.",
                 },
                 "saved": False,

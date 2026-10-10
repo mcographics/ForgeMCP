@@ -1,5 +1,12 @@
 # ForgeMCP
 
+**Free and open source.** All original ForgeMCP source uses the [MIT license](LICENSE).
+See [credits and upstream notices](CREDITS.md) for separately licensed material.
+The Unreal plugin, Blender add-on and external MCP server live in this repository;
+the author's active Unreal development project is preserved locally and excluded
+from the current source checkout. This is a development release with documented
+operation limits, not universal control of either application.
+
 Original Majestic Creations ForgeMCP integration for Unreal Engine and Blender, with Codex in
 VS Code as the primary intended client. ForgeMCPDev is the Unreal 5.6 test project.
 The current development source retains the inspection foundation and adds native Blueprint
@@ -8,6 +15,89 @@ Blueprint setup and live inspection, Blender rig animation, scene/material graph
 and local version-aware API retrieval. GAS, UMG, World
 Partition, broad graph/property coverage, asset interchange and wider workflows remain
 in development.
+
+The [active development plan](Documentation/Active_Development_Plan.md) defines the
+full completion gates and the next Blender-to-Unreal asset-transfer milestone.
+The original roadmap remains the historical vision.
+
+Standalone `blender_preview_export` and `blender_apply_export` tools export a reviewed
+static mesh to private FBX staging without saving the scene or accepting arbitrary
+output paths. The development MCP registry exposes the current inspection and reviewed workflow tools. This stage requires
+the updated Blender add-on; it does not perform Unreal import or asset placement.
+Texture/group materials and modified/animated meshes are explicitly unsupported by
+the initial export stage.
+
+`forge_preview_transfer` and `forge_apply_transfer` connect export, protected
+staging, Unreal import, native geometry/material verification and actor placement.
+They require explicit Blender and Unreal sessions and current adapter builds.
+`forge_inspect_transfer` reads durable operation receipts without claiming current
+application state. Headless native acceptance passed for asymmetric identity and
+transformed metric fixtures; interactive use, level saving, shader appearance and
+native recovery reconciliation remain outstanding.
+
+`unreal_inspect_static_mesh` reports bounded geometry and material graphs for an
+already loaded mesh, including dirty flags and disk-package presence. It never
+loads, saves or retries imports. Disk presence alone does not prove saved contents.
+
+`forge_reconcile_transfer` compares a retained operation with an explicit Unreal
+session in the recorded project. It verifies loaded geometry/materials against
+export evidence without changing the receipt or performing recovery mutations.
+
+`forge_preview_asset_recovery` / `forge_apply_asset_recovery` restore a retained
+export from an incomplete operation into a reviewed new destination in the same
+Unreal project. They require no Blender session, preserve the original receipt
+and partial assets, verify the restored geometry/materials and save new packages.
+This recovery restores assets only; it does not place actors or save a level.
+
+Build the source-only Blender installer ZIP with
+`.venv\Scripts\python.exe scripts/package_blender_addon.py`. Previous package bytes
+are preserved in `Artifacts/Backups` when the package changes. The native export,
+MCP export and clean-profile ZIP-install verifiers are respectively
+`scripts/verify_blender_export.py`, `scripts/verify_blender_export_mcp.py`, and
+`scripts/verify_blender_package.py`.
+
+The Blender 0.2.12 add-on includes **Export to Unreal** in the 3D Viewport sidebar
+under **ForgeMCP**. Select an active static mesh in Object mode, choose a new
+`/Game/.../SM_Name` asset path, and click the button. Review the connected Unreal
+project, asset path, save option and placement before clicking **Confirm Export
+to Unreal**. Placement defaults to `(0,0,0)` in Unreal centimeters. Leave the
+session field empty only when exactly one Unreal bridge is connected; otherwise
+enter the intended `unreal-PID` session ID. The Blender bridge must be running.
+The **ForgeMCP folder** setting points to this development checkout and its
+`.venv`; the source-only add-on ZIP does not bundle the external MCP runtime.
+
+Transfers use the existing authenticated MCP preview/apply tools and durable
+receipts. Existing assets are not overwritten, scenes and levels are not saved,
+and unsupported procedural/textured materials produce an explicit error. Use
+an opaque constant Principled material for this stage. Do not close either app
+during apply. An uncertain result must be inspected using its receipt before
+retrying. `scripts/verify_blender_transfer_panel.py` exercises the actual native
+Blender operators and Unreal import/placement in disposable sessions; it does
+not claim visual interaction or rendered acceptance.
+
+The current Unreal development installer is
+`Artifacts/ForgeMCP-Unreal-Development-0.2.0-UE5.6.1-Win64.zip`. Extract its
+`MajesticForge` folder into a closed project's `Plugins` directory, or pass that
+extracted folder as `-PackageDirectory` to `scripts/Install-ForgeUnreal.ps1`.
+The installer now defaults to this ZIP and accepts `-PackageArchive` explicitly;
+it validates checksums, bounded archive scope and paths before extraction into
+private project-local staging. The ForgeMCP Python environment is required for
+archive validation. It refuses replacement while that project is open in either
+UnrealEditor or UnrealEditor-Cmd and preserves an existing plugin/project backup.
+The package includes current source/configuration and both compiled modules for
+the verified Unreal 5.6.1 Win64 editor BuildId. A fresh Blueprint-only test project
+loaded the extracted DLL and exposed native transfer/inspection capabilities.
+It is a development package; other engine builds require a matching rebuild.
+`scripts/package_unreal_plugin.py` checks source/build identity and creates the ZIP;
+`scripts/verify_unreal_package.py` validates extraction and native loading separately.
+
+The current Blender installer is
+`Artifacts/ForgeMCP-Blender-Addon-0.2.1.zip`. Install the ZIP through Blender's
+Install from Disk action and enable ForgeMCP. Version 0.2.1 reloads cached helper
+modules in dependency order when Blender imports/reloads an updated add-on,
+fixing `cannot import name 'transfer_surface'` after replacing an older version.
+Clean installation and the stale-module update regression passed in an isolated
+Blender 5.2.2 session; this does not assert installation in an existing user session.
 
 The external Python server uses the official MCP Python SDK. The Unreal C++ plugin,
 Blender Python add-on, session protocol, and routing code were authored here. No
@@ -37,95 +127,33 @@ scene and bone-animation recipes. `forge_search_api_docs` retrieves installed Un
 reference data for an exact version. Engineering tools require explicit session IDs.
 Reviewed actor recipes support native spawning, transforms and game-hidden state;
 Blender recipes also duplicate local mesh/empty objects with independent mesh/Action data.
-There are currently 23 MCP tools in development source. The existing 0.2.0 release ZIP
-predates asset queries and custom material graphs. See [engineering interfaces](Documentation/Engineering.md)
+There are currently 36 MCP tools in development source, including reviewed saving
+of a persistent Unreal level to a new map destination. The local application
+packages and the older combined release ZIP have different validation histories.
+See [engineering interfaces](Documentation/Engineering.md)
 and [the current roadmap status](Documentation/Development_Status.md).
 
-## Setup on Windows
+## Installation and repository organization
 
-Run from this checkout using Python 3.11 or newer:
+ForgeMCP is a free local integration. Unreal Engine, Blender and your MCP client
+remain separately installed products with their own terms. The core workflow does
+not require paid APIs or cloud services.
 
-```powershell
-.\scripts\Setup-Forge.ps1
-.\BuildAndOpen.ps1
-.\scripts\Install-ForgeBlender.ps1 -BlenderVersion 5.2
-```
+Follow [the source installation guide](Documentation/Installation.md) to install
+the external server, build the Unreal plugin in your own project and package the
+Blender add-on. See [repository layout](Documentation/Repository_Layout.md) for
+published components and excluded local development files.
 
-Setup creates a separate `.venv`, installs the package with the verified dependency
-constraints, and prepares `.codex/config.toml`. Project configuration requires a
-trusted workspace in Codex. To register the server through Codex's CLI instead:
+The Unreal plugin lives in `Plugins/MajesticForge`; the Blender add-on lives in
+`blender-addon/majestic_forge`. Their internal identifiers remain stable while both
+appear as **ForgeMCP** in the applications. The local `ForgeMCPDev.uproject`, root
+`Config`, `Content` and `Source` remain on disk for development but are excluded from
+Git. A new clone can generate an independent minimal Unreal host with
+`scripts/create_unreal_host.py`. No full game project is required to use the plugin.
 
-```powershell
-codex mcp add forgemcp --env "FORGE_PROJECT_ROOT=$PWD" -- "$PWD\.venv\Scripts\python.exe" -m server.main
-codex mcp get forgemcp
-```
-
-That command creates a user-level entry. The environment variable keeps discovery
-pointed at this Unreal project even when Codex starts the server elsewhere. It does
-not change other MCP entries. Restart the Codex extension after registration. Remove
-the entry with `codex mcp remove forgemcp` if desired.
-
-The Unreal plugin is explicitly enabled in `ForgeMCPDev.uproject`. An editor that was
-already running before the plugin was built needs to be reopened after saving work.
-The plugin automatically advertises a session once it loads.
-
-The Unreal panel is available from **Window > ForgeMCP**. It provides bridge status,
-the local address/session ID, last authenticated request timing,
-**Start Bridge / Stop Bridge** controls, and a per-project auto-start checkbox. Changing
-auto-start affects the next project launch; start/stop affects only the local bridge.
-The panel never displays authentication tokens.
-
-The current Windows development package for the installed UE 5.6.1 engine is available
-locally at `Artifacts/ForgeMCP-development-0.2.0-UE5.6.1-Win64.zip`. Its Unreal plugin
-descriptor and editor panel use the **ForgeMCP** display name. Save your work and close
-the target project's Unreal editor before replacing its loaded plugin binaries. To install
-or update this project's plugin:
-
-```powershell
-.\scripts\Install-ForgeUnreal.ps1
-```
-
-To install into another UE 5.6 project using this engine build:
-
-```powershell
-.\scripts\Install-ForgeUnreal.ps1 -ProjectFile 'G:\YourProject\YourProject.uproject'
-```
-
-The installer copies `Artifacts/ForgeMCP-development-0.2.0/MajesticForge` into the selected project's
-`Plugins/MajesticForge`, enables its descriptor entry, and preserves unrelated plugin
-entries. Existing plugin files and the project descriptor are backed up. It refuses
-to replace a plugin while that project's editor is running. You can also extract the
-ZIP's `MajesticForge` folder into your project's `Plugins` folder, then enable it in
-**Edit > Plugins** and reopen the editor. Other engine versions/builds need a matching
-plugin build. The package is a local installation artifact, not a public release.
-
-The Blender installer copies the add-on into the selected version's user scripts
-directory, backing up an existing different file. In Blender, enable **ForgeMCP**
-under **Preferences > Add-ons**. The installer does not rewrite preferences or
-modify the open scene.
-
-Blender add-on version 0.1.1 adds a visible **ForgeMCP** tab in the 3D Viewport
-sidebar: hover over the viewport and press **N**. The **ForgeMCP Connection** panel
-shows whether the bridge is running, its local endpoint and session ID, and the time
-since its last authenticated request. **Start Bridge** and **Stop Bridge** control the
-connection without editing the scene. The auto-start setting is also available in
-the add-on's Preferences entry. It takes effect when the add-on is next enabled;
-save Blender preferences if you want to persist that choice. The panel never displays
-authentication tokens.
-
-After installing an update, save your work and restart Blender, or disable and enable
-the add-on so Blender reloads its changed module. Updating the file on disk does not
-replace the module already loaded in an open application.
-
-To launch a separate Blender session with the source add-on enabled:
-
-```powershell
-& 'E:\SteamLibrary\steamapps\common\Blender\blender.exe' --python "$PWD\scripts\blender_bootstrap.py"
-```
-
-That enables the add-on for the new session without persisting a preference change.
-Change the executable path for your installation. Save preferences yourself if you
-want the add-on enabled on future starts.
+Native version-specific development packages are generated locally under
+`Artifacts` and are not committed. A source checkout is not an installed application
+adapter, and a packaged adapter is not proof of visible interactive acceptance.
 
 ## Try it in Codex
 

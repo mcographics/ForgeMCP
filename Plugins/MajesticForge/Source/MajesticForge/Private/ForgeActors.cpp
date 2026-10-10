@@ -1,7 +1,14 @@
 #include "ForgeActors.h"
 #include "Editor.h"
 #include "Engine/World.h"
+#include "Engine/Level.h"
 #include "Engine/StaticMeshActor.h"
+#include "Engine/StaticMesh.h"
+#include "Components/StaticMeshComponent.h"
+#include "Materials/MaterialInterface.h"
+#include "MeshDescription.h"
+#include "StaticMeshAttributes.h"
+#include "Misc/SecureHash.h"
 #include "Engine/PointLight.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/SpotLight.h"
@@ -40,6 +47,59 @@ AActor* Resolve(UWorld* World, const FString& Path)
         if (IsValid(*It) && It->GetPathName() == Path) return *It;
     return nullptr;
 }
+UStaticMesh* ResolveMesh(const FString& Path)
+{
+    // Preview never loads caller-selected objects or invokes constructors.
+    if (Path.Len() > 240 || !Path.StartsWith(TEXT("/Game/")) || Path.Contains(TEXT(":"))) return nullptr;
+    for (TCHAR C : Path) if (!((C >= 'a' && C <= 'z') || (C >= 'A' && C <= 'Z') || (C >= '0' && C <= '9') || C == '_' || C == '/' || C == '.')) return nullptr;
+    UStaticMesh* Mesh = FindObject<UStaticMesh>(nullptr, *Path);
+    if (!IsValid(Mesh) || Mesh->GetPathName() != Path) return nullptr;
+    if (Mesh->GetStaticMaterials().Num() > 32) return nullptr;
+    const FMeshDescription* Description = Mesh->GetMeshDescription(0);
+    if (!Description || Description->Vertices().Num() < 3 || Description->Vertices().Num() > 100000 ||
+        Description->Triangles().Num() < 1 || Description->Triangles().Num() > 200000) return nullptr;
+    return Mesh;
+}
+JObject MeshState(UStaticMesh* Mesh)
+{
+    auto State = MakeShared<FJsonObject>();
+    State->SetStringField(TEXT("path"), Mesh->GetPathName());
+    State->SetStringField(TEXT("instance"), FString::Printf(TEXT("%p"), Mesh));
+    State->SetStringField(TEXT("lighting_guid"), Mesh->GetLightingGuid().ToString());
+    const FMeshDescription* Description = Mesh->GetMeshDescription(0);
+    FStaticMeshConstAttributes Attributes(*Description);
+    const auto Positions = Attributes.GetVertexPositions();
+    FSHA1 Hash;
+    for (FVertexID Id : Description->Vertices().GetElementIDs())
+    {
+        const int32 Index = Id.GetValue();
+        const FVector3f Position = Positions[Id];
+        Hash.Update(reinterpret_cast<const uint8*>(&Index), sizeof(Index));
+        Hash.Update(reinterpret_cast<const uint8*>(&Position), sizeof(Position));
+    }
+    for (FTriangleID Id : Description->Triangles().GetElementIDs())
+        for (FVertexID Vertex : Description->GetTriangleVertices(Id))
+        {
+            const int32 Index = Vertex.GetValue();
+            Hash.Update(reinterpret_cast<const uint8*>(&Index), sizeof(Index));
+        }
+    Hash.Final();
+    uint8 Digest[20];
+    Hash.GetHash(Digest);
+    State->SetStringField(TEXT("geometry_fingerprint"), BytesToHex(Digest, sizeof(Digest)));
+    State->SetNumberField(TEXT("vertex_count"), Description->Vertices().Num());
+    State->SetNumberField(TEXT("triangle_count"), Description->Triangles().Num());
+    TArray<TSharedPtr<FJsonValue>> Materials;
+    for (const FStaticMaterial& Slot : Mesh->GetStaticMaterials())
+    {
+        auto Item = MakeShared<FJsonObject>();
+        Item->SetStringField(TEXT("slot"), Slot.MaterialSlotName.ToString());
+        Item->SetStringField(TEXT("material"), Slot.MaterialInterface ? Slot.MaterialInterface->GetPathName() : TEXT(""));
+        Materials.Add(MakeShared<FJsonValueObject>(Item));
+    }
+    State->SetArrayField(TEXT("materials"), Materials);
+    return State;
+}
 TSharedRef<FJsonObject> Describe(AActor* Actor)
 {
     auto Result = MakeShared<FJsonObject>();
@@ -56,6 +116,24 @@ TSharedRef<FJsonObject> Describe(AActor* Actor)
     AddVector(TEXT("rotation"), FVector(Rotation.Pitch, Rotation.Yaw, Rotation.Roll));
     AddVector(TEXT("scale"), Actor->GetActorScale3D());
     Result->SetBoolField(TEXT("hidden"), Actor->IsHidden());
+    if (AStaticMeshActor* MeshActor = Cast<AStaticMeshActor>(Actor))
+    {
+        UStaticMeshComponent* Component = MeshActor->GetStaticMeshComponent();
+        UStaticMesh* Mesh = Component ? Component->GetStaticMesh() : nullptr;
+        Result->SetStringField(TEXT("static_mesh"), Mesh ? Mesh->GetPathName() : TEXT(""));
+        FVector Origin, Extent;
+        Actor->GetActorBounds(false, Origin, Extent);
+        AddVector(TEXT("bounds_origin"), Origin);
+        AddVector(TEXT("bounds_extent"), Extent);
+        TArray<TSharedPtr<FJsonValue>> Materials;
+        for (int32 Index = 0; Component && Index < FMath::Min(Component->GetNumMaterials(), 32); ++Index)
+        {
+            UMaterialInterface* Material = Component->GetMaterial(Index);
+            Materials.Add(MakeShared<FJsonValueString>(Material ? Material->GetPathName() : TEXT("")));
+        }
+        Result->SetArrayField(TEXT("material_assets"), Materials);
+        Result->SetBoolField(TEXT("material_assets_truncated"), Component && Component->GetNumMaterials() > 32);
+    }
     return Result;
 }
 bool ReadVector(const JObject& Op, const TCHAR* Field, FVector& Value)
@@ -78,6 +156,7 @@ FString Fingerprint(UWorld* World, const TArray<TSharedPtr<FJsonValue>>& Operati
     auto State = MakeShared<FJsonObject>();
     State->SetStringField(TEXT("world"), World->GetPathName());
     State->SetStringField(TEXT("world_instance"), FString::Printf(TEXT("%p"), World));
+    State->SetStringField(TEXT("level_instance"), FString::Printf(TEXT("%p"), World->GetCurrentLevel()));
     TArray<TSharedPtr<FJsonValue>> Targets;
     for (const auto& Value : Operations)
     {
@@ -90,6 +169,10 @@ FString Fingerprint(UWorld* World, const TArray<TSharedPtr<FJsonValue>>& Operati
             Item->SetStringField(TEXT("parent"), Actor->GetAttachParentActor() ? Actor->GetAttachParentActor()->GetPathName() : TEXT(""));
             Targets.Add(MakeShared<FJsonValueObject>(Item));
         }
+        FString MeshPath;
+        Value->AsObject()->TryGetStringField(TEXT("mesh_path"), MeshPath);
+        if (UStaticMesh* Mesh = ResolveMesh(MeshPath))
+            Targets.Add(MakeShared<FJsonValueObject>(MeshState(Mesh)));
     }
     State->SetArrayField(TEXT("targets"), Targets);
     FString Serialized;
@@ -268,7 +351,7 @@ bool FForgeActors::Handle(const FString& Command, const JObject& Args, JObject D
     const TArray<TSharedPtr<FJsonValue>>* Operations;
     if (Recipe->Values.Num() != 1 || !Recipe->TryGetArrayField(TEXT("operations"), Operations) || Operations->Num() < 1 || Operations->Num() > 32)
         return Fail(TEXT("invalid_arguments"), TEXT("Use 1 to 32 actor operations."));
-    const TSet<FString> Allowed{TEXT("op"),TEXT("actor_path"),TEXT("class_path"),TEXT("label"),TEXT("location"),TEXT("rotation"),TEXT("scale"),TEXT("hidden")};
+    const TSet<FString> Allowed{TEXT("op"),TEXT("actor_path"),TEXT("class_path"),TEXT("label"),TEXT("location"),TEXT("rotation"),TEXT("scale"),TEXT("hidden"),TEXT("mesh_path")};
     for (const auto& Value : *Operations)
     {
         if (Value->Type != EJson::Object) return Fail(TEXT("invalid_arguments"), TEXT("Operations must be objects."));
@@ -283,6 +366,12 @@ bool FForgeActors::Handle(const FString& Command, const JObject& Args, JObject D
         FString Kind, Path, Class, Label;
         Op->TryGetStringField(TEXT("op"), Kind); Op->TryGetStringField(TEXT("actor_path"), Path);
         Op->TryGetStringField(TEXT("class_path"), Class); Op->TryGetStringField(TEXT("label"), Label);
+        FString MeshPath;
+        Op->TryGetStringField(TEXT("mesh_path"), MeshPath);
+        if (!MeshPath.IsEmpty() && (Kind != TEXT("spawn") || Class != TEXT("/Script/Engine.StaticMeshActor")))
+            return Fail(TEXT("invalid_arguments"), TEXT("mesh_path is supported only for new native StaticMeshActor placement."));
+        if (!MeshPath.IsEmpty() && !ResolveMesh(MeshPath))
+            return Fail(TEXT("asset_not_found"), TEXT("mesh_path must identify an exact loaded /Game/ static mesh within geometry limits."));
         if (Path.Len() > 512 || Class.Len() > 240 || Label.Len() > 64)
             return Fail(TEXT("invalid_arguments"), TEXT("Actor names and paths exceed their bounds."));
         FVector Location(0), Rotation(0), Scale(1);
@@ -343,6 +432,15 @@ bool FForgeActors::Handle(const FString& Command, const JObject& Args, JObject D
             Actor = World->SpawnActor<AActor>(SpawnClass(Class), FTransform(FRotator(Rotation.X,Rotation.Y,Rotation.Z),Location,Scale), Params);
             if (!Actor) { Success = false; break; }
             Created.Add(Actor); if (!Label.IsEmpty()) Actor->SetActorLabel(Label);
+            FString MeshPath;
+            Op->TryGetStringField(TEXT("mesh_path"), MeshPath);
+            if (!MeshPath.IsEmpty())
+            {
+                AStaticMeshActor* MeshActor = Cast<AStaticMeshActor>(Actor);
+                UStaticMeshComponent* Component = MeshActor ? MeshActor->GetStaticMeshComponent() : nullptr;
+                if (Component) Component->Modify();
+                if (!Component || !Component->SetStaticMesh(ResolveMesh(MeshPath))) { Success = false; break; }
+            }
         }
         else
         {

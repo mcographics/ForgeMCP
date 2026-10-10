@@ -449,3 +449,215 @@ updated, but its active Codex extension must restart before the old child proces
 be cleared. A hidden central Unreal verification process remains open as well. Close or
 restart these sessions through the application UI, then verify no process references
 the old root before recoverably removing it. No source has been pushed or deployed.
+
+## Active asset-transfer milestone: contract foundation
+
+The adopted objective and acceptance gates are recorded in
+`Documentation/Active_Development_Plan.md`. The full platform objective remains
+active, including clean installation, interactive operation, recovery, capability
+coverage, and installable packages for both adapters.
+
+`server/core/transfer.py` now defines the static-mesh transfer manifest and staged
+binary-FBX integrity verifier. It requires explicit source/target session identities,
+an absolute project identity, a bounded `/Game/` asset destination, declared units,
+bounds, counts and material slots. It rejects overwrite requests, traversal/device
+filenames, links/reparse points, oversized artifacts and checksum changes. It also
+checks file identity during reading. Integrity verification explicitly does not
+establish native geometry correctness or authorize import.
+
+Validation: all 81 Python tests passed; Ruff passed. The added transfer tests exercise
+invalid contracts, missing/changed files, incorrect format headers, file links and
+linked staging roots. No application session or scene was changed by these tests.
+The pre-existing `Config/DefaultEngine.ini` edit remains separate from this work.
+
+Native Blender export, Unreal import, placement, durable recovery and interactive
+end-to-end transfer acceptance remain outstanding. The new contract is not yet
+connected to a transfer MCP tool, and no end-to-end transfer success is claimed.
+
+## Native Blender static-mesh export stage
+
+The source now includes reviewed native FBX export in
+`blender-addon/majestic_forge/exporting.py`, authenticated export routes in the
+Blender bridge, and standalone `blender_preview_export` / `blender_apply_export`
+MCP tools. The development registry contains 25 tools. Export is a distinct stage;
+no Unreal import or complete asset-transfer capability is claimed.
+
+Previews are read-only, expire after 300 seconds, and bind to source geometry,
+attributes, material state, transform and scene units. Apply requires the reviewed
+preview ID as confirmation and consumes it once. Output paths are generated inside
+private per-session staging, existing destinations are rejected, and the source
+scene is not saved. Recovery records are persisted before export and updated
+atomically after success or failure. Unknown outcomes require inspection before
+retry. The initial exporter explicitly rejects animation, modifiers, parenting,
+constraints, shape keys and texture/group materials; those require later stages.
+
+Validated in separate Blender 5.2.2 factory-startup processes:
+
+- Native preview/apply exported and reimported an asymmetric mesh, preserving
+  dimensions, signed vertex coordinates, vertex count and material slots in a
+  Blender roundtrip. This does not establish Unreal coordinate conversion.
+  Source selection and active object were preserved. Stale geometry/UV/material/units,
+  unsupported modifiers, expired
+  previews, incorrect confirmations and replay were rejected. Cancelled export
+  retained an export-failed record. Authenticated bridge routing and argument
+  allowlists were exercised.
+- Real MCP stdio discovery and export returned a new FBX whose checksum matched the
+  native response and retained report. Replayed apply was rejected; scene-info
+  responses before and after were equal.
+- The rebuilt six-module ZIP was installed with Blender's native install operator
+  into an isolated user profile. Add-on enablement, panel-class registration and
+  bridge start/stop/disable passed. No user preferences were saved.
+
+All 81 Python tests and Ruff passed. The source installer includes the exporter;
+`scripts/package_blender_addon.py` builds a deterministic source-only ZIP and
+preserves the previous archive when its bytes change. No add-on was deployed or
+reloaded in an existing user session during this stage. Headless installation and
+registered panel classes do not establish interactive panel click-through.
+
+Unreal import, native result comparison, level placement, coordinated recovery and
+interactive end-to-end transfer acceptance remain outstanding. The complete
+platform goal remains active.
+
+### Unreal staged static-mesh import implementation
+
+The Unreal plugin now routes native `mesh_import_preview` and `mesh_import_apply`
+commands. These commands accept bounded recipes identifying the target project,
+editor session, new asset package and private staged binary FBX. Preview checks
+the file header, size and SHA256 and rejects existing destinations. Apply consumes
+the preview once, repeats validation and uses Unreal's FBX factory on the editor
+game thread. It retains an import status record and reports native mesh geometry
+and material-slot metadata. Material asset creation and actor placement are not
+implemented by this stage.
+
+These commands are in the native bridge allowlist but are not exposed as new MCP
+tools. The isolated UE 5.6 Editor target compiled and linked successfully. Existing
+application sessions have not been reloaded.
+
+After the routing changes, all 81 Python tests passed and Ruff passed. An initial
+regression run encountered one 100 ms malformed-response timeout; its focused
+connection suite and the complete rerun both passed.
+
+The server now stages validated exports into private target-project runtime storage
+and retains manifests and staging status records. Corrupted source data is rejected
+before target writes; changes while copying retain a staging-failed record. Existing
+transfer directories are never reused. All 85 Python tests passed after these additions.
+
+`scripts/verify_unreal_mesh_import.py` runs factory Blender and its own unattended
+Unreal instance, restricted to generated disposable validation hosts. Native import
+acceptance passed for an asymmetric eight-vertex/twelve-triangle mesh: signed
+coordinate conversion, meter-to-centimeter scale, bounds, material-slot names,
+static-mesh class/package identity, package save, wrong-session and unknown-field
+rejection, replay rejection, stale-checksum rejection and invalid-native-FBX rollback.
+The actor list stayed unchanged. Recovery records persisted both imported and
+rolled-back outcomes, including native FBX errors. This is headless native acceptance,
+not interactive UI verification, a full material transfer, or completed orchestration.
+
+The importer holds a Windows handle denying writes/deletion during native import
+and captures at most 32 relevant native warnings/errors, each bounded to 1,024
+characters. Blender export includes face smoothing groups. The updated six-module
+addon ZIP passed isolated native installation and enable/disable validation, and its
+previous archive was preserved under `Artifacts/Backups`.
+
+### Native static-mesh placement and MCP acceptance
+
+Actor spawn recipes now accept `mesh_path` for `/Script/Engine.StaticMeshActor`
+only. The path must identify an exact loaded `/Game/` static mesh; preview does not
+load caller-selected assets. Supported meshes are bounded to 100,000 vertices,
+200,000 triangles and 32 material slots. Fingerprints include the mesh instance,
+lighting GUID, geometry/topology and material references, plus world/current-level
+identity. Existing actor edits do not accept mesh assignment through this field.
+
+Apply binds the mesh through the native static-mesh component inside the editor
+transaction. A binding failure uses the existing created-actor rollback path.
+Actor inspection now includes the mesh reference, material asset references and
+world bounds. No level save is implied by successful placement.
+
+The isolated UE 5.6 Editor target passed after these changes. All 86 Python tests
+passed, including recipe boundary checks and real stdio schema/validation checks.
+An unattended Unreal acceptance run imported the asymmetric Blender fixture and
+then used real MCP stdio `unreal_preview_actors`, `unreal_apply_actors` and
+`unreal_inspect_actor` calls to place and inspect it. Verified native location,
+rotation, nonuniform scale, world bounds, mesh reference and material-reference
+count matched expectations. Preview did not change actors; replay was rejected.
+The run retained `acceptance.json`, `native-result.json` and `placement-result.json`
+under its isolated `Saved/MeshImportAcceptance-*` directory. The record explicitly
+states `interactive: false`, `level_saved: false` and
+`material_assets_transferred: false`.
+
+This acceptance also caught and fixed a diagnostic-capture race: Unreal's dedicated
+logging thread could still have queued import errors when the recovery report was
+written. Diagnostic capture now flushes before attaching and before collecting its
+bounded results. The rebuilt native test required an actual FBX error in the
+invalid-input rollback report and passed.
+
+Full material transfer, durable production placement/recovery coordination,
+general transform/unit acceptance, saved-level/reopen acceptance and visible
+interactive workflows remain outstanding. Existing user sessions were left running;
+the isolated validation processes were closed after testing.
+
+### Constant-PBR material transfer
+
+Blender export slots now include an explicit transfer-surface classification.
+Supported opaque constant Principled surfaces retain scene-linear base color,
+roughness, metallic and sidedness. Procedural/linked graphs, transparency,
+non-default advanced BSDF features, animated surfaces and out-of-range constants
+are classified as unsupported. Standalone geometry export may retain that
+classification, but material-transfer staging rejects unsupported/missing profiles
+before writing target files.
+
+Unreal staged import accepts bounded material definitions with generated new
+package destinations. It rejects existing material packages, verifies imported
+slot names/counts, creates native Default Lit constant graphs, assigns them to the
+mesh and records per-material save results. Planned mesh/material destinations
+are persisted before native import. Materials save before the mesh; any material
+save failure produces a partial outcome and prevents mesh save. Save-failure
+recovery remains a required acceptance case, not proven by the successful run.
+
+The isolated UE 5.6 Editor build passed. All 94 Python tests and Ruff passed.
+Factory Blender 5.2.2 profile checks passed for active shader constants, sidedness,
+unsupported advanced BSDF settings, transparency, linked/procedural graphs and
+animation. The test confirmed that this Blender version keeps node shading active
+despite the deprecated `use_nodes=False` setter: viewport properties must not
+replace the active shader values. A legacy non-node branch is implemented but is
+not claimed as exercised in this Blender version.
+
+Native acceptance exported a non-default Principled material and verified the
+created Unreal graph's base color, roughness, metallic, sidedness and package save.
+Real MCP placement/inspection verified that the actor referenced the generated
+material. The acceptance record now distinguishes material assets transferred
+from shader compilation and visual equivalence, which remain unverified. The
+Blender add-on ZIP was rebuilt with these classifications, preserving its previous
+archive. Clean ZIP installation/enable/disable and real MCP native export checks
+passed. Existing application sessions were not reloaded or replaced.
+
+The complete goal remains active: end-to-end MCP orchestration and durable recovery,
+material save-failure acceptance, broader transforms/units, saved-level reopening,
+interactive workflows, advanced materials/textures, rigs/animation, clean Unreal
+packaging and full capability acceptance still require work.
+
+### Transfer coordinator persistence foundation
+
+`server/core/workflow_journal.py` adds private per-operation receipts for ordered
+export, staging, import, verification and optional placement. Record updates use
+an actual OS file lock, expected-revision checks, fsynced temporary data and atomic
+replacement. Existing operation IDs cannot be reused and terminal outcomes cannot
+be replayed through the transition API. Linked/reparse paths and hardlinked record
+files are rejected. Known credential fields and bounded-data violations are
+rejected before storage.
+
+`forge_inspect_transfer` is a new read-only MCP tool, bringing the current source
+registry to 26 tools. It reports retained evidence without treating that evidence
+as a current application-state check. An unfinished native intent becomes
+`outcome_unknown` after restart; no automatic native replay is allowed. The
+coordinator still needs native reconciliation and the connected preview/apply
+pipeline. A successful receipt-store test does not establish recovery of native
+application assets.
+
+All 112 Python tests and Ruff passed. New checks exercised ordered completion,
+terminal/replay rejection, stale revision rejection, active-versus-restarted
+inspection, partial/failed/unknown/rolled-back receipts, injected write failure,
+credential/size/path rejection, actual lock contention and lock release when a
+separate process exits without releasing its handle. Real MCP stdio discovery and
+receipt inspection, missing-record handling and input-path rejection also passed.
+No native plugin/add-on source changed in this step, and no application session was
+reloaded or replaced.
