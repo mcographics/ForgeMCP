@@ -23,6 +23,8 @@ from majestic_forge import transfer_ui
 root = Path(os.environ["FORGE_PANEL_TEST_ROOT"])
 majestic_forge.register()
 assert transfer_ui.MAJESTICFORGE_PT_Transfer.is_registered
+assert transfer_ui.MAJESTICFORGE_OT_ExportToUnreal.bl_label == "Send to Unreal"
+assert transfer_ui.MAJESTICFORGE_OT_ConfirmTransfer.bl_label == "Confirm Send to Unreal"
 settings = bpy.context.window_manager.forge_transfer
 settings.project_root = os.environ["FORGE_REPOSITORY"]
 settings.target_session = os.environ["FORGE_PANEL_TARGET"]
@@ -76,7 +78,7 @@ async def verify(args):
     repository = Path(__file__).resolve().parents[1]
     project = args.project.resolve(strict=True)
     relative = project.relative_to(repository / "Saved")
-    if not relative.parts[0].startswith("TransferImportValidation-") or relative.parts[1:] != ("HostProject", "ForgeMCPDev.uproject"):
+    if not relative.parts[0].startswith(("TransferImportValidation-", "RoundtripValidation-")) or relative.parts[1:] != ("HostProject", "ForgeMCPDev.uproject"):
         raise ValueError("Only the generated disposable host is allowed")
     root = project.parent / "Saved" / ("PanelAcceptance-" + uuid.uuid4().hex)
     root.mkdir(parents=True)

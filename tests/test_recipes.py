@@ -1,7 +1,102 @@
 import pytest
 from pydantic import ValidationError
 
-from server.core.recipes import ActorRecipe, BlueprintEditRecipe, BlueprintRecipe, SceneRecipe
+from server.core.recipes import (
+    ActorRecipe,
+    BlueprintEditRecipe,
+    BlueprintRecipe,
+    CsvImportPreviewRequest,
+    DataAssetCreateRequest,
+    DataAssetPropertyEditRequest,
+    SceneRecipe,
+    StructTooltipsPreviewRequest,
+)
+
+
+def test_data_asset_create_request_is_exact_and_bounded():
+    request = DataAssetCreateRequest(
+        asset_path="/Game/Forge/DA_Weapon",
+        class_path="/Script/Engine.PrimaryAssetLabel",
+        properties=[{"name": "bIsRuntimeLabel", "value": "true"}],
+        save=True,
+    )
+    assert request.properties[0].value == "true" and request.save
+    invalid = [
+        {"asset_path": "/Engine/DA_Weapon", "class_path": "/Script/Engine.PrimaryAssetLabel"},
+        {"asset_path": "/Game/DA_Weapon.DA_Weapon", "class_path": "/Script/Engine.PrimaryAssetLabel"},
+        {"asset_path": "/Game/DA_Weapon", "class_path": "/Script/Engine"},
+        {"asset_path": "/Game/DA_Weapon", "class_path": "/Script/Engine.PrimaryAssetLabel",
+         "properties": [{"name": "bIsRuntimeLabel", "value": "true"},
+                        {"name": "bIsRuntimeLabel", "value": "false"}]},
+        {"asset_path": "/Game/DA_Weapon", "class_path": "/Script/Engine.PrimaryAssetLabel", "save": "true"},
+        {"asset_path": "/Game/DA_Weapon", "class_path": "/Script/Engine.PrimaryAssetLabel",
+         "properties": [{"name": "bIsRuntimeLabel", "value": True}]},
+    ]
+    for values in invalid:
+        with pytest.raises(ValidationError):
+            DataAssetCreateRequest(**values)
+
+
+def test_csv_import_preview_is_project_asset_scoped_and_typed():
+    request = CsvImportPreviewRequest(
+        csv_path=r"G:\COSMOS\Dataset\bodies.csv",
+        struct_path="/Game/Space/Blueprints/ST_CelestialBodyData",
+        data_table_path="/Game/Data/DT_CelestialBodies",
+        row_key_column="id",
+        type_overrides={"hip": "string", "mass_kg": "double"},
+    )
+    assert request.row_key_column == "id"
+    assert request.type_overrides["hip"] == "string"
+    invalid = [
+        {"csv_path": "x.csv", "struct_path": "/Engine/ST_X", "data_table_path": "/Game/DT_X", "row_key_column": "id"},
+        {"csv_path": "x.csv", "struct_path": "/Game/ST_X.Other", "data_table_path": "/Game/DT_X", "row_key_column": "id"},
+        {"csv_path": "x.csv", "struct_path": "/Game/ST_X", "data_table_path": "/Game/DT_X", "row_key_column": "id", "extra": True},
+        {"csv_path": "x.csv", "struct_path": "/Game/ST_X", "data_table_path": "/Game/DT_X", "row_key_column": "id", "type_overrides": {"mass": "object"}},
+    ]
+    for values in invalid:
+        with pytest.raises(ValidationError):
+            CsvImportPreviewRequest(**values)
+
+
+def test_struct_tooltip_preview_request_is_bounded_and_exact():
+    request = StructTooltipsPreviewRequest(
+        struct_path="/Game/Space/Blueprints/ST_CelestialBodyData",
+        tooltips={"ra": "Right ascension in hours.", "mean_radius_km": "Mean radius in kilometers."},
+    )
+    assert len(request.tooltips) == 2
+    invalid = [
+        {"struct_path": "/Engine/ST_X", "tooltips": {"ra": "Right ascension."}},
+        {"struct_path": "/Game/ST_X.X", "tooltips": {"ra": "Right ascension."}},
+        {"struct_path": "/Game/ST_X", "tooltips": {}},
+        {"struct_path": "/Game/ST_X", "tooltips": {"../ra": "Right ascension."}},
+        {"struct_path": "/Game/ST_X", "tooltips": {"ra": "x" * 1025}},
+        {"struct_path": "/Game/ST_X", "tooltips": {"ra": "Right ascension."}, "extra": True},
+    ]
+    for values in invalid:
+        with pytest.raises(ValidationError):
+            StructTooltipsPreviewRequest(**values)
+
+
+def test_data_asset_property_edit_request_is_bounded_and_exact():
+    request = DataAssetPropertyEditRequest(
+        asset_path="/Game/Items/DA_Weapon.DA_Weapon",
+        properties=[{"name": "bIsRuntimeLabel", "value": "true"},
+                    {"name": "bIsEditorOnly", "value": "false"}],
+        save=True,
+    )
+    assert len(request.properties) == 2 and request.save
+    invalid = [
+        {"asset_path": "/Engine/DA_Weapon", "properties": [{"name": "b", "value": "true"}]},
+        {"asset_path": "/Game/Items/DA_Weapon.Other", "properties": [{"name": "b", "value": "true"}]},
+        {"asset_path": "/Game/DA_Weapon", "properties": []},
+        {"asset_path": "/Game/DA_Weapon", "properties": [{"name": "b", "value": "true"},
+                                                             {"name": "B", "value": "false"}]},
+        {"asset_path": "/Game/DA_Weapon", "properties": [{"name": "../b", "value": "true"}]},
+        {"asset_path": "/Game/DA_Weapon", "properties": [{"name": "b", "value": "true"}], "save": "true"},
+    ]
+    for values in invalid:
+        with pytest.raises(ValidationError):
+            DataAssetPropertyEditRequest(**values)
 
 
 def test_actor_mesh_placement_requires_exact_native_mesh_object_path():
@@ -29,6 +124,24 @@ def test_actor_mesh_placement_requires_exact_native_mesh_object_path():
         }])
 
 
+def test_actor_tags_are_bounded_unique_and_spawn_only():
+    recipe = ActorRecipe(operations=[{
+        "op": "spawn", "class_path": "/Script/Engine.PointLight",
+        "tags": ["ForgeProbe", "Rendering"],
+    }])
+    assert recipe.operations[0].tags == ["ForgeProbe", "Rendering"]
+    invalid = [
+        {"op": "transform", "actor_path": "Existing", "tags": ["ForgeProbe"]},
+        {"op": "spawn", "class_path": "/Script/Engine.PointLight", "tags": ["ForgeProbe", "forgeprobe"]},
+        {"op": "spawn", "class_path": "/Script/Engine.PointLight", "tags": [" ForgeProbe"]},
+        {"op": "spawn", "class_path": "/Script/Engine.PointLight", "tags": ["x" * 129]},
+        {"op": "spawn", "class_path": "/Script/Engine.PointLight", "tags": [f"Tag{i}" for i in range(17)]},
+    ]
+    for operation in invalid:
+        with pytest.raises(ValidationError):
+            ActorRecipe(operations=[operation])
+
+
 @pytest.mark.parametrize(
     "path", ["/Engine/BP", "/Game/../BP", "/Game/BP.BP", "C:/file", "/Game/Bad Name"]
 )
@@ -46,6 +159,155 @@ def test_recipe_rejects_arbitrary_script_and_unbounded_numbers():
         SceneRecipe(
             operations=[{"op": "set_transform", "name": "x", "location": [float("nan"), 0, 0]}]
         )
+
+
+def test_scene_recipe_supports_only_bounded_reviewed_modifier_operations():
+    recipe = SceneRecipe(operations=[
+        {"op": "add_modifier", "name": "Cube", "modifier_type": "SUBSURF",
+         "modifier_name": "ForgeMCPSubdivision", "modifier_settings": {"levels": 2}},
+        {"op": "set_modifier_settings", "name": "Cube", "modifier_name": "ExistingBevel",
+         "modifier_settings": {"segments": 4}},
+    ])
+    assert recipe.operations[0].modifier_settings == {"levels": 2}
+    assert recipe.operations[1].modifier_settings == {"segments": 4}
+    for bad in (
+        {"op": "add_modifier", "name": "Cube", "modifier_name": "Sub"},
+        {"op": "add_modifier", "name": "Cube", "modifier_type": "NODES", "modifier_name": "Custom"},
+        {"op": "add_modifier", "name": "Cube", "modifier_type": "SUBSURF", "modifier_name": "Bad Name"},
+        {"op": "set_modifier_settings", "name": "Cube", "modifier_name": "ExistingBevel"},
+        {"op": "set_modifier_settings", "name": "Cube", "modifier_settings": {"segments": 4}},
+        {"op": "set_transform", "name": "Cube", "modifier_type": "SUBSURF", "modifier_name": "Sub"},
+    ):
+        with pytest.raises(ValidationError):
+            SceneRecipe(operations=[bad])
+
+
+def test_scene_recipe_accepts_bounded_mesh_topology_replacement_only():
+    operation = {
+        "op": "set_mesh_geometry", "name": "EditableMesh",
+        "vertices": [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]],
+        "faces": [[0, 1, 2], [0, 2, 3]],
+    }
+    recipe = SceneRecipe(operations=[operation])
+    assert recipe.operations[0].op == "set_mesh_geometry"
+    assert recipe.operations[0].faces == [[0, 1, 2], [0, 2, 3]]
+    for invalid in (
+        {**operation, "faces": [[0, 1, 4]]},
+        {**operation, "faces": [[0, 0, 1]]},
+        {**operation, "vertices": [[0, 0, 0]] * 513, "faces": []},
+        {**operation, "faces": [[True, 1, 2]]},
+    ):
+        with pytest.raises(ValidationError):
+            SceneRecipe(operations=[invalid])
+
+
+def test_scene_recipe_accepts_bounded_uv_loop_edits_only():
+    operation = {
+        "op": "set_uv_coordinates", "name": "EditableMesh",
+        "uv_layer": "UVMap", "uv_start": 2,
+        "uv_values": [[0.25, 0.5], [-0.1, 1.2]],
+    }
+    recipe = SceneRecipe(operations=[operation])
+    assert recipe.operations[0].uv_values == [[0.25, 0.5], [-0.1, 1.2]]
+    for invalid in (
+        {**operation, "uv_values": [[1.0]]},
+        {**operation, "uv_values": [[1.0, float("inf")]]},
+        {**operation, "uv_values": [[1.0, 1.0]] * 513},
+        {"op": "set_transform", "name": "EditableMesh", "uv_layer": "UVMap"},
+    ):
+        with pytest.raises(ValidationError):
+            SceneRecipe(operations=[invalid])
+
+
+def test_scene_recipe_accepts_bounded_uv_layer_creation():
+    recipe = SceneRecipe(operations=[{
+        "op": "create_uv_layer", "name": "EditableMesh", "uv_layer": "Lightmap UV",
+        "uv_values": [[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]],
+    }])
+    assert recipe.operations[0].op == "create_uv_layer"
+    assert SceneRecipe(operations=[{
+        "op": "create_uv_layer", "name": "EditableMesh", "uv_layer": "UVMap",
+    }]).operations[0].uv_values == []
+    for invalid in (
+        {"op": "create_uv_layer", "name": "EditableMesh"},
+        {"op": "create_uv_layer", "name": "EditableMesh", "uv_layer": "UVMap", "uv_start": 1},
+        {"op": "create_uv_layer", "name": "EditableMesh", "uv_layer": "UVMap", "uv_values": [[0, 0]] * 513},
+        {"op": "set_transform", "name": "EditableMesh", "uv_layer": "UVMap"},
+    ):
+        with pytest.raises(ValidationError):
+            SceneRecipe(operations=[invalid])
+
+
+def test_scene_recipe_accepts_bounded_smart_uv_projection():
+    recipe = SceneRecipe(operations=[{
+        "op": "smart_uv_project", "name": "EditableMesh", "uv_layer": "GeneratedUV",
+        "uv_angle_limit": 1.0, "uv_island_margin": 0.025,
+    }])
+    assert recipe.operations[0].uv_angle_limit == 1.0
+    assert recipe.operations[0].uv_island_margin == 0.025
+    assert SceneRecipe(operations=[{
+        "op": "smart_uv_project", "name": "EditableMesh", "uv_layer": "UVMap",
+    }]).operations[0].uv_angle_limit > 0
+    for invalid in (
+        {"op": "smart_uv_project", "name": "EditableMesh"},
+        {"op": "smart_uv_project", "name": "EditableMesh", "uv_layer": "UVMap", "uv_angle_limit": 2.0},
+        {"op": "smart_uv_project", "name": "EditableMesh", "uv_layer": "UVMap", "uv_island_margin": 0.6},
+        {"op": "smart_uv_project", "name": "EditableMesh", "uv_layer": "UVMap", "uv_values": [[0, 0]]},
+        {"op": "set_transform", "name": "EditableMesh", "uv_angle_limit": 0.5},
+    ):
+        with pytest.raises(ValidationError):
+            SceneRecipe(operations=[invalid])
+
+
+def test_scene_recipe_accepts_bounded_seam_aware_uv_unwrap():
+    recipe = SceneRecipe(operations=[{
+        "op": "unwrap_uv", "name": "EditableMesh", "uv_layer": "UVMap",
+        "uv_unwrap_method": "CONFORMAL", "uv_margin": 0.015,
+    }])
+    assert recipe.operations[0].uv_unwrap_method == "CONFORMAL"
+    assert recipe.operations[0].uv_margin == 0.015
+    assert SceneRecipe(operations=[{
+        "op": "unwrap_uv", "name": "EditableMesh", "uv_layer": "UVMap",
+    }]).operations[0].uv_unwrap_method == "ANGLE_BASED"
+    for invalid in (
+        {"op": "unwrap_uv", "name": "EditableMesh"},
+        {"op": "unwrap_uv", "name": "EditableMesh", "uv_layer": "UVMap", "uv_unwrap_method": "SMART"},
+        {"op": "unwrap_uv", "name": "EditableMesh", "uv_layer": "UVMap", "uv_margin": 0.6},
+        {"op": "unwrap_uv", "name": "EditableMesh", "uv_layer": "UVMap", "uv_values": [[0, 0]]},
+        {"op": "smart_uv_project", "name": "EditableMesh", "uv_layer": "UVMap", "uv_margin": 0.01},
+    ):
+        with pytest.raises(ValidationError):
+            SceneRecipe(operations=[invalid])
+
+
+def test_scene_recipe_accepts_bounded_uv_island_packing():
+    recipe = SceneRecipe(operations=[{
+        "op": "pack_uv_islands", "name": "EditableMesh", "uv_layer": "UVMap", "uv_margin": 0.02,
+    }])
+    assert recipe.operations[0].uv_margin == 0.02
+    for invalid in (
+        {"op": "pack_uv_islands", "name": "EditableMesh"},
+        {"op": "pack_uv_islands", "name": "EditableMesh", "uv_layer": "UVMap", "uv_margin": 0.6},
+        {"op": "pack_uv_islands", "name": "EditableMesh", "uv_layer": "UVMap", "uv_values": [[0, 0]]},
+    ):
+        with pytest.raises(ValidationError):
+            SceneRecipe(operations=[invalid])
+
+
+def test_scene_recipe_accepts_bounded_mesh_seam_edits():
+    recipe = SceneRecipe(operations=[{
+        "op": "set_mesh_edge_seams", "name": "EditableMesh",
+        "edge_seams": [{"index": 0, "seam": True}, {"index": 7, "seam": False}],
+    }])
+    assert [item.index for item in recipe.operations[0].edge_seams] == [0, 7]
+    for invalid in (
+        {"op": "set_mesh_edge_seams", "name": "EditableMesh"},
+        {"op": "set_mesh_edge_seams", "name": "EditableMesh", "edge_seams": [{"index": 0, "seam": 1}]},
+        {"op": "set_mesh_edge_seams", "name": "EditableMesh", "edge_seams": [{"index": 0, "seam": True}] * 2},
+        {"op": "set_transform", "name": "EditableMesh", "edge_seams": [{"index": 0, "seam": True}]},
+    ):
+        with pytest.raises(ValidationError):
+            SceneRecipe(operations=[invalid])
 
 
 def test_scene_recipe_supports_typed_pose_bone_keyframes_and_rejects_invalid_rotations():
@@ -93,6 +355,28 @@ def test_scene_recipe_supports_typed_pose_bone_keyframes_and_rejects_invalid_rot
             "data_path": "scale",
             "value": [1.0, 0.0, 1.0],
         }])
+
+
+def test_scene_recipe_supports_bounded_existing_action_key_edits():
+    edited = SceneRecipe(operations=[{
+        "op": "set_keyframe", "name": "AnimatedMesh", "curve_index": 2,
+        "keyframe_index": 1, "key_frame": 9.5, "key_value": -12.25,
+    }]).operations[0]
+    assert edited.curve_index == 2 and edited.keyframe_index == 1
+    assert edited.key_frame == 9.5 and edited.key_value == -12.25
+
+    for invalid in (
+        {"op": "set_keyframe", "name": "AnimatedMesh", "curve_index": 0,
+         "keyframe_index": 0, "key_frame": 1.0},
+        {"op": "set_keyframe", "name": "AnimatedMesh", "curve_index": -1,
+         "keyframe_index": 0, "key_frame": 1.0, "key_value": 0.0},
+        {"op": "set_keyframe", "name": "AnimatedMesh", "curve_index": 0,
+         "keyframe_index": 0, "key_frame": 1.0, "key_value": 0.0,
+         "frame": 2},
+        {"op": "keyframe", "name": "AnimatedMesh", "curve_index": 0},
+    ):
+        with pytest.raises(ValidationError):
+            SceneRecipe(operations=[invalid])
 
 
 def test_scene_recipe_accepts_bounded_armature_bones_and_parenting():
@@ -155,6 +439,70 @@ def test_shader_recipes_reject_script_nodes_and_unbounded_defaults():
             {"id": "surface", "type": "ShaderNodeBsdfPrincipled",
              "inputs": {"Metallic": float("inf")}}
         ]}])
+
+
+def test_existing_material_graph_edits_are_additive_and_bounded():
+    recipe = SceneRecipe(operations=[{
+        "op": "edit_material_graph",
+        "name": "Existing Material",
+        "shader_nodes": [{
+            "id": "ForgeRoughness",
+            "type": "ShaderNodeValue",
+            "outputs": {"Value": 0.35},
+        }],
+        "shader_links": [{
+            "from_node": "ForgeRoughness", "from_socket": "Value",
+            "to_node": "Principled BSDF", "to_socket": "Roughness",
+        }],
+    }])
+    assert recipe.operations[0].shader_links[0].to_node == "Principled BSDF"
+
+    existing_only = SceneRecipe(operations=[{
+        "op": "edit_material_graph",
+        "name": "Existing Material",
+        "shader_links": [{
+            "from_node": "Noise Texture", "from_socket": "Fac",
+            "to_node": "Math", "to_socket": "Value",
+        }],
+    }])
+    assert not existing_only.operations[0].shader_nodes
+
+    edited = SceneRecipe(operations=[{
+        "op": "edit_material_graph", "name": "Existing Material",
+        "shader_node_edits": [{
+            "id": "Noise Texture", "x": 280, "y": -120,
+            "inputs": {"Scale": 3.25},
+        }],
+    }])
+    assert edited.operations[0].shader_node_edits[0].inputs["Scale"] == 3.25
+
+
+def test_existing_material_graph_edit_rejects_unsafe_recipes():
+    valid_link = {"from_node": "Node", "from_socket": "Value",
+                  "to_node": "Principled BSDF", "to_socket": "Roughness"}
+    invalid_recipes = [
+        {"op": "edit_material_graph", "name": "Material"},
+        {"op": "edit_material_graph", "name": "Material", "shader_nodes": [
+            {"id": "Output", "type": "ShaderNodeOutputMaterial"}]},
+        {"op": "edit_material_graph", "name": "Material", "shader_nodes": [
+            {"id": "Node", "type": "ShaderNodeScript"}]},
+        {"op": "edit_material_graph", "name": "Material", "shader_nodes": [
+            {"id": "Node", "type": "ShaderNodeValue"}], "shader_links": [
+            valid_link, valid_link]},
+        {"op": "set_transform", "name": "Object", "shader_nodes": [
+            {"id": "Node", "type": "ShaderNodeValue"}]},
+        {"op": "edit_material_graph", "name": "Material", "shader_node_edits": [
+            {"id": "Math"}]},
+        {"op": "edit_material_graph", "name": "Material", "shader_node_edits": [
+            {"id": "Math", "x": 100001}]},
+        {"op": "edit_material_graph", "name": "Material", "shader_node_edits": [
+            {"id": "Math", "blend_type": "INVALID"}]},
+        {"op": "set_transform", "name": "Object", "shader_node_edits": [
+            {"id": "Math", "x": 10}]},
+    ]
+    for operation in invalid_recipes:
+        with pytest.raises(ValidationError):
+            SceneRecipe(operations=[operation])
 
 
 @pytest.mark.parametrize("operation", [
@@ -368,11 +716,38 @@ def test_blueprint_function_signatures_reject_conflicts_and_unsafe_graph_referen
              "graph": "MissingFunction"},
         ])
 
-    with pytest.raises(ValidationError, match="only in new Blueprint recipes"):
+    with pytest.raises(ValidationError, match="function added in this edit"):
         BlueprintEditRecipe(asset_path="/Game/Existing", nodes=[
             {"id": "entry", "kind": "function_entry", "name": "Entry",
              "graph": "Compute"},
         ])
+
+
+def test_existing_blueprint_edit_accepts_new_typed_function_signatures():
+    recipe = BlueprintEditRecipe(asset_path="/Game/Existing", functions=[{
+        "name": "Compute",
+        "inputs": [{"name": "Value", "type": "float"}],
+        "outputs": [{"name": "Result", "type": "float"}],
+        "pure": True,
+    }], nodes=[
+        {"id": "entry", "kind": "function_entry", "name": "Entry", "graph": "Compute"},
+        {"id": "return", "kind": "function_result", "name": "Return", "graph": "Compute"},
+    ], connections=[{
+        "graph": "Compute", "from_node": "entry", "from_pin": "Value",
+        "to_node": "return", "to_pin": "Result",
+    }])
+    assert recipe.functions[0].name == "Compute"
+    assert len(recipe.nodes) == 2 and len(recipe.connections) == 1
+
+    with pytest.raises(ValidationError, match="Function names must be unique"):
+        BlueprintEditRecipe(asset_path="/Game/Existing", functions=[
+            {"name": "Compute"}, {"name": "compute"},
+        ])
+
+    with pytest.raises(ValidationError, match="conflict with new variables"):
+        BlueprintEditRecipe(asset_path="/Game/Existing", variables=[{
+            "name": "Compute", "type": "float",
+        }], functions=[{"name": "Compute"}])
 
 
 def test_blueprint_function_signatures_are_bounded_and_typed():

@@ -8,7 +8,9 @@ Native export/import and post-import verification remain separate operations.
 import hashlib
 import json
 import os
+import re
 import stat
+import uuid
 from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Annotated, Literal
 
@@ -55,6 +57,7 @@ class StaticMeshTransferManifest(TransferModel):
     asset_kind: Literal["static_mesh"] = "static_mesh"
     format: Literal["fbx_binary"] = "fbx_binary"
     transfer_id: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")]
+    binding_id: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")] = Field(default_factory=lambda: uuid.uuid4().hex)
     source_session_id: Annotated[str, Field(pattern=r"^blender-[1-9][0-9]{0,9}$")]
     target_session_id: Annotated[str, Field(pattern=r"^unreal-[1-9][0-9]{0,9}$")]
     source_object: Annotated[str, Field(min_length=1, max_length=128)]
@@ -199,7 +202,9 @@ def verify_staged_artifact(staging_root: Path, manifest: StaticMeshTransferManif
 
 def stage_unreal_artifact(
     source_root: Path, manifest: StaticMeshTransferManifest, *, save: bool = False,
-    transfer_materials: bool = False,
+    transfer_materials: bool = False, replace_existing: bool = False,
+    expected_source_baseline_sha256: str | None = None,
+    expected_target_revision_sha256: str | None = None,
 ) -> dict:
     """Copy a verified export to its explicit target project without importing it.
 
@@ -207,8 +212,14 @@ def stage_unreal_artifact(
     applying an import. The manifest alone is not application authorization.
     Existing transfers are never reused, even after a failed attempt.
     """
-    if type(save) is not bool or type(transfer_materials) is not bool:
+    if type(save) is not bool or type(transfer_materials) is not bool or type(replace_existing) is not bool:
         raise TransferArtifactError("Save and material-transfer policies must be Booleans")
+    if replace_existing and (not save or transfer_materials or
+            not isinstance(expected_source_baseline_sha256, str) or
+            not re.fullmatch(r"[0-9a-f]{64}", expected_source_baseline_sha256) or
+            not isinstance(expected_target_revision_sha256, str) or
+            not re.fullmatch(r"[0-9a-f]{64}", expected_target_revision_sha256)):
+        raise TransferArtifactError("Replacement requires saving, no generated materials and exact reviewed binding revisions")
     definitions = []
     if transfer_materials:
         folder = manifest.target_asset_path.rsplit("/", 1)[0]
@@ -314,6 +325,8 @@ def stage_unreal_artifact(
         raise TransferArtifactError("Staging outcome unknown; inspect retained transfer before retrying") from error
     recipe = {
         "transfer_id": manifest.transfer_id,
+        "binding_id": manifest.binding_id,
+        "source_snapshot_sha256": manifest.source_snapshot_sha256,
         "artifact_sha256": manifest.artifact_sha256,
         "artifact_bytes": manifest.artifact_bytes,
         "asset_path": manifest.target_asset_path,
@@ -321,6 +334,11 @@ def stage_unreal_artifact(
         "target_session_id": manifest.target_session_id,
         "save": save,
     }
+    if replace_existing:
+        recipe.update(replace_existing=True,
+            expected_source_baseline_sha256=expected_source_baseline_sha256,
+            expected_target_revision_sha256=expected_target_revision_sha256,
+            material_slot_names=[slot.name for slot in manifest.materials])
     if transfer_materials:
         recipe["material_definitions"] = definitions
     return recipe

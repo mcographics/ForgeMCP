@@ -22,7 +22,8 @@ MAX_RECORD_BYTES = 256 * 1024
 STAGES = ("export", "staging", "import", "verification", "placement")
 RECOVERY_STAGES = STAGES[1:4]
 LEVEL_STAGES = ("level_save",)
-ALL_STAGES = STAGES + LEVEL_STAGES
+LEVEL_CREATE_STAGES = ("level_create",)
+ALL_STAGES = STAGES + LEVEL_STAGES + LEVEL_CREATE_STAGES
 TERMINAL = {"completed", "failed", "partial", "outcome_unknown", "rolled_back"}
 
 
@@ -143,7 +144,9 @@ class WorkflowJournal:
 
     def create(self, operation_id, plan, *, stages=STAGES):
         directory = self._directory(operation_id)
-        if not isinstance(plan, dict) or tuple(stages) not in (STAGES, STAGES[:-1], RECOVERY_STAGES, LEVEL_STAGES):
+        if not isinstance(plan, dict) or tuple(stages) not in (
+            STAGES, STAGES[:-1], RECOVERY_STAGES, LEVEL_STAGES, LEVEL_CREATE_STAGES,
+        ):
             raise JournalError("invalid_plan")
         timestamp = _now()
         record = {
@@ -190,7 +193,10 @@ class WorkflowJournal:
             or record["operation_id"] != operation_id
             or type(record["revision"]) is not int or not 0 <= record["revision"] <= 64
             or not isinstance(record["state"], str) or record["state"] not in {"prepared", "running", *TERMINAL}
-            or record["planned_stages"] not in (list(STAGES), list(STAGES[:-1]), list(RECOVERY_STAGES), list(LEVEL_STAGES))
+            or record["planned_stages"] not in (
+                list(STAGES), list(STAGES[:-1]), list(RECOVERY_STAGES),
+                list(LEVEL_STAGES), list(LEVEL_CREATE_STAGES),
+            )
             or not isinstance(record["completed_stages"], list)
             or record["completed_stages"] != record["planned_stages"][:len(record["completed_stages"])]
             or record["active_stage"] not in (None, *ALL_STAGES)

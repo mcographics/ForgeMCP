@@ -1,5 +1,7 @@
 # Installation from source
 
+For the UE 5.6.1 Win64 engine-wide alpha, see [UE 5.6 alpha](UE56_Alpha.md).
+
 ForgeMCP's integration is free. Python 3.11+, Unreal Engine and Blender must be
 installed separately. Validated native development versions are Windows, Unreal
 5.6.1 and Blender 5.2.2; this is not a claim of compatibility with every version.
@@ -7,6 +9,14 @@ The core has no paid API or cloud-service requirement. Your chosen MCP client ha
 its own installation, account and pricing terms.
 
 ## External MCP server
+
+Current component versions: server source **0.3.11**, Blender add-on
+**0.2.35-alpha.6** (Blender numeric metadata **0.2.35**). After updating
+source/installing the Blender add-on, save open scene
+work and reload Blender's add-on (or restart Blender), then restart the MCP server
+connection in the client so its tool registry refreshes. Verify both versions and
+the nine tools described in [Blender creative automation](Blender_Creative_Automation.md).
+Copying installed files does not refresh a running Python module or MCP process.
 
 Clone this repository into a directory of your choice, then run:
 
@@ -17,20 +27,24 @@ python -m venv .venv
 
 Configure your MCP client to launch the absolute path to `.venv\Scripts\python.exe`
 with arguments `-m server.main` and this checkout as its working directory.
-Set `FORGE_PROJECT_ROOT` to the checkout. Set `FORGE_UNREAL_SESSION_DIR` to your
-Unreal project's `Saved\MajesticForge` directory. The Blender adapter advertises
-sessions in `%LOCALAPPDATA%\MajesticForge\sessions` by default; override this with
-`FORGE_BLENDER_SESSION_DIR` when deliberately using a separate private session root.
-Never upload those registration files: they contain credentials.
+Set `FORGE_PROJECT_ROOT` to the checkout. The engine-wide Unreal plugin and Blender
+add-on register live sessions in `%LOCALAPPDATA%\MajesticForge\sessions`, allowing
+the MCP server to discover whichever applications are currently running without
+binding discovery to an Unreal project or the last project opened. Use
+`FORGE_SESSION_DIR` only when deliberately choosing a shared private session root;
+app-specific `FORGE_UNREAL_SESSION_DIR` and `FORGE_BLENDER_SESSION_DIR` overrides
+remain available for isolated tests and deployments. Never upload registration
+files: they contain credentials.
 
-For Codex, `scripts/configure_codex.py` creates a local configuration. Add the
-explicit Unreal session-directory override to its MCP environment when the Unreal
-project is outside the checkout. Other MCP clients can use the same stdio command.
+For Codex, `scripts/configure_codex.py` creates a local configuration. Do not set a
+project-specific Unreal session-directory override for engine-wide use. Other MCP
+clients can use the same stdio command.
 
 ## Unreal plugin
 
-Copy `Plugins/MajesticForge` into your own project's `Plugins` directory. Keep its
-internal folder/module names. Build the project using Unreal's supported C++
+Copy `Plugins/Forge` into your own project's `Plugins` directory. The directory is
+named `Forge`; keep the `MajesticForge.uplugin` descriptor filename and internal
+module IDs for compatibility. Build the project using Unreal's supported C++
 toolchain; source-only clones do not include compiled DLLs. Enable **ForgeMCP** in
 **Edit > Plugins** and open **Window > ForgeMCP**. Save and close the relevant editor
 before replacing a loaded plugin. Unreal Engine's own license still applies.
@@ -40,7 +54,7 @@ own C++ project (set the engine path to your installation):
 
 ```powershell
 $EngineRoot = 'C:\Program Files\Epic Games\UE_5.6'
-& "$EngineRoot\Engine\Build\BatchFiles\RunUAT.bat" BuildPlugin "-Plugin=$PWD\Plugins\MajesticForge\MajesticForge.uplugin" "-Package=$PWD\Artifacts\UnrealPlugin" -TargetPlatforms=Win64
+& "$EngineRoot\Engine\Build\BatchFiles\RunUAT.bat" BuildPlugin "-Plugin=$PWD\Plugins\Forge\MajesticForge.uplugin" "-Package=$PWD\Artifacts\UnrealPlugin" -TargetPlatforms=Win64
 ```
 
 This invokes Unreal's native build tooling and requires its supported compiler.
@@ -71,7 +85,7 @@ In Blender, use **Preferences > Add-ons > Install from Disk**, select the genera
 3D Viewport sidebar with **N** and select **ForgeMCP**. The add-on uses Blender's
 Python runtime; the external server runs in the repository's separate environment.
 
-For **Export to Unreal**, set **ForgeMCP folder** to your actual checkout. Start
+For **Send to Unreal**, set **ForgeMCP folder** to your actual checkout. Start
 Blender with `FORGE_UNREAL_SESSION_DIR` pointing to the target project's private
 registration directory so the external worker can discover it. Select explicit
 session IDs when multiple sessions exist. Review the destination, saves and

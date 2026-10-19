@@ -11,6 +11,13 @@ from pathlib import Path
 REPOSITORY = "https://github.com/aadeshrao123/Unreal-MCP"
 
 # Conservative semantic comparisons: a recipe step is not an independent editor command.
+SUPPORTED = {
+    "get_selected_actors": (
+        ["unreal_get_selected_actors"],
+        "Read-only bounded Editor selection query returns actor identity, level and truncation metadata.",
+    ),
+}
+RUNTIME_VERIFIED = {"get_selected_actors", "find_actors", "create_blueprint_function"}
 PARTIAL = {
     "spawn_actor": "Reviewed actor recipes spawn five allowlisted native actor classes; arbitrary classes/assets are unsupported.",
     "spawn_actor_by_class": "Reviewed actor recipes spawn five allowlisted native actor classes, not arbitrary classes.",
@@ -19,13 +26,23 @@ PARTIAL = {
     "find_assets": "unreal_search_assets filters registry paths, exact native classes and name substrings with pagination.",
     "list_assets": "unreal_search_assets lists sorted registry metadata; filtered class matching is exact, not recursive.",
     "get_asset_info": "unreal_inspect_asset returns registry metadata/tags without loading editable UObject properties.",
+    "get_data_table_schema": "unreal_inspect_data_table_schema returns bounded row-struct field metadata; nested types are described but not traversed.",
+    "get_data_table_rows": "unreal_list_data_table_rows returns sorted DataTable row names with bounded pagination.",
+    "get_data_table_row": "unreal_inspect_data_table_row returns bounded simple reflected values for one exact row; nested containers are omitted.",
+    "list_data_asset_classes": "unreal_list_data_asset_classes discovers loaded UDataAsset-derived classes with bounded filtering and pagination; abstract classes are optional and unrelated unloaded/plugin types are not enumerated.",
+    "list_data_assets": "unreal_list_data_assets queries recursive Asset Registry results derived from UDataAsset, with bounded content paths, class filtering and pagination.",
+    "open_asset": "unreal_open_asset opens one exact /Game or /JasperPrism asset in its native editor; asset edits and saving are not performed.",
+    "get_selected_assets": "unreal_get_selected_assets returns sorted, bounded Content Browser selection metadata.",
+    "sync_browser": "unreal_sync_content_browser requests Content Browser navigation to one exact /Game or /JasperPrism asset; visual focus is not verified.",
     "find_references": "unreal_inspect_asset returns bounded registry package dependencies and referencers.",
     "get_actors_in_level": "unreal_list_actors lists the active editor world with a bounded limit.",
+    "find_actors_by_name": "unreal_find_actors performs bounded case-insensitive substring matching on actor names and labels; wildcard/exact/pattern syntax is not implemented.",
+    "find_actors": "unreal_find_actors searches by name/label substring, exact class path or exact actor tag with pagination and optional transforms; wildcard/exact name patterns and property predicates remain unsupported.",
     "get_world_info": "unreal_project_info plus unreal_list_actors supplies current world context.",
     "create_blueprint": "Preview/apply creates new /Game Actor Blueprints with native Actor parents only.",
     "add_component_to_blueprint": "Native ActorComponents are available in new Blueprints and reviewed existing normal Blueprint edits.",
     "create_blueprint_variable": "Seven primitive variable types/defaults are available in new Blueprints and reviewed existing normal Blueprint edits.",
-    "create_blueprint_function": "New Blueprint recipes support empty void functions, without signatures.",
+    "create_blueprint_function": "New Blueprint recipes and reviewed edits to existing normal Blueprints add typed function signatures and validated entry/return pin connections; existing function signature changes remain unsupported.",
     "add_blueprint_node": "New and existing Blueprint recipes support bounded event, variable, flow-control, reroute and allowlisted native function nodes.",
     "add_event_node": "New recipes support parent override events and custom events.",
     "connect_blueprint_nodes": "Named pins connect during new Blueprint creation and reviewed existing-graph edits, including newly added nodes, within the approved native node set.",
@@ -97,6 +114,9 @@ def extract(root: Path, commit: str) -> list[dict]:
             if node.name == "health_check":
                 status, ours = "equivalent-purpose", ["forge_status", "forge_list_sessions"]
                 note = "Authenticated health/session checks serve the same inspection purpose."
+            elif node.name in SUPPORTED:
+                ours, note = SUPPORTED[node.name]
+                status = "supported"
             elif node.name in PARTIAL:
                 status, note = "partial", PARTIAL[node.name]
                 ours = ["unreal_preview_blueprint", "unreal_apply_blueprint"]
@@ -104,14 +124,31 @@ def extract(root: Path, commit: str) -> list[dict]:
                     ours = ["unreal_inspect_blueprint"]
                 elif node.name == "get_actors_in_level":
                     ours = ["unreal_list_actors"]
+                elif node.name in {"find_actors_by_name", "find_actors"}:
+                    ours = ["unreal_find_actors"]
                 elif node.name == "get_world_info":
                     ours = ["unreal_project_info", "unreal_list_actors"]
                 elif node.name in {"find_assets", "list_assets"}:
                     ours = ["unreal_search_assets"]
                 elif node.name in {"get_asset_info", "find_references"}:
                     ours = ["unreal_inspect_asset"]
+                elif node.name == "get_selected_assets":
+                    ours = ["unreal_get_selected_assets"]
+                elif node.name == "get_data_table_schema":
+                    ours = ["unreal_inspect_data_table_schema"]
+                elif node.name == "get_data_table_rows":
+                    ours = ["unreal_list_data_table_rows"]
+                elif node.name == "get_data_table_row":
+                    ours = ["unreal_inspect_data_table_row"]
+                elif node.name == "open_asset":
+                    ours = ["unreal_open_asset"]
+                elif node.name == "sync_browser":
+                    ours = ["unreal_sync_content_browser"]
                 elif node.name == "get_actor_properties":
                     ours = ["unreal_inspect_actor"]
+                elif node.name == "create_blueprint_function":
+                    ours = ["unreal_preview_blueprint", "unreal_apply_blueprint",
+                            "unreal_preview_blueprint_edits", "unreal_apply_blueprint_edits"]
                 elif node.name in {"spawn_actor", "spawn_actor_by_class", "set_actor_transform"}:
                     ours = ["unreal_preview_actors", "unreal_apply_actors"]
             elif node.name == "execute_python":
@@ -130,7 +167,7 @@ def extract(root: Path, commit: str) -> list[dict]:
                     for target in targets
                 },
                 "coverage": status, "majestic_tools": ours, "coverage_note": note,
-                "runtime_verified": False,
+                "runtime_verified": node.name in RUNTIME_VERIFIED,
             })
     counts = collections.Counter(record["name"] for record in records)
     for record in records:
@@ -193,7 +230,7 @@ def main():
                              row["duplicate_registration"], row["source_url"]])
     lines = ["# Unreal-MCP public command comparison", "",
              f"Audited 2026-10-09 against [{args.commit}]({REPOSITORY}/tree/{args.commit}).", "",
-             "Majestic Forge 0.2.0 does not provide feature parity with this public repository. "
+             "ForgeMCP does not provide feature parity with this public repository. "
              "Its 22 MCP interfaces include Blender and API retrieval; bundled Unreal recipes "
              "are not equivalent to standalone editor commands.", "",
              f"Static source contains **{len(records)} decorated registrations**, "
@@ -203,12 +240,12 @@ def main():
              "Both level.py and editor_commands.py register spawn_actor with different signatures "
              "and RPC targets. Both definitions are retained, without assuming which wins at runtime.",
              "", "## Coverage by source module", "",
-             "| Module | Registrations | Equivalent purpose | Partial | Missing | Excluded |",
-             "|---|---:|---:|---:|---:|---:|"]
+             "| Module | Registrations | Equivalent purpose | Supported | Partial | Missing | Excluded |",
+             "|---|---:|---:|---:|---:|---:|---:|"]
     for category, count in categories.items():
         group = collections.Counter(r["coverage"] for r in records if r["category"] == category)
-        lines.append(f"| {category} | {count} | {group['equivalent-purpose']} | {group['partial']} "
-                     f"| {group['missing']} | {group['intentionally-excluded']} |")
+        lines.append(f"| {category} | {count} | {group['equivalent-purpose']} | {group['supported']} "
+                     f"| {group['partial']} | {group['missing']} | {group['intentionally-excluded']} |")
     lines += ["", "Coverage classifications compare purpose and scope, not wire compatibility. "
               "Partial means a bounded subset exists, usually only during creation of a new Actor "
               "Blueprint. Missing does not mean approved for automatic implementation. "

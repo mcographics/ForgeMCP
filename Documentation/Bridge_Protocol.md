@@ -12,6 +12,13 @@ Version 0.1.2 protects Windows registration directories and files with an
 owner-and-SYSTEM-only DACL before advertising a session; protection failures prevent
 startup. Tokens use cryptographic randomness and rotate on bridge startup.
 
+The server rediscovers registrations for each operation. `forge_ensure_connected`
+checks for exactly one responsive Unreal bridge and one responsive Blender bridge
+using authenticated `health` requests, then returns the selected session IDs. Optional
+explicit IDs resolve a selection when multiple sessions respond. Ambiguous sessions
+are not guessed. The call verifies reachability but does not keep a socket open or
+launch an application; a missing bridge must be started in Unreal or Blender.
+
 A connection carries one UTF-8 JSON object terminated by a newline:
 
 ```json
@@ -32,7 +39,11 @@ Failure:
 
 Malformed JSON has no recoverable correlation ID. The server rejects missing or
 mismatched response IDs. Foundation commands are Unreal `health`, `project_info`,
-`list_actors`, and Blender `health`, `scene_info`. Unreal actor limit is an integer
+`list_actors`, `editor_log`, and `capture_screenshot`, and Blender `health`, `scene_info`.
+`capture_screenshot` returns a bounded JPEG of the active Unreal Editor viewport as
+an MCP image. The adapter reads current viewport pixels, scales them in memory to at
+most 1280x720, and never resizes the Editor window or writes a screenshot file. Unreal
+actor limit is an integer
 from 1 to 1000; its result includes `total_count` and `truncated`. The current editor
 world is inspected, including loaded actors; unloaded World Partition content is not
 enumerated. Blender reports `fps`, `fps_base`, and `effective_fps` separately.
@@ -61,6 +72,12 @@ The development registry also exposes Unreal `gas_info` for bounded read-only GA
 state inspection on one exact actor path in the idle editor world. The Blender scene
 recipe allowlist includes reviewed pose-bone keyframes; neither operation executes
 arbitrary application scripts.
+
+Static-mesh transfer adapters expose read-only `binding_info` in Blender and
+`mesh_binding_info` in Unreal. These return stable current-content revisions and,
+where a transfer baseline is present, its binding ID and baseline fingerprints.
+The external MCP server combines those results as `forge_compare_mesh_binding`;
+comparison is inspection only and never applies a transfer.
 
 Error codes include `invalid_request`, `invalid_arguments`, `unauthorized`,
 `command_not_allowed`, `editor_not_ready`, `scene_not_ready`, `inspection_failed`,
@@ -142,6 +159,13 @@ editor transaction. Inspection returns `static_mesh`, `material_assets`,
 results. Location and bounds use centimeters; rotation is pitch/yaw/roll in degrees.
 Successful placement leaves the level unsaved. Material references describe what
 is assigned in Unreal; they do not establish that Blender material assets transferred.
+
+Actor deletion is a separate one-actor `unreal_preview_actor_delete` /
+`unreal_apply_actor_delete` operation. Preview binds the exact loaded actor, class,
+world and state; world infrastructure, attached actors, actors with attached children,
+and actors outside the active level are rejected. Apply uses Unreal's editor destroy
+path inside an undo transaction. It does not save the map; `Ctrl+Z` remains available
+until a separate current-level save is applied.
 
 ## Constant-PBR material transfer
 
@@ -324,6 +348,19 @@ comparison. File absence never resolves an unknown native operation automaticall
 Reconciliation does not load/save/replay maps, change receipts, infer native map
 contents from bytes, inspect unsaved world changes or claim completed recovery.
 
+The existing-map operation is `unreal_preview_current_level_save(session_id)` /
+`unreal_apply_current_level_save(preview_id, confirmation, session_id)`. It targets
+the active persistent level and uses Unreal's native current-level save path, which
+saves the level package and its loaded external-object packages (including loaded
+World Partition actors) without saving unrelated dirty content assets. Preview binds
+the exact world, level and loaded package state. Apply creates and verifies binary
+backups for every package that Unreal will save, calls `FEditorFileUtils::SaveCurrentLevel`,
+then reports each saved package's size and SHA-1. A detected failure restores existing
+package files or removes newly created package files; an incomplete rollback reports
+`partial_backup_retained`. Backups and native/server receipts remain under project
+`Saved` for inspection. This does not save unloaded World Partition actors or establish
+that the map has been reopened or visually tested.
+
 Level-save previews now scan the loaded hard-reference graph of persistent world
 objects, bounded to 20000 queued objects, 10000 references per object and 256
 external packages. Package dirty flags and disk-package presence are reported.
@@ -424,3 +461,16 @@ and target positions, `target_distance_world`, `position_tolerance_world` (0.000
 `target_reached`, frame and warning code `ik_target_not_reached` when outside
 tolerance. Creation success verifies the constraint setup; clients must review the
 measured convergence, especially for straight rest chains or unreachable targets.
+
+## Reviewed existing DataAsset edits — Unreal adapter 0.2.8 / MCP server 0.3.1
+
+`unreal_preview_data_asset_edit` and `unreal_apply_data_asset_edit` edit an existing,
+loaded DataAsset with a bounded set of 1–32 editable simple reflected properties.
+Preview identifies the asset, requested values, current values and exact confirmation;
+apply requires that confirmation and rejects expired, reused, stale, dirty or identity-
+changed targets. Asset paths are restricted to `/Game` and `/JasperPrism`. Saving is
+explicit. Before a save, the adapter preserves and verifies a copy of the original
+package under the project's `Saved` area, then reads back applied values. Native
+`FBoolProperty` accessors are used for bitfield booleans. Arrays, nested containers,
+and object/asset references are excluded from this profile. Receipts report applied
+values, save status and backup metadata; a receipt does not imply visual/runtime QA.

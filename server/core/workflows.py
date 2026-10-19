@@ -3,6 +3,7 @@
 
 import hashlib
 import math
+import re
 import time
 import uuid
 from pathlib import Path
@@ -22,6 +23,10 @@ from server.core.workflow_journal import STAGES, JournalError
 
 Vector = Annotated[list[Annotated[float, Field(ge=-1e8, le=1e8, allow_inf_nan=False)]],
                    Field(min_length=3, max_length=3)]
+ASSET_PATH_PATTERN = r"^/Game/(?:[A-Za-z_][A-Za-z0-9_]*/)+[A-Za-z_][A-Za-z0-9_]*$"
+RETURN_FOLDER = "/Game/Content/Returns"
+LEGACY_RETURN_PATH = "/Game/ForgeMCP/Returns/SM_Return"
+RETURN_FOLDER_INPUTS = {"", RETURN_FOLDER, RETURN_FOLDER + "/"}
 
 
 class TransferRequest(TransferModel):
@@ -29,9 +34,11 @@ class TransferRequest(TransferModel):
     target_session_id: Annotated[str, Field(pattern=r"^unreal-[1-9][0-9]{0,9}$")]
     source_object: Annotated[str, Field(min_length=1, max_length=128)]
     target_asset_path: Annotated[str, Field(
-        pattern=r"^/Game/(?:[A-Za-z_][A-Za-z0-9_]*/)+[A-Za-z_][A-Za-z0-9_]*$", max_length=240)]
+        pattern=r"^(?:/Game/(?:[A-Za-z_][A-Za-z0-9_]*/)+[A-Za-z_][A-Za-z0-9_]*|/Game/(?:[A-Za-z_][A-Za-z0-9_]*/)+)?$",
+        max_length=240)]
     save_assets: bool = True
     place: bool = True
+    replace_existing: bool = False
     location: Vector = Field(default_factory=lambda: [0.0, 0.0, 0.0])
     rotation: Vector = Field(default_factory=lambda: [0.0, 0.0, 0.0])
     scale: Vector = Field(default_factory=lambda: [1.0, 1.0, 1.0])
@@ -40,6 +47,14 @@ class TransferRequest(TransferModel):
     def nonzero_scale(self):
         if any(abs(v) < 1e-8 for v in self.scale):
             raise ValueError("Placement scale must be nonzero")
+        if self.replace_existing and (not self.save_assets or self.place):
+            raise ValueError("Reviewed replacement saves the existing mesh and never places an actor")
+        if self.replace_existing and (
+            not self.target_asset_path
+            or self.target_asset_path.endswith("/")
+            or self.target_asset_path.rstrip("/") == RETURN_FOLDER
+        ):
+            raise ValueError("Replacement requires an explicit target asset path")
         return self
 
 
@@ -61,9 +76,39 @@ def converted(point, meters):
     return [-y * meters * 100, -x * meters * 100, z * meters * 100]
 
 
-def verify_import(manifest, result):
+def close_geometry_bounds(actual_min, actual_max, expected_min, expected_max):
+    """Allow float32 FBX/bounds reconstruction rounding, including cancellation.
+
+    A small bound can be reconstructed from a much larger centre and extent.
+    Its rounding budget therefore depends on both ends of that axis. Keep counts,
+    material comparisons and complete vertex verification independently checked.
+    """
+    if not all(isinstance(v, list) and len(v) == 3 for v in (actual_min, actual_max)):
+        return False
+    for axis in range(3):
+        magnitude = max(abs(expected_min[axis]), abs(expected_max[axis]))
+        float32_step = math.ldexp(1.0, math.frexp(magnitude)[1] - 24)
+        for actual, expected in ((actual_min[axis], expected_min[axis]),
+                                 (actual_max[axis], expected_max[axis])):
+            if (type(actual) not in (int, float) or not math.isfinite(actual)
+                    or abs(actual - expected) > max(.001, abs(expected) * 1e-6, 4 * float32_step)):
+                return False
+    return True
+
+
+def close_geometry_position(actual, expected, bounds_min, bounds_max):
+    """FBX unit/axis conversion also rounds vertex positions at mesh-wide scale."""
+    for axis, (a, b) in enumerate(zip(actual, expected)):
+        magnitude = max(abs(bounds_min[axis]), abs(bounds_max[axis]))
+        step = math.ldexp(1.0, math.frexp(magnitude)[1] - 24)
+        if abs(a - b) > max(.001, abs(b) * 1e-6, 8 * step):
+            return False
+    return True
+
+
+def verify_geometry(manifest, result, *, accepted_states=("imported",)):
     path = manifest.target_asset_path + "." + manifest.target_asset_path.rsplit("/", 1)[1]
-    if (result.get("state") != "imported" or result.get("asset_path") != path
+    if (result.get("state") not in accepted_states or result.get("asset_path") != path
             or result.get("class_path") != "/Script/Engine.StaticMesh"
             or result.get("vertex_count") != manifest.vertex_count
             or result.get("triangle_count") != manifest.triangle_count):
@@ -71,7 +116,7 @@ def verify_import(manifest, result):
     lo, hi = manifest.source_world_bounds_min, manifest.source_world_bounds_max
     expected_min = converted([hi[0], hi[1], lo[2]], manifest.meters_per_source_unit)
     expected_max = converted([lo[0], lo[1], hi[2]], manifest.meters_per_source_unit)
-    if not close_vector(result.get("bounds_min_cm"), expected_min) or not close_vector(result.get("bounds_max_cm"), expected_max):
+    if not close_geometry_bounds(result.get("bounds_min_cm"), result.get("bounds_max_cm"), expected_min, expected_max):
         raise WorkflowError("geometry_verification_failed")
     positions_verified = False
     if not manifest.world_vertices_truncated:
@@ -81,9 +126,16 @@ def verify_import(manifest, result):
         if any(not isinstance(p, list) or len(p) != 3 or any(type(v) not in (int, float) or not math.isfinite(v) for v in p) for p in actual):
             raise WorkflowError("geometry_verification_failed")
         expected = sorted(converted(p, manifest.meters_per_source_unit) for p in manifest.source_world_vertices)
-        if not all(close_vector(a, b) for a, b in zip(sorted(actual), expected)):
+        if not all(close_geometry_position(a, b, expected_min, expected_max)
+                   for a, b in zip(sorted(actual), expected)):
             raise WorkflowError("geometry_verification_failed")
         positions_verified = True
+    return {"geometry_bounds_and_counts_verified": True,
+            "complete_vertex_positions_verified": positions_verified}
+
+
+def verify_import(manifest, result):
+    geometry = verify_geometry(manifest, result)
     materials = result.get("materials", [])
     if not isinstance(materials, list) or len(materials) != len(manifest.materials):
         raise WorkflowError("material_verification_failed")
@@ -97,8 +149,7 @@ def verify_import(manifest, result):
                 or not close_vector(native.get("base_color"), surface.base_color)
                 or not close_vector([native.get("roughness"), native.get("metallic")], [surface.roughness, surface.metallic])):
             raise WorkflowError("material_verification_failed")
-    return {"geometry_bounds_and_counts_verified": True,
-            "complete_vertex_positions_verified": positions_verified,
+    return {**geometry,
             "material_constant_graphs_verified": True, "shader_compile_verified": False,
             "visual_equivalence_verified": False}
 
@@ -142,6 +193,10 @@ class TransferCoordinator:
         if any(name not in metadata for name in names):
             raise WorkflowError("adapter_upgrade_required")
         values = {name: metadata[name] for name in names}
+        binding_id = metadata.get("binding_id")
+        if not isinstance(binding_id, str) or len(binding_id) != 32:
+            binding_id = hashlib.sha256((metadata["source_session_id"] + "|" + metadata["source_object"]).encode()).hexdigest()[:32]
+        values["binding_id"] = binding_id
         values.update(transfer_id=transfer_id, target_session_id=request.target_session_id,
                       target_project_file=context["project_file"], target_asset_path=request.target_asset_path,
                       artifact_name="mesh.fbx", artifact_sha256=metadata["artifact_sha256"] if exported else "0" * 64,
@@ -155,22 +210,86 @@ class TransferCoordinator:
             raise WorkflowError("unsupported_material_surface")
         return manifest
 
+    async def replacement_baseline(self, source, target, manifest):
+        """Require a single-sided Blender edit against an unchanged bound Unreal asset."""
+        target_object = manifest.target_asset_path + "." + manifest.target_asset_path.rsplit("/", 1)[1]
+        blender = await self.connections.request(source, "binding_info", {"name": manifest.source_object})
+        unreal = await self.connections.request(target, "mesh_binding_info", {"asset_path": target_object})
+        def digest(value):
+            return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
+        binding = manifest.binding_id
+        if not isinstance(blender.get("binding_id"), str) or blender.get("binding_id") != binding or unreal.get("binding_id") != binding:
+            raise WorkflowError("replacement_binding_mismatch")
+        source_revision = blender.get("source_revision_sha256")
+        source_baseline = blender.get("baseline_revision_sha256") or unreal.get("source_revision_sha256")
+        target_source_baseline = unreal.get("source_revision_sha256")
+        target_revision = unreal.get("target_revision_sha256")
+        current_target = unreal.get("source_snapshot_sha256")
+        if (not digest(source_revision) or source_revision != manifest.source_snapshot_sha256
+                or not digest(source_baseline) or source_baseline != target_source_baseline
+                or not digest(target_revision) or not digest(current_target)):
+            raise WorkflowError("replacement_baseline_unavailable")
+        if source_revision == source_baseline:
+            raise WorkflowError("replacement_blender_unchanged")
+        if current_target != target_revision:
+            raise WorkflowError("replacement_conflict_unreal_changed")
+        return {"target_asset_path": target_object, "binding_id": binding,
+            "source_snapshot_sha256": source_revision, "source_baseline_sha256": source_baseline,
+            "target_revision_sha256": target_revision, "blender_revision_sha256": source_revision,
+            "unreal_revision_sha256": current_target}
+
     async def preview(self, request):
         source = self.session("blender", request.source_session_id)
         target = self.session("unreal", request.target_session_id)
         context = await self.target_context(target)
+        requested_path = request.target_asset_path
+        folder_input = (requested_path in RETURN_FOLDER_INPUTS or requested_path.endswith("/")
+                        or (requested_path == LEGACY_RETURN_PATH and not request.replace_existing))
+        if folder_input:
+            folder = (RETURN_FOLDER if requested_path in RETURN_FOLDER_INPUTS
+                      else requested_path.rstrip("/"))
+            requested_path = f"{folder}/{request.source_object}"
+            if not re.fullmatch(ASSET_PATH_PATTERN, requested_path):
+                raise WorkflowError("invalid_source_asset_name")
+            request = TransferRequest.model_validate({
+                **request.model_dump(), "target_asset_path": requested_path})
+        destination_exists = False
         try:
-            await self.connections.request(target, "asset_info", {"asset_path": request.target_asset_path})
+            await self.connections.request(target, "asset_info", {"asset_path": requested_path})
         except BridgeError as error:
             if error.code != "asset_not_found":
                 raise
         else:
+            destination_exists = True
+        if destination_exists and not request.replace_existing:
             raise WorkflowError("destination_exists")
+        if request.replace_existing and not destination_exists:
+            raise WorkflowError("replacement_target_missing")
         health = await self.connections.request(source, "health")
         if type(health.get("transfer_contract_version")) is not int or health["transfer_contract_version"] != 1:
             raise WorkflowError("adapter_upgrade_required")
+        if request.replace_existing:
+            target_health = await self.connections.request(target, "health")
+            required_source = {"binding_info", "binding_commit_preview", "binding_commit_apply"}
+            required_target = {"mesh_binding_info", "mesh_replace_preview", "mesh_replace_apply"}
+            if (not required_source.issubset(set(health.get("capabilities", [])))
+                    or not required_target.issubset(set(target_health.get("capabilities", [])))):
+                raise WorkflowError("adapter_upgrade_required")
         exported = await self.connections.request(source, "export_preview", {"name": request.source_object})
         manifest = self.manifest(exported, request, context, exported["preview_id"])
+        replacement = None
+        if request.replace_existing:
+            replacement = await self.replacement_baseline(source, target, manifest)
+            native_preview = await self.connections.request(target, "mesh_replace_preview", {
+                "asset_path": replacement["target_asset_path"], "binding_id": replacement["binding_id"],
+                "source_snapshot_sha256": replacement["source_snapshot_sha256"],
+                "source_baseline_sha256": replacement["source_baseline_sha256"],
+                "target_revision_sha256": replacement["target_revision_sha256"],
+                "transfer_id": manifest.transfer_id,
+                "material_slot_names": [slot.name for slot in manifest.materials]})
+            if not isinstance(native_preview.get("preview_id"), str):
+                raise WorkflowError("invalid_native_result")
+            replacement.update(native_preview)
         now = time.monotonic()
         self.previews = {k: p for k, p in self.previews.items() if p["expires"] > now}
         if len(self.previews) >= 32:
@@ -178,13 +297,19 @@ class TransferCoordinator:
         operation_id = uuid.uuid4().hex
         self.previews[operation_id] = {"request": request, "context": context, "manifest": manifest,
                                       "export_preview_id": exported["preview_id"], "expires": now + 300,
-                                      "source_binding": self.binding(source), "target_binding": self.binding(target)}
+                                      "source_binding": self.binding(source), "target_binding": self.binding(target),
+                                      "replacement": replacement}
         return {"operation_id": operation_id, "preview_id": operation_id, "expires_in_seconds": 300,
                 "source": manifest.model_dump(exclude={"artifact_sha256", "artifact_bytes"}),
                 "target": context, "changes": request.model_dump(), "saves_source_scene": False,
-                "saves_level": False, "overwrite": False,
+                "saves_level": False, "overwrite": request.replace_existing,
+                "replacement": replacement,
                 "limitations": ["opaque constant-PBR material profile", "shader/visual verification remains separate",
-                                "complete vertex-position comparison is limited to 256 vertices; all meshes receive bounds/count checks"]}
+                                "complete vertex-position comparison is limited to 256 vertices; all meshes receive bounds/count checks"] +
+                    (["replaces only a bound mesh after Blender-only revision change",
+                      "existing Unreal material assignments are preserved; Blender material edits are not applied",
+                      "a verified package backup is retained under the target project's Saved/ForgeMCP/Backups directory"]
+                     if request.replace_existing else [])}
 
     async def reconcile(self, operation_id, target_session_id):
         """Observe current native state without changing receipts or replaying steps."""
@@ -241,8 +366,25 @@ class TransferCoordinator:
         target = self.session("unreal", request.target_session_id)
         if self.binding(source) != plan["source_binding"] or self.binding(target) != plan["target_binding"] or await self.target_context(target) != plan["context"]:
             raise WorkflowError("stale_preview")
+        if not request.replace_existing:
+            try:
+                await self.connections.request(target, "asset_info", {
+                    "asset_path": request.target_asset_path})
+            except BridgeError as error:
+                if error.code != "asset_not_found":
+                    raise
+            else:
+                raise WorkflowError("destination_exists")
+        if request.replace_existing:
+            current_replacement = await self.replacement_baseline(source, target, plan["manifest"])
+            reviewed = plan["replacement"]
+            if any(current_replacement.get(key) != reviewed.get(key) for key in (
+                    "target_asset_path", "binding_id", "source_snapshot_sha256", "source_baseline_sha256",
+                    "target_revision_sha256")):
+                raise WorkflowError("stale_preview")
         record = self.journal.create(operation_id, {"request": request.model_dump(),
-            "target": plan["context"], "export_preview_id": plan["export_preview_id"]},
+            "target": plan["context"], "export_preview_id": plan["export_preview_id"],
+            "replacement": plan.get("replacement")},
             stages=STAGES if request.place else STAGES[:-1])
         self.active.add(operation_id)
         imported = None
@@ -273,20 +415,63 @@ class TransferCoordinator:
             if not roots:
                 raise WorkflowError("source_staging_unavailable")
             artifact_root = roots[0] / "transfers" / source.session_id / manifest.transfer_id
-            recipe = stage_unreal_artifact(artifact_root, manifest, save=request.save_assets, transfer_materials=True)
+            replacement = plan.get("replacement")
+            recipe = stage_unreal_artifact(artifact_root, manifest, save=request.save_assets,
+                transfer_materials=not request.replace_existing, replace_existing=request.replace_existing,
+                expected_source_baseline_sha256=replacement["source_baseline_sha256"] if replacement else None,
+                expected_target_revision_sha256=replacement["target_revision_sha256"] if replacement else None)
             receipt("staging", "completed", {"recipe": recipe, "recoverable_export_retained": True})
             receipt("import", "started")
             await check_target()
-            preview = await self.connections.request(target, "mesh_import_preview", {"recipe": recipe})
-            imported = await self.connections.request(target, "mesh_import_apply", {
-                "preview_id": preview["preview_id"], "confirmation": preview["preview_id"]})
-            if imported.get("state") != "imported":
+            if request.replace_existing:
+                imported = await self.connections.request(target, "mesh_replace_apply", {
+                    "preview_id": replacement["preview_id"], "confirmation": replacement["preview_id"],
+                    "recipe": recipe})
+            else:
+                preview = await self.connections.request(target, "mesh_import_preview", {"recipe": recipe})
+                imported = await self.connections.request(target, "mesh_import_apply", {
+                    "preview_id": preview["preview_id"], "confirmation": preview["preview_id"]})
+            expected_state = "replaced" if request.replace_existing else "imported"
+            if imported.get("state") != expected_state:
                 state = imported.get("state")
                 receipt("import", state if state in {"partial", "rolled_back", "outcome_unknown"} else "outcome_unknown", imported)
                 return {"operation_id": operation_id, "state": record["state"], "receipt": record}
+            if imported.get("binding_id") != manifest.binding_id:
+                raise WorkflowError("binding_verification_failed")
             receipt("import", "completed", imported)
             receipt("verification", "started")
-            checks = verify_import(manifest, imported)
+            if request.replace_existing:
+                commit_preview = await self.connections.request(source, "binding_commit_preview", {
+                    "name": request.source_object, "binding_id": manifest.binding_id,
+                    "source_revision_sha256": manifest.source_snapshot_sha256,
+                    "expected_previous_revision_sha256": replacement["source_baseline_sha256"]})
+                if not isinstance(commit_preview.get("preview_id"), str):
+                    raise WorkflowError("binding_commit_preview_failed")
+                committed = await self.connections.request(source, "binding_commit_apply", {
+                    "preview_id": commit_preview["preview_id"], "confirmation": commit_preview["preview_id"]})
+                source_binding = await self.connections.request(source, "binding_info", {"name": request.source_object})
+                target_binding = await self.connections.request(target, "mesh_binding_info", {
+                    "asset_path": replacement["target_asset_path"]})
+                if (committed.get("state") != "accepted"
+                        or source_binding.get("binding_id") != manifest.binding_id
+                        or source_binding.get("source_revision_sha256") != manifest.source_snapshot_sha256
+                        or source_binding.get("baseline_revision_sha256") != manifest.source_snapshot_sha256
+                        or target_binding.get("binding_id") != manifest.binding_id
+                        or target_binding.get("source_revision_sha256") != manifest.source_snapshot_sha256
+                        or target_binding.get("source_snapshot_sha256") != imported.get("target_revision_sha256")
+                        or target_binding.get("target_revision_sha256") != imported.get("target_revision_sha256")):
+                    raise WorkflowError("binding_commit_verification_failed")
+                checks = verify_geometry(manifest, imported, accepted_states=("replaced",))
+                if (imported.get("materials_preserved") is not True or imported.get("saved") is not True
+                        or imported.get("material_assignments") != replacement.get("material_assignments")):
+                    raise WorkflowError("replacement_material_verification_failed")
+                checks["existing_material_assignments_preserved"] = True
+                checks["backup_retained_and_verified"] = imported.get("backup_retained") is True
+                checks["source_and_target_binding_baselines_synchronized"] = True
+                if not checks["backup_retained_and_verified"]:
+                    raise WorkflowError("replacement_backup_verification_failed")
+            else:
+                checks = verify_import(manifest, imported)
             if request.save_assets and (imported.get("saved") is not True or any(m.get("saved") is not True for m in imported.get("materials", []))):
                 raise WorkflowError("save_verification_failed")
             receipt("verification", "completed", checks)

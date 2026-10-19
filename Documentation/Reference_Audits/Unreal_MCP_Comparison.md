@@ -2,29 +2,29 @@
 
 Audited 2026-10-09 against [dadf24f460da4249ce7d94ee23a025b0b6e5cdff](https://github.com/aadeshrao123/Unreal-MCP/tree/dadf24f460da4249ce7d94ee23a025b0b6e5cdff).
 
-Majestic Forge 0.2.0 does not provide feature parity with this public repository. Its 22 MCP interfaces include Blender and API retrieval; bundled Unreal recipes are not equivalent to standalone editor commands.
+Majestic Forge 0.2.8 does not provide feature parity with this public repository. Current `server/main.py` statically registers 85 MCP tools spanning Unreal, Blender, shared transfers and API retrieval; bundled Unreal recipes are not equivalent to standalone editor commands. This count describes decorated source registrations; MCP stdio tests separately verify the live registry.
 
 Static source contains **287 decorated registrations**, **286 distinct names**, in **15 imported modules**. The README advertises 288 community commands; its 900+ figure describes a separate commercial product whose private commands are not included in this audit. Both level.py and editor_commands.py register spawn_actor with different signatures and RPC targets. Both definitions are retained, without assuming which wins at runtime.
 
 ## Coverage by source module
 
-| Module | Registrations | Equivalent purpose | Partial | Missing | Excluded |
-|---|---:|---:|---:|---:|---:|
-| assets | 16 | 0 | 5 | 11 | 0 |
-| blueprint_graph | 17 | 0 | 11 | 6 | 0 |
-| blueprints | 5 | 0 | 2 | 3 | 0 |
-| core | 2 | 1 | 0 | 0 | 1 |
-| data_assets | 12 | 0 | 0 | 12 | 0 |
-| data_tables | 8 | 0 | 0 | 8 | 0 |
-| debug | 2 | 0 | 0 | 2 | 0 |
-| editor_commands | 15 | 0 | 4 | 11 | 0 |
-| enhanced_input | 21 | 0 | 0 | 21 | 0 |
-| level | 8 | 0 | 4 | 4 | 0 |
-| materials | 37 | 0 | 0 | 37 | 0 |
-| niagara | 97 | 0 | 0 | 97 | 0 |
-| profiling | 3 | 0 | 0 | 3 | 0 |
-| statetree | 33 | 0 | 0 | 33 | 0 |
-| widgets | 11 | 0 | 0 | 11 | 0 |
+| Module | Registrations | Equivalent purpose | Supported | Partial | Missing | Excluded |
+|---|---:|---:|---:|---:|---:|---:|
+| assets | 16 | 0 | 0 | 10 | 6 | 0 |
+| blueprint_graph | 17 | 0 | 0 | 11 | 6 | 0 |
+| blueprints | 5 | 0 | 0 | 2 | 3 | 0 |
+| core | 2 | 1 | 0 | 0 | 0 | 1 |
+| data_assets | 12 | 0 | 0 | 5 | 7 | 0 |
+| data_tables | 8 | 0 | 0 | 3 | 5 | 0 |
+| debug | 2 | 0 | 0 | 0 | 2 | 0 |
+| editor_commands | 15 | 0 | 0 | 5 | 10 | 0 |
+| enhanced_input | 21 | 0 | 0 | 0 | 21 | 0 |
+| level | 8 | 0 | 1 | 7 | 0 | 0 |
+| materials | 37 | 0 | 0 | 3 | 34 | 0 |
+| niagara | 97 | 0 | 0 | 0 | 97 | 0 |
+| profiling | 3 | 0 | 0 | 0 | 3 | 0 |
+| statetree | 33 | 0 | 0 | 0 | 33 | 0 |
+| widgets | 11 | 0 | 0 | 0 | 11 | 0 |
 
 Coverage classifications compare purpose and scope, not wire compatibility. Partial means a bounded subset exists, usually only during creation of a new Actor Blueprint. Missing does not mean approved for automatic implementation. Unrestricted execute_python remains intentionally excluded.
 
@@ -38,8 +38,8 @@ Every registration is listed below. JSON and CSV companions retain all parameter
 | assets | [list_assets](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/assets.py#L37) | list_assets | partial | unreal_search_assets lists sorted registry metadata; filtered class matching is exact, not recursive. |
 | assets | [open_asset](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/assets.py#L56) | open_asset | missing | No corresponding typed Majestic Forge operation. |
 | assets | [get_asset_info](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/assets.py#L62) | get_asset_info | partial | unreal_inspect_asset returns registry metadata/tags without loading editable UObject properties. |
-| assets | [get_asset_properties](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/assets.py#L68) | get_asset_properties | missing | No corresponding typed Majestic Forge operation. |
-| assets | [set_asset_property](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/assets.py#L74) | set_asset_property | missing | No corresponding typed Majestic Forge operation. |
+| assets | [get_asset_properties](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/assets.py#L68) | get_asset_properties | partial | `unreal_inspect_asset_properties` loads one `/Game` or `/JasperPrism` asset and returns bounded simple reflected values; complex/container/reference values are omitted. Native acceptance verified a StaticMesh fixture. |
+| assets | [set_asset_property](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/assets.py#L74) | set_asset_property | partial | `unreal_preview_asset_property_edit` / `unreal_apply_asset_property_edit` support reviewed in-memory edits for editable scalar, enum, name/string and common math/color properties; stale and dirty targets are rejected. Saving is manual and complex/object/container edits are omitted. Native StaticMesh acceptance passed. |
 | assets | [find_references](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/assets.py#L98) | find_references | partial | unreal_inspect_asset returns bounded registry package dependencies and referencers. |
 | assets | [duplicate_asset](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/assets.py#L110) | duplicate_asset | missing | No corresponding typed Majestic Forge operation. |
 | assets | [rename_asset](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/assets.py#L120) | rename_asset | missing | No corresponding typed Majestic Forge operation. |
@@ -57,7 +57,7 @@ Every registration is listed below. JSON and CSV companions retain all parameter
 | blueprint_graph | [add_event_node](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/blueprint_graph.py#L165) | add_event_node | partial | New recipes support parent override events and custom events. |
 | blueprint_graph | [delete_blueprint_node](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/blueprint_graph.py#L181) | delete_node | missing | No corresponding typed Majestic Forge operation. |
 | blueprint_graph | [set_blueprint_node_property](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/blueprint_graph.py#L194) | set_node_property | partial | Reviewed existing graph edits support node positions and validated input defaults, not generic node properties. |
-| blueprint_graph | [create_blueprint_function](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/blueprint_graph.py#L242) | create_function | partial | New Blueprint recipes support empty void functions, without signatures. |
+| blueprint_graph | [create_blueprint_function](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/blueprint_graph.py#L242) | create_function | partial | New Blueprint recipes and reviewed edits to existing normal Blueprints add typed function signatures and validated entry/return pin connections; existing function signature changes remain unsupported. |
 | blueprint_graph | [add_function_input](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/blueprint_graph.py#L252) | add_function_input | missing | No corresponding typed Majestic Forge operation. |
 | blueprint_graph | [add_function_output](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/blueprint_graph.py#L267) | add_function_output | missing | No corresponding typed Majestic Forge operation. |
 | blueprint_graph | [delete_blueprint_function](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/blueprint_graph.py#L282) | delete_function | missing | No corresponding typed Majestic Forge operation. |
@@ -75,9 +75,9 @@ Every registration is listed below. JSON and CSV companions retain all parameter
 | core | [execute_python](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/core.py#L10) | execute_python | intentionally-excluded | Unrestricted editor Python violates the project command allowlist requirements. |
 | core | [health_check](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/core.py#L20) | health_check | equivalent-purpose | Authenticated health/session checks serve the same inspection purpose. |
 | data_assets | [list_data_asset_classes](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/data_assets.py#L8) | list_data_asset_classes | missing | No corresponding typed Majestic Forge operation. |
-| data_assets | [create_data_asset](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/data_assets.py#L24) | create_data_asset | missing | No corresponding typed Majestic Forge operation. |
-| data_assets | [get_data_asset_properties](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/data_assets.py#L47) | get_data_asset_properties | missing | No corresponding typed Majestic Forge operation. |
-| data_assets | [set_data_asset_property](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/data_assets.py#L66) | set_data_asset_property | missing | No corresponding typed Majestic Forge operation. |
+| data_assets | [create_data_asset](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/data_assets.py#L24) | create_data_asset | partial | `unreal_preview_data_asset` / `unreal_apply_data_asset` create one new asset from a loaded concrete DataAsset class with bounded supported initial values and optional explicit save; arrays and references are not covered; existing-instance edits use the separate reviewed `unreal_preview_data_asset_edit` / `unreal_apply_data_asset_edit` path with explicit save and pre-edit package backup. |
+| data_assets | [get_data_asset_properties](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/data_assets.py#L47) | get_data_asset_properties | partial | `unreal_inspect_data_asset_schema` reports bounded reflected fields for a loaded DataAsset class; instance value inspection remains limited to generic supported simple properties. |
+| data_assets | [set_data_asset_property](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/data_assets.py#L66) | set_data_asset_property | partial | Generic reviewed asset-property edits cover supported editable scalar/math fields; DataAsset-specific nested/reference editing is absent; existing bounded scalar/math edits use `unreal_preview_data_asset_edit` / `unreal_apply_data_asset_edit` with stale-preview guards and verified pre-edit backup on save. |
 | data_assets | [set_data_asset_properties](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/data_assets.py#L101) | set_data_asset_properties | missing | No corresponding typed Majestic Forge operation. |
 | data_assets | [get_property_valid_types](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/data_assets.py#L114) | get_property_valid_types | missing | No corresponding typed Majestic Forge operation. |
 | data_assets | [search_class_paths](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/data_assets.py#L148) | search_class_paths | missing | No corresponding typed Majestic Forge operation. |
@@ -97,7 +97,7 @@ Every registration is listed below. JSON and CSV companions retain all parameter
 | debug | [set_mcp_debug](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/debug.py#L8) | set_mcp_debug | missing | No corresponding typed Majestic Forge operation. |
 | debug | [get_mcp_token_stats](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/debug.py#L26) | get_mcp_token_stats | missing | No corresponding typed Majestic Forge operation. |
 | editor_commands | [get_actors_in_level](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/editor_commands.py#L12) | get_actors_in_level | partial | unreal_list_actors lists the active editor world with a bounded limit. |
-| editor_commands | [find_actors_by_name](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/editor_commands.py#L18) | find_actors_by_name | missing | No corresponding typed Majestic Forge operation. |
+| editor_commands | [find_actors_by_name](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/editor_commands.py#L18) | find_actors_by_name | partial | `unreal_find_actors` performs bounded case-insensitive substring matching on names/labels; wildcard and exact-name syntax are unsupported. |
 | editor_commands | [spawn_actor](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/editor_commands.py#L24) (duplicate)| spawn_actor | partial | Reviewed actor recipes spawn five allowlisted native actor classes; arbitrary classes/assets are unsupported. |
 | editor_commands | [delete_actor](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/editor_commands.py#L53) | delete_actor | missing | No corresponding typed Majestic Forge operation. |
 | editor_commands | [set_actor_transform](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/editor_commands.py#L59) | set_actor_transform | partial | Reviewed actor recipes transform exact loaded unattached actor paths in the editor world. |
@@ -133,15 +133,15 @@ Every registration is listed below. JSON and CSV companions retain all parameter
 | enhanced_input | [list_modifier_types](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/enhanced_input.py#L392) | list_modifier_types | missing | No corresponding typed Majestic Forge operation. |
 | enhanced_input | [list_input_keys](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/enhanced_input.py#L402) | list_input_keys | missing | No corresponding typed Majestic Forge operation. |
 | level | [spawn_actor](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L10) (duplicate)| spawn_actor_from_class | partial | Reviewed actor recipes spawn five allowlisted native actor classes; arbitrary classes/assets are unsupported. |
-| level | [get_selected_actors](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L39) | get_selected_actors | missing | No corresponding typed Majestic Forge operation. |
+| level | [get_selected_actors](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L39) | get_selected_actors | supported | `unreal_get_selected_actors` reads a bounded current Editor actor selection; native MCP stdio response shape verified. |
 | level | [get_world_info](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L45) | get_world_info | partial | unreal_project_info plus unreal_list_actors supplies current world context. |
-| level | [get_actor_properties](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L51) | get_actor_properties | partial | unreal_inspect_actor reads identity, transform and game-hidden state, not generic properties. |
-| level | [set_actor_property](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L105) | set_actor_property | missing | No corresponding typed Majestic Forge operation. |
-| level | [get_actor_property_metadata](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L145) | get_actor_property_metadata | missing | No corresponding typed Majestic Forge operation. |
+| level | [get_actor_properties](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L51) | get_actor_properties | partial | `unreal_inspect_actor_properties` reads bounded simple reflected actor values; `unreal_inspect_actor_components` reads hierarchy/transforms and `unreal_inspect_component_properties` reads bounded simple reflected component values. Containers, nested references and component edits remain unsupported. |
+| level | [set_actor_property](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L105) | set_actor_property | partial | Actor and component preview/apply tools parse bounded native reflected values, bind previews to exact object/class/world/property/current value and apply with Editor transactions; component float and bitfield-boolean edits are verified. Component coverage remains limited to supported simple reflected fields; level saving is separate. |
+| level | [get_actor_property_metadata](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L145) | get_actor_property_metadata | partial | Actor/component inspection returns native property type and editability for bounded simple fields; category filtering, property-path metadata and recursive object metadata remain unsupported. |
 | level | [spawn_actor_by_class](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L216) | spawn_actor_by_class | partial | Reviewed actor recipes spawn five allowlisted native actor classes, not arbitrary classes. |
-| level | [find_actors](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L256) | find_actors | missing | No corresponding typed Majestic Forge operation. |
+| level | [find_actors](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/level.py#L256) | find_actors | partial | `unreal_find_actors` searches by name/label substring or exact class path with pagination; tag and property filters and transform output are unsupported. |
 | materials | [create_material](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L14) | create_material | missing | No corresponding typed Majestic Forge operation. |
-| materials | [create_material_instance](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L53) | create_material_instance | missing | No corresponding typed Majestic Forge operation. |
+| materials | [create_material_instance](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L53) | create_material_instance | partial | Typed new-instance creation, scalar/vector/texture overrides and separate save; existing instances require a same-session reviewed change and verified backup before overwrite. Static switches and other parameter families remain unsupported; native edits are unverified. |
 | materials | [build_material_graph](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L91) | build_material_graph | missing | No corresponding typed Majestic Forge operation. |
 | materials | [get_material_info](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L146) | get_material_info | missing | No corresponding typed Majestic Forge operation. |
 | materials | [recompile_material](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L169) | recompile_material | missing | No corresponding typed Majestic Forge operation. |
@@ -158,8 +158,8 @@ Every registration is listed below. JSON and CSV companions retain all parameter
 | materials | [move_material_expression](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L362) | move_material_expression | missing | No corresponding typed Majestic Forge operation. |
 | materials | [duplicate_material_expression](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L373) | duplicate_material_expression | missing | No corresponding typed Majestic Forge operation. |
 | materials | [layout_material_expressions](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L392) | layout_material_expressions | missing | No corresponding typed Majestic Forge operation. |
-| materials | [get_material_instance_parameters](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L398) | get_material_instance_parameters | missing | No corresponding typed Majestic Forge operation. |
-| materials | [set_material_instance_parameter](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L404) | set_material_instance_parameter | missing | No corresponding typed Majestic Forge operation. |
+| materials | [get_material_instance_parameters](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L398) | get_material_instance_parameters | partial | Inspects loaded constant instances and global scalar/vector/texture values with override flags; build/live acceptance pending. |
+| materials | [set_material_instance_parameter](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L404) | set_material_instance_parameter | partial | Typed scalar/vector/texture preview/apply requires confirmation; existing instance save uses a bound disk fingerprint and retained backup. Native parameter and save behavior remain unverified. |
 | materials | [list_material_expression_types](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L425) | list_material_expression_types | missing | No corresponding typed Majestic Forge operation. |
 | materials | [get_expression_type_info](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L447) | get_expression_type_info | missing | No corresponding typed Majestic Forge operation. |
 | materials | [get_available_material_pins](https://github.com/aadeshrao123/Unreal-MCP/blob/dadf24f460da4249ce7d94ee23a025b0b6e5cdff/unrealmcp/tools/materials.py#L478) | get_available_material_pins | missing | No corresponding typed Majestic Forge operation. |

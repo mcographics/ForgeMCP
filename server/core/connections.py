@@ -2,39 +2,102 @@
 from __future__ import annotations
 
 import asyncio
+import heapq
 import json
 import logging
+import math
 import os
+import stat
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
 log = logging.getLogger("majestic_forge")
 MAX_RESPONSE = 1024 * 1024
+MAX_REQUEST = 512 * 1024
+MAX_SESSION_REGISTRATIONS = 64
 COMMANDS = {
     "unreal": {
         "health",
         "project_info",
+        "landscape_info",
+        "landscape_preview",
+        "landscape_apply",
+        "landscape_job_status",
+        "landscape_job_cancel",
+        "collision_query",
         "list_actors",
+        "find_actors",
+        "get_selected_actors",
+        "editor_log",
+        "capture_screenshot",
         "blueprint_preview",
         "blueprint_apply",
         "blueprint_info",
         "class_info",
         "asset_search",
+        "list_data_assets",
+        "list_data_asset_classes",
+        "data_asset_schema",
+        "data_asset_create_preview",
+        "data_asset_create_apply",
+        "data_asset_edit_preview",
+        "data_asset_edit_apply",
         "asset_info",
+        "get_data_table_schema",
+        "get_data_table_rows",
+        "get_data_table_row",
+        "csv_import_preview",
+        "csv_import_apply",
+        "struct_tooltips_preview",
+        "struct_tooltips_apply",
+        "get_selected_assets",
+        "open_asset",
+        "sync_browser",
+        "asset_property_info",
+        "asset_property_edit_preview",
+        "asset_property_edit_apply",
         "actor_info",
+        "actor_components_info",
+        "component_property_info",
+        "component_property_edit_preview",
+        "component_property_edit_apply",
+        "actor_property_info",
+        "actor_property_edit_preview",
+        "actor_property_edit_apply",
         "gas_info",
         "actor_preview",
         "actor_apply",
+        "actor_delete_preview",
+        "actor_delete_apply",
         "level_save_preview",
         "level_save_apply",
+        "level_create_preview",
+        "level_create_apply",
+        "current_level_save_preview",
+        "current_level_save_apply",
         "blueprint_edit_preview",
         "blueprint_edit_apply",
         "mesh_import_preview",
         "mesh_import_apply",
+        "mesh_replace_preview",
+        "mesh_replace_apply",
         "mesh_info",
+        "mesh_export_preview",
+        "mesh_export_apply",
+        "mesh_binding_info",
+        "material_graph_info",
+        "material_preview",
+        "material_apply",
+        "material_edit_preview",
+        "material_edit_apply",
+        "material_instance_info",
+        "material_instance_preview",
+        "material_instance_apply",
+        "material_instance_save_preview",
+        "material_instance_save_apply",
     },
-    "blender": {"health", "scene_info", "object_info", "material_info", "rig_info", "skin_info", "scene_preview", "scene_apply", "export_preview", "export_apply"},
+    "blender": {"command_catalog", "command_schema", "rna_catalog", "rna_schema", "creative_properties", "creative_preview", "creative_apply", "render_job_info", "render_job_cancel", "health", "scene_info", "object_info", "animation_info", "mesh_geometry_info", "mesh_edge_info", "mesh_uv_info", "material_info", "rig_info", "skin_info", "scene_preview", "scene_apply", "export_preview", "export_apply", "binding_info", "binding_commit_preview", "binding_commit_apply", "import_preview", "import_apply"},
 }
 
 
@@ -57,28 +120,43 @@ class Session:
 
 
 class ConnectionManager:
-    def __init__(self, roots: list[Path], timeout: float = 10):
+    def __init__(self, roots: list[Path], timeout: float = 10, *, apply_timeout: float = 60):
+        if not math.isfinite(apply_timeout) or not 0 < apply_timeout <= 1800:
+            raise ValueError("Apply timeout must be finite and between 0 and 1800 seconds")
         self.roots = roots
         self.timeout = timeout
+        self.apply_timeout = apply_timeout
 
     @classmethod
     def configured(cls) -> ConnectionManager:
-        project = Path(os.environ.get("FORGE_PROJECT_ROOT", Path(__file__).resolve().parents[2]))
-        blender_root = Path(
+        shared_root = Path(
             os.environ.get(
-                "FORGE_BLENDER_SESSION_DIR",
-                str(
-                    Path(os.environ.get("LOCALAPPDATA", Path.home())) / "MajesticForge" / "sessions"
-                ),
+                "FORGE_SESSION_DIR",
+                str(Path(os.environ.get("LOCALAPPDATA", Path.home())) / "MajesticForge" / "sessions"),
             )
         )
-        unreal_root = Path(os.environ.get("FORGE_UNREAL_SESSION_DIR", str(project / "Saved" / "MajesticForge")))
+        # App-specific overrides remain useful for isolated tests and deliberate
+        # private deployments. Normal engine-wide installs share one user session
+        # directory and never infer an Unreal project from the MCP checkout.
+        unreal_root = Path(os.environ.get("FORGE_UNREAL_SESSION_DIR", str(shared_root)))
+        blender_root = Path(os.environ.get("FORGE_BLENDER_SESSION_DIR", str(shared_root)))
         return cls([unreal_root, blender_root])
 
     def discover(self) -> list[Session]:
         sessions = {}
         for root in self.roots:
-            for path in sorted(root.glob("*.json"))[:64]:
+            recent = []
+            for path in root.glob("*.json"):
+                try:
+                    info = path.lstat()
+                except OSError:
+                    continue
+                if stat.S_ISREG(info.st_mode):
+                    recent.append((info.st_mtime_ns, path))
+            candidates = heapq.nlargest(
+                MAX_SESSION_REGISTRATIONS, recent, key=lambda item: (item[0], item[1].name)
+            )
+            for _, path in candidates:
                 try:
                     if path.stat().st_size > 8192:
                         raise ValueError("registration too large")
@@ -131,9 +209,9 @@ class ConnectionManager:
                     "args": args or {},
                 }
                 encoded = json.dumps(request, allow_nan=False).encode() + b"\n"
-                if len(encoded) > 16384:
+                if len(encoded) > MAX_REQUEST:
                     raise BridgeError(
-                        "invalid_arguments", "Recipe exceeds the 16 KiB request limit."
+                        "invalid_arguments", "Native request exceeds the 512 KiB transport limit."
                     )
                 writer.write(encoded)
                 await writer.drain()
@@ -153,9 +231,11 @@ class ConnectionManager:
                     error = response.get("error", {})
                     if not isinstance(error, dict):
                         raise BridgeError("invalid_response", "Invalid bridge error object.")
+                    native_message = error.get("message", "")
+                    safe_message = " ".join(native_message.split())[:256] if isinstance(native_message, str) else ""
                     raise BridgeError(
                         str(error.get("code", "bridge_error"))[:64],
-                        "Bridge rejected the request.",
+                        safe_message or "Bridge rejected the request.",
                     )
                 if not isinstance(response.get("data"), dict):
                     raise BridgeError("invalid_response", "Bridge data must be an object.")
@@ -166,7 +246,7 @@ class ConnectionManager:
 
         try:
             return await asyncio.wait_for(
-                exchange(), 60 if command.endswith("_apply") else self.timeout
+                exchange(), self.apply_timeout if command.endswith("_apply") else self.timeout
             )
         except BridgeError:
             raise
@@ -196,6 +276,77 @@ class ConnectionManager:
             return result
 
         return await asyncio.gather(*(inspect(s) for s in self.discover()))
+
+    async def ensure_app_sessions(
+        self, requested: dict[str, str | None] | None = None
+    ) -> dict[str, dict]:
+        """Find and health-check one live session for Unreal and Blender.
+
+        ForgeMCP uses short authenticated TCP requests rather than persistent
+        sockets. A successful health request verifies a session for the caller;
+        it does not keep an application connection open between MCP calls.
+        """
+        requested = requested or {}
+        found = self.discover()
+
+        async def resolve(kind: str) -> dict:
+            candidates = [session for session in found if session.kind == kind]
+            session_id = requested.get(kind)
+            if session_id:
+                candidates = [session for session in candidates if session.session_id == session_id]
+                if not candidates:
+                    return {
+                        "connected": False,
+                        "session_id": None,
+                        "error": {
+                            "code": "session_not_found",
+                            "message": f"No registered {kind} session matches the requested ID.",
+                        },
+                    }
+
+            async def probe(session: Session) -> tuple[Session, dict | None, BridgeError | None]:
+                try:
+                    health = await self.request(session, "health")
+                    if health.get("adapter") not in {"ForgeMCP Unreal", "ForgeMCP Blender"}:
+                        raise BridgeError("invalid_identity", "Bridge health identity is invalid.")
+                    expected = "ForgeMCP Unreal" if kind == "unreal" else "ForgeMCP Blender"
+                    if health.get("adapter") != expected:
+                        raise BridgeError("invalid_identity", "Bridge application type does not match its registration.")
+                    return session, health, None
+                except BridgeError as error:
+                    return session, None, error
+
+            results = await asyncio.gather(*(probe(session) for session in candidates))
+            live = [(session, health) for session, health, error in results if error is None]
+            if len(live) == 1:
+                session, health = live[0]
+                return {"connected": True, "session_id": session.session_id, "health": health}
+            if len(live) > 1:
+                return {
+                    "connected": False,
+                    "session_id": None,
+                    "error": {
+                        "code": "ambiguous_session",
+                        "message": f"Multiple live {kind} sessions responded; specify a session ID.",
+                    },
+                    "candidates": [session.public() for session, _ in live],
+                }
+            if results:
+                error = results[0][2]
+                return {"connected": False, "session_id": None,
+                        "error": {"code": error.code, "message": str(error)}}
+            return {
+                "connected": False,
+                "session_id": None,
+                "error": {
+                    "code": "session_not_found",
+                    "message": f"No {kind} bridge session was found. Open the app and start its ForgeMCP bridge.",
+                },
+            }
+
+        unreal, blender = await asyncio.gather(resolve("unreal"), resolve("blender"))
+        return {"unreal": unreal, "blender": blender,
+                "connected": unreal["connected"] and blender["connected"]}
 
     async def dispatch(
         self, kind: str, command: str, session_id: str | None, args: dict | None = None

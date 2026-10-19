@@ -30,7 +30,7 @@ def socket(tree_node, collection, key):
     return by_name[0]
 
 
-def graph_validate(nodes, links):
+def graph_validate(nodes, links, require_output=True):
     if not isinstance(nodes, list) or len(nodes) > 32 or not isinstance(links, list) or len(links) > 64:
         raise ValueError("Use at most 32 shader nodes and 64 links.")
     if not nodes:
@@ -69,8 +69,11 @@ def graph_validate(nodes, links):
                 raise ValueError("Socket vectors require three or four components.")
             if any(type(v) not in (int, float) or not math.isfinite(v) or abs(v) > 1e8 for v in values):
                 raise ValueError("Socket defaults must be bounded finite numbers or vectors.")
-    if sum(n["type"] == "ShaderNodeOutputMaterial" for n in nodes) != 1:
+    output_count = sum(n["type"] == "ShaderNodeOutputMaterial" for n in nodes)
+    if require_output and output_count != 1:
         raise ValueError("Custom shader graphs require exactly one material output node.")
+    if not require_output and output_count:
+        raise ValueError("Existing graph edits cannot create or replace the material output node.")
     targets = set()
     for link in links:
         if not isinstance(link, dict) or set(link) != {"from_node", "from_socket", "to_node", "to_socket"}:
@@ -105,13 +108,12 @@ def graph_validate(nodes, links):
         visit(name)
 
 
-def construct_graph(material, nodes, links):
-    # Called only on a newly created material already registered with batch rollback.
-    tree = material.node_tree
-    tree.nodes.clear()
+def _create_nodes(tree, nodes, created=None, owner=None):
     instances = {}
     for spec in nodes:
         node = tree.nodes.new(spec["type"])
+        if created is not None:
+            created.append((owner, node) if owner is not None else node)
         node.name = spec["id"]
         node.location = (spec.get("x", 0), spec.get("y", 0))
         instances[spec["id"]] = node
@@ -146,6 +148,11 @@ def construct_graph(material, nodes, links):
             else:
                 raise ValueError("Output default is outside the node allowlist.")
             pin.default_value = value
+    return instances
+
+
+def _create_links(tree, instances, links, created=None, owner=None):
+    made = []
     for spec in links:
         output = socket(instances[spec["from_node"]], "outputs", spec["from_socket"])
         input_pin = socket(instances[spec["to_node"]], "inputs", spec["to_socket"])
@@ -156,7 +163,156 @@ def construct_graph(material, nodes, links):
         } <= {"VALUE", "RGBA", "VECTOR"}
         if not compatible:
             raise ValueError("Shader socket types are incompatible.")
-        tree.links.new(output, input_pin)
+        link = tree.links.new(output, input_pin)
+        made.append(link)
+        if created is not None:
+            created.append((owner, link) if owner is not None else link)
+    return made
+
+
+def construct_graph(material, nodes, links):
+    # Called only on a newly created material already registered with batch rollback.
+    tree = material.node_tree
+    tree.nodes.clear()
+    instances = _create_nodes(tree, nodes)
+    _create_links(tree, instances, links)
+    tree.update_tag()
+
+
+def validate_existing_graph_edit(material_name, nodes, links, edits=None):
+    if edits is None:
+        edits = []
+    material = bpy.data.materials.get(material_name)
+    if not material or material.library or not material.use_nodes or not material.node_tree:
+        raise ValueError("Expected an editable local material with a native node tree.")
+    tree = material.node_tree
+    if len(tree.nodes) > 64 or len(tree.links) > 128:
+        raise ValueError("Material exceeds bounded graph edit limits.")
+    if not isinstance(nodes, list) or len(nodes) > 32:
+        raise ValueError("Existing graph edits support at most 32 allowlisted nodes.")
+    if (not isinstance(links, list) or len(links) > 64 or
+            not isinstance(edits, list) or len(edits) > 32 or not nodes and not links and not edits):
+        raise ValueError("Existing graph edits need additions or node edits, with bounded nodes and links.")
+    graph_validate(nodes, [], require_output=False)
+    aliases = [spec["id"] for spec in nodes]
+    if len(aliases) != len(set(aliases)) or any(tree.nodes.get(name) for name in aliases):
+        raise ValueError("New node IDs must be unique and absent from the existing material graph.")
+    instances = {node.name: node for node in tree.nodes}
+    edited_ids = [spec.get("id") for spec in edits if isinstance(spec, dict)]
+    if (len(edited_ids) != len(edits) or len(edited_ids) != len(set(edited_ids)) or
+            set(edited_ids) & set(aliases)):
+        raise ValueError("Existing node edits must be unique and cannot target nodes added in this recipe.")
+    for spec in edits:
+        if not isinstance(spec, dict) or set(spec) - {"id", "x", "y", "operation", "blend_type", "inputs"}:
+            raise ValueError("Existing node edits contain unknown fields.")
+        node = instances.get(spec["id"])
+        if not node or node.bl_idname not in NODE_TYPES:
+            raise ValueError("Existing node edits target only exact allowlisted node IDs.")
+        if spec.get("operation"):
+            allowed = (MATH_OPERATIONS if node.bl_idname == "ShaderNodeMath" else
+                       VECTOR_OPERATIONS if node.bl_idname == "ShaderNodeVectorMath" else set())
+            if spec["operation"] not in allowed or spec["operation"] not in {
+                    item.identifier for item in node.bl_rna.properties["operation"].enum_items}:
+                raise ValueError("Node operation is outside the type-specific allowlist.")
+        if spec.get("blend_type") is not None:
+            if node.bl_idname != "ShaderNodeMixRGB" or spec["blend_type"] not in BLEND_OPERATIONS or spec["blend_type"] not in {
+                    item.identifier for item in node.bl_rna.properties["blend_type"].enum_items}:
+                raise ValueError("Blend type is outside the MixRGB allowlist.")
+        if not isinstance(spec.get("inputs", {}), dict) or len(spec.get("inputs", {})) > 16:
+            raise ValueError("Each node edit supports at most 16 socket defaults.")
+        for socket_name, value in spec.get("inputs", {}).items():
+            pin = editable_input(material_name, node.name, socket_name, value)
+            if pin.is_linked:
+                raise ValueError("Linked input defaults cannot be edited by this graph operation.")
+    targets = set()
+    edges = {node.name: [] for node in tree.nodes}
+    for link in tree.links:
+        edges.setdefault(link.from_node.name, []).append(link.to_node.name)
+    temporary_tree = bpy.data.node_groups.new("ForgeMCPValidation", "ShaderNodeTree")
+    try:
+        added = _create_nodes(temporary_tree, nodes)
+        instances.update(added)
+        for spec in links:
+            if not isinstance(spec, dict) or set(spec) != {"from_node", "from_socket", "to_node", "to_socket"}:
+                raise ValueError("Expected explicit shader link endpoints.")
+            source = instances.get(spec["from_node"])
+            target = instances.get(spec["to_node"])
+            if source is None or target is None:
+                raise ValueError("Shader link references a node outside the inspected graph or added node batch.")
+            if source.bl_idname not in NODE_TYPES or target.bl_idname not in NODE_TYPES:
+                raise ValueError("Links may target only inspected allowlisted shader nodes.")
+            output = socket(source, "outputs", spec["from_socket"])
+            input_pin = socket(target, "inputs", spec["to_socket"])
+            target_key = (spec["to_node"], input_pin.identifier)
+            if input_pin.is_linked or target_key in targets:
+                raise ValueError("Existing graph edits cannot replace or duplicate an input link.")
+            targets.add(target_key)
+            if not ({output.type, input_pin.type} <= {"VALUE", "RGBA", "VECTOR"}):
+                raise ValueError("Shader socket types are incompatible.")
+            edges.setdefault(spec["from_node"], []).append(spec["to_node"])
+
+        visiting, visited = set(), set()
+
+        def visit(name):
+            if name in visiting:
+                raise ValueError("Shader graph cycles are not allowed.")
+            if name in visited:
+                return
+            visiting.add(name)
+            for child in edges.get(name, []):
+                visit(child)
+            visiting.remove(name)
+            visited.add(name)
+
+        for name in edges:
+            visit(name)
+    finally:
+        bpy.data.node_groups.remove(temporary_tree)
+    return material
+
+
+def add_existing_graph_nodes(material_name, nodes, links, created_nodes, created_links, edits=None):
+    if edits is None:
+        edits = []
+    material = validate_existing_graph_edit(material_name, nodes, links, edits)
+    tree = material.node_tree
+    instances = {node.name: node for node in tree.nodes}
+    instances.update(_create_nodes(tree, nodes, created_nodes, material))
+    _create_links(tree, instances, links, created_links, material)
+    for spec in edits:
+        node = tree.nodes[spec["id"]]
+        if spec.get("x") is not None or spec.get("y") is not None:
+            node.location = (spec.get("x", node.location.x), spec.get("y", node.location.y))
+        if spec.get("operation"):
+            node.operation = spec["operation"]
+        if spec.get("blend_type") is not None:
+            node.blend_type = spec["blend_type"]
+        for socket_name, value in spec.get("inputs", {}).items():
+            editable_input(material_name, node.name, socket_name, value).default_value = value
+    tree.update_tag()
+    return material
+
+
+def restore_existing_graph_state(material_name, state):
+    material = bpy.data.materials.get(material_name)
+    if material is None or material.library or not material.node_tree:
+        raise ValueError("Cannot restore the original local material graph.")
+    tree = material.node_tree
+    for saved in state.get("nodes", []):
+        node = tree.nodes.get(saved["id"])
+        if node is None:
+            continue
+        node.location = saved["location"]
+        if saved.get("operation") is not None and hasattr(node, "operation"):
+            node.operation = saved["operation"]
+        if saved.get("blend_type") is not None and hasattr(node, "blend_type"):
+            node.blend_type = saved["blend_type"]
+        for saved_input in saved.get("inputs", []):
+            if "default" not in saved_input:
+                continue
+            pin = next((item for item in node.inputs if item.identifier == saved_input["identifier"]), None)
+            if pin is not None:
+                pin.default_value = saved_input["default"]
     tree.update_tag()
 
 

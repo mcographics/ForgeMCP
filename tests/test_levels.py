@@ -1,10 +1,11 @@
+import hashlib
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
 from server.core.connections import BridgeError
-from server.core.levels import LevelSaves
+from server.core.levels import CurrentLevelSaves, LevelSaves, inspect_project_package_file
 from server.core.workflow_journal import WorkflowJournal
 from server.core.workflows import WorkflowError
 
@@ -35,6 +36,33 @@ class NativeSaveFixture:
         self.calls.append(command)
         if self.failure:
             raise BridgeError(self.failure, "private native detail")
+        if command == "current_level_save_preview":
+            self.context["level"] = "/Game/Maps/Map.Map"
+            self.current_level_package = "/Game/Maps/Map"
+            self.current_packages = [
+                ("/Game/Maps/Map", Path(self.context["project_file"]).parent / "Content" / "Maps" / "Map.umap", True),
+                ("/Game/Maps/Map/ExternalActors/Actor_1", Path(self.context["project_file"]).parent / "Content" / "Maps" / "Map" / "ExternalActors" / "Actor_1.uasset", True),
+            ]
+            for package, path, _ in self.current_packages:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes((package + "-before").encode())
+            return {"preview_id": self.preview_id, "world": self.context["level"],
+                    "level_package": self.current_level_package, "package_count": len(self.current_packages),
+                    "packages": [{"package": package, "will_save": True, "file_existed_before": True,
+                                  "before_sha1": hashlib.sha1(path.read_bytes()).hexdigest(),
+                                  "before_bytes": path.stat().st_size}
+                                 for package, path, _ in self.current_packages]}
+        if command == "current_level_save_apply":
+            assert self.journal.read(self.preview_id.lower())["active_stage"] == "level_save"
+            saved = []
+            for package, path, _ in self.current_packages:
+                path.write_bytes((package + "-after-save").encode())
+                content = path.read_bytes()
+                saved.append({"package": package, "saved": True,
+                              "sha1": hashlib.sha1(content).hexdigest().upper(),
+                              "bytes": len(content)})
+            return {"operation_id": self.preview_id, "state": "saved", "saved": True,
+                    "level_package": self.current_level_package, "saved_packages": saved}
         if command == "level_save_preview":
             return {"preview_id": self.preview_id, "asset_path": args["asset_path"],
                     "source_world": self.context["level"], "dependencies": []}
@@ -107,6 +135,122 @@ async def test_uncertain_save_reconciliation_does_not_infer_success_from_absence
     assert result["map_file"] == {"exists": False}
     assert result["matches_recorded_saved_checksum"] is None
     assert result["recovery_completed"] is False
+
+
+async def test_current_world_partition_save_verifies_map_and_external_actor_packages(tmp_path):
+    native = NativeSaveFixture(tmp_path)
+    native.context["level"] = "/Game/Maps/Map.Map"
+    saves = CurrentLevelSaves(native)
+    preview = await saves.preview("unreal-123")
+    assert preview["scope"] == "active persistent level and its loaded external-object packages"
+    operation = preview["preview_id"]
+    result = await saves.apply(operation, operation, "unreal-123")
+    assert result["state"] == "saved"
+    assert {item["package"] for item in result["saved_package_files"]} == {
+        "/Game/Maps/Map", "/Game/Maps/Map/ExternalActors/Actor_1"}
+    assert result["receipt"]["completed_stages"] == ["level_save"]
+    observed = await CurrentLevelSaves(native).reconcile(operation, "unreal-123")
+    assert observed["matching_saved_packages"] is True
+    external = next(item for item in observed["saved_package_files"] if item["package"].endswith("Actor_1"))
+    assert inspect_project_package_file(native.context, external["package"], "/Game/Maps/Map") == external
+
+
+async def test_current_save_rejects_bad_confirmation_and_stale_session(tmp_path):
+    native = NativeSaveFixture(tmp_path)
+    native.context["level"] = "/Game/Maps/Map.Map"
+    saves = CurrentLevelSaves(native)
+    preview = await saves.preview("unreal-123")
+    with pytest.raises(WorkflowError, match="confirmation_required"):
+        await saves.apply(preview["preview_id"], "wrong", "unreal-123")
+    with pytest.raises(WorkflowError, match="wrong_target_session"):
+        await saves.apply(preview["preview_id"], preview["preview_id"], "unreal-456")
+    assert "current_level_save_apply" not in native.calls
+
+
+async def test_current_save_verifies_world_partition_actor_package_deletion(tmp_path, monkeypatch):
+    native = NativeSaveFixture(tmp_path)
+    native.context["level"] = "/Game/Maps/Map.Map"
+    package = "/Game/Maps/Map"
+    deleted_package = "/Game/__ExternalActors__/Maps/Map/ActorRemoved"
+    map_path = tmp_path / "Content" / "Maps" / "Map.umap"
+    deleted_path = tmp_path / "Content" / "__ExternalActors__" / "Maps" / "Map" / "ActorRemoved.uasset"
+    map_path.parent.mkdir(parents=True)
+    deleted_path.parent.mkdir(parents=True)
+    map_path.write_bytes(b"map-before")
+    deleted_path.write_bytes(b"external-actor-before")
+    native.current_level_package = package
+    saves = CurrentLevelSaves(native)
+
+    async def request(target, command, args):
+        native.calls.append(command)
+        if command == "current_level_save_preview":
+            return {
+                "preview_id": native.preview_id, "world": native.context["level"],
+                "level_package": package, "package_count": 2,
+                "packages": [
+                    {"package": package, "will_save": True, "will_delete": False,
+                     "file_existed_before": True, "before_sha1": hashlib.sha1(map_path.read_bytes()).hexdigest(),
+                     "before_bytes": map_path.stat().st_size},
+                    {"package": deleted_package, "will_save": False, "will_delete": True,
+                     "file_existed_before": True, "before_sha1": hashlib.sha1(deleted_path.read_bytes()).hexdigest(),
+                     "before_bytes": deleted_path.stat().st_size},
+                ],
+            }
+        assert command == "current_level_save_apply"
+        map_path.write_bytes(b"map-after-save")
+        deleted_path.unlink()
+        return {
+            "operation_id": native.preview_id, "state": "saved", "saved": True,
+            "level_package": package,
+            "saved_packages": [
+                {"package": package, "saved": True,
+                 "sha1": hashlib.sha1(map_path.read_bytes()).hexdigest().upper(),
+                 "bytes": map_path.stat().st_size},
+                {"package": deleted_package, "saved": False, "deleted": True},
+            ],
+        }
+
+    monkeypatch.setattr(native, "request", request)
+    preview = await saves.preview("unreal-123")
+    result = await saves.apply(preview["preview_id"], preview["preview_id"], "unreal-123")
+    assert result["state"] == "saved"
+    assert not deleted_path.exists()
+    observed = await saves.reconcile(preview["preview_id"], "unreal-123")
+    assert observed["matching_saved_packages"] is True
+    assert any(item == {"package": deleted_package, "exists": False}
+               for item in observed["saved_package_files"])
+
+
+async def test_current_save_accepts_verified_unchanged_packages(tmp_path, monkeypatch):
+    native = NativeSaveFixture(tmp_path)
+    native.context["level"] = "/Game/Maps/Map.Map"
+    saves = CurrentLevelSaves(native)
+    original_request = native.request
+
+    async def request(target, command, args):
+        if command == "current_level_save_preview":
+            preview = await original_request(target, command, args)
+            for item in preview["packages"]:
+                item["will_save"] = False
+                item["will_delete"] = False
+            return preview
+        native.calls.append(command)
+        saved = []
+        for package, path, _ in native.current_packages:
+            content = path.read_bytes()
+            saved.append({"package": package, "saved": False, "deleted": False,
+                          "sha1": hashlib.sha1(content).hexdigest().upper(), "bytes": len(content)})
+        return {"operation_id": native.preview_id, "state": "saved", "saved": True,
+                "level_package": native.current_level_package, "saved_packages": saved}
+
+    monkeypatch.setattr(native, "request", request)
+    preview = await saves.preview("unreal-123")
+    result = await saves.apply(preview["preview_id"], preview["preview_id"], "unreal-123")
+    assert result["state"] == "saved"
+    assert len(result["saved_package_files"]) == len(preview["packages"])
+    assert all(item["exists"] for item in result["saved_package_files"])
+    observed = await saves.reconcile(preview["preview_id"], "unreal-123")
+    assert observed["matching_saved_packages"] is True
 
 
 async def test_level_reconciliation_rejects_wrong_project_and_active_operation(tmp_path):

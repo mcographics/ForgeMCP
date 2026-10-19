@@ -3,7 +3,70 @@
 The authoritative source location is `G:\ForgeMCP`. The original roadmap remains
 the historical vision; this plan governs completion evidence for ongoing development.
 
+## Next Unreal milestone — Splines, PCG and city reconstruction
+
+Prioritize the [Splines/PCG implementation specification](Splines_PCG_City_Reconstruction.md)
+requested October 16, 2026. Deliver versioned capability inventory and read-only
+inspection first, followed by spline authoring, roads/junctions/Landscape integration,
+PCG graph authoring and generation, city districts, and calibrated reference-image
+reconstruction. Full exposure remains the target; each increment must state its
+coverage gaps. Reference calibration and accuracy constraints must inform the data
+contracts from the first increment. The specification records the live baseline,
+acceptance gates and 1:1-scale accuracy contract; these capabilities are not yet
+implemented. Existing roadmap obligations and release gates remain active.
+
+Component versions advance when that component receives a validated change: the
+MCP server source is 0.3.13, the engine-installed Unreal plugin is 0.2.13-alpha.9,
+and the latest Blender add-on is 0.2.35-alpha.4. Keep component versions truthful instead
+of bumping an unchanged component.
+The coordinated v1.0.0 release is reserved for completion of the roadmap's clean
+installation, live-session, capability, recovery, and package acceptance criteria.
+
+October 16 engine-wide alpha: UE 5.6.1 Win64 installation and fresh-project native
+and real stdio MCP inspection passed. Keep the installed alpha snapshot separate
+from active source development. See [acceptance evidence](UE56_Alpha_Acceptance_20261016.md)
+for the 335-test result, full editor-target build, loaded DLL proof and remaining
+visible UI/performance gates; [alpha setup](UE56_Alpha.md) covers updates and rollback.
+
+Alpha.9 brings a reference-inspired React UI into the Unreal editor tab. Its first
+split-file bundle failed to load from the local file URL; the corrected self-contained
+bundle passed Chromium runtime and clean-project UE package checks. Rendering and
+control interaction inside the user's standard desktop Editor remain unverified.
+See [alpha.9 UI acceptance](UE56_Alpha9_React_Tab_UI_20261016.md) and the [white-tab
+fix record](UE56_Alpha9_White_Tab_Fix_20261016.md).
+The transfer actions also use locally embedded official Unreal Engine and Blender
+marks; see the [logo integration record](UE56_Alpha9_Official_Partner_Logos_20261016.md).
+The reference-matched compact panel is recorded in the
+[layout refinement note](UE56_Alpha9_Compact_Layout_20261016.md).
+
 ## Objective
+
+Alpha.4 transfer-name retention: Blender-to-Unreal defaults to
+`/Game/Content/Returns/` and uses the exact Blender source object name. The
+reverse handoff keeps the Unreal asset name as Blender's object name when the
+optional override is blank. Exact-name collisions are reported instead of
+silently renamed. See [alpha.4 acceptance](UE56_Alpha4_Transfer_Names_20261016.md).
+
+Alpha.3 transfer UX: Import from Blender reports the existing Unreal destination
+and offers the safe next step; Send to Blender keeps the source name when its
+optional name override is blank. The engine package was installed and loaded in
+a fresh project; visible panel acceptance remains. See [the fix record](UE56_Alpha3_Transfer_UX_20261016.md).
+
+Alpha.2 transfer fix: built-in `/Engine` meshes support read-only Send to Blender;
+typed validation errors no longer disappear inside async exception groups. Both
+FBX and OBJ panel-worker handoffs and the installed engine copy passed acceptance.
+Native source stays in the engine installation; use explicit source arguments for
+host generation and packaging. See [the fix record](UE56_Alpha2_Transfer_Fix_20261016.md).
+
+October 13 Blender expansion: the source now exposes native operator/RNA catalogs
+and reviewed creative workflows for primitives, cameras/lights, properties, shader
+graphs, numeric keys, modifiers/constraints, save-copy and asynchronous PNG renders.
+The complete source registry contains 104 MCP tools. Native and real stdio MCP
+tests rendered 4096 × 2304 outputs in disposable sessions. Existing interactive
+Blender/client processes require their own version refresh. See
+`Documentation/Blender_Creative_Automation.md` for exact execution coverage,
+remaining adapters and acceptance evidence; discovery does not imply universal
+operator execution.
 
 Develop ForgeMCP into a dependable local MCP platform for practical game-development
 workflows across Unreal Engine and Blender. Build on the existing server, Unreal
@@ -22,7 +85,58 @@ capability coverage, and installable packages for both applications. The existen
 of a tool, a passing unit test, or an adapter health response alone does not prove a
 complete workflow.
 
+## Current capability note — Blender modifiers
+
+The native modifier slice currently supports inspection and reviewed creation of
+Subdivision, Bevel, Solidify and Weighted Normal modifiers through the existing
+preview/apply scene recipe. It validates bounded settings, protects linked and
+edit-mode meshes, includes modifier state in stale-preview checks and rolls back
+modifiers created by a failed batch. Editing/removing existing modifiers and
+arbitrary Geometry Nodes graphs remain outside this slice. See
+`Documentation/Development_Status.md` for the latest MCP acceptance evidence.
+
+Unreal DataTables now support bounded, read-only schema inspection, paginated row
+names and exact row-value inspection through three MCP tools. Only `/Game` and
+`/JasperPrism` asset paths are accepted; nested/container values are omitted. The
+disposable UE 5.6.1 MCP acceptance and unchanged-package hash are recorded in the
+development status report.
+
+DataAsset support includes native Asset Registry search under `/Game` or
+`/JasperPrism`, loaded `UDataAsset` subclass discovery, and bounded reflected class
+schema inspection. The schema reports inherited/editable flags, native property
+types, container element/key/value types, and reference constraints without loading
+instances. DataAsset creation now uses a separate reviewed preview/apply path for
+one new asset of an exact loaded concrete class, with bounded editable initial
+values and optional explicit saving. Existing-instance editing now uses `unreal_preview_data_asset_edit` and
+`unreal_apply_data_asset_edit`: each operation is bounded to 1–32 supported simple
+editable reflected properties on one existing asset, requires an exact single-use
+preview confirmation, rejects stale/dirty targets, and only saves when explicitly
+requested. Apply preserves a verified pre-edit package backup under the disposable
+project Saved directory and validates values after save. Native boolean accessors
+handle Unreal bitfield booleans. Arrays, nested containers, object/asset references,
+and arbitrary property editing remain unsupported. A disposable UE 5.6.1 test also
+reopened the saved asset in a fresh Editor process and confirmed the values.
+
+Unreal also exposes `unreal_inspect_actor_components` for bounded native
+component hierarchy, attachment, transform, mobility and assigned static-mesh
+inspection, plus `unreal_inspect_component_properties` for a bounded set of simple
+reflected values and editability metadata on one exact loaded component. Neither
+component tooling provides recursive object/container access. Component values
+can also be edited through reviewed `unreal_preview_component_property_edit` /
+`unreal_apply_component_property_edit` transactions, with separate level saving.
+Bitfield booleans use Unreal's native boolean property accessors and verified
+lowercase read-back; component property reflection class is returned alongside
+the C++ type string. See the development status record for native MCP acceptance
+evidence.
+
 ## Next milestone: validated Blender-to-Unreal asset workflow
+
+October 11–12 live integration checkpoint: the Codex host reports server 0.3.1
+and connected Unreal bridge 0.2.8 in ForgeMCPDev. The separate Blueprint showcase
+passed guarded creation, compilation, save, opening and native read-back. The full
+ForgeMCPDevEditor target passed after orderly Editor closure; saved Blueprint
+read-back passed again after restart. See `Unreal_MCP_Showcase.md`. Other operation
+families and JasperPrismDev keep their own acceptance gates.
 
 Create or modify a supported asset in Blender, validate and export it, import it
 into Unreal, place it in a level, and verify scale, orientation, materials, and asset
@@ -30,10 +144,12 @@ references. Include explicit previews, overwrite protection, recoverable backups
 and a structured report for every step. Validate in separate test projects and in
 interactive Blender and Unreal sessions.
 
-The first transfer implementation handles static meshes using binary FBX. This is
-the first acceptance case, not a replacement for the full asset, rig, animation,
-material, or cross-application objective. Unsupported source types must be reported
-explicitly; they must never silently produce a partially compatible asset.
+The primary Blender-to-Unreal transfer and return-to-Unreal path handles static
+meshes using binary FBX. Unreal-to-Blender additionally supports a constrained OBJ
+route, now covered by an asymmetric round-trip fixture. These are initial acceptance
+cases, not a replacement for the full asset, rig, animation, material, or
+cross-application objective. Unsupported source types must be reported explicitly;
+they must never silently produce a partially compatible asset.
 
 | Stage | Required behavior | Evidence required |
 | --- | --- | --- |
@@ -818,7 +934,7 @@ authenticated native export/stale/replay checks.
 
 ## GitHub publication preparation — 2026-10-10
 
-The repository is organized as Unreal plugin (`Plugins/MajesticForge`), Blender
+The repository is organized as Unreal plugin (`Plugins/Forge`), Blender
 add-on (`blender-addon/majestic_forge`), external server, scripts, tests and docs.
 Local Unreal host/configuration/content remain on disk and are excluded from the
 current tracked scope. A verified Git bundle and private local-development-file
@@ -839,3 +955,217 @@ export checks. SHA256:
 `b419fd7d2056c139dd6bdf8cce394257f4de534a72d7e7ae7285c85590de1cec`.
 The full development objective remains unfinished; public source availability is
 not production or visible interactive acceptance.
+
+## OBJ round-trip acceptance — 2026-10-11
+
+The optional Unreal-to-Blender OBJ route now has an asymmetric native acceptance case in addition to FBX. `scripts/verify_roundtrip_mcp.py --reverse-format obj` drove an actual MCP stdio session against a disposable UE 5.6.1 Editor and Blender 5.2.2 process. It exported a non-cubic, offset mesh with UE's native OBJ exporter, imported and welded it in Blender, returned it through the existing Blender FBX path, and compared the full vertex set, bounds, vertex count and triangle count in Unreal. The same fixture exercised a reviewed Blender transform edit and the external UI worker used by **Import from Blender**.
+
+The first acceptance run exposed an X-axis reflection. Blender's OBJ importer had been configured with positive X forward; using `NEGATIVE_X` matched UE's emitted coordinate convention. The corrected complete round trip passed, with all signed vertex positions and bounds matching within the existing geometric tolerance. The verifier now accepts a reverse-leg format argument and asserts the format recorded in the durable import receipt. This is headless native acceptance for this tested static-mesh fixture; materials, broad unit/transform profiles, visible panel operation and real-time synchronization remain unverified or unimplemented.
+
+Blender source version is now 0.2.16. Rebuild the source-only archive and run the isolated clean-profile ZIP verifier before distributing it. The Unreal package is unchanged. Do not install into the user's open applications as part of this acceptance.
+
+## Read-only Unreal reflected asset-property query — 2026-10-11
+
+Added `unreal_inspect_asset_properties` and native `asset_property_info` to close part of the audited asset-property discovery gap. It accepts one exact `/Game` or `/JasperPrism` asset path, loads that selected object on the Editor game thread, and returns a bounded page of supported scalar/enum/name/text/vector/rotator/color properties with native type and editability metadata. It reports omitted complex/container/transient fields explicitly and does not traverse object references; Unreal may load normal dependencies with the selected asset. `/Engine` paths are rejected. The older `unreal_inspect_asset` remains registry-only and does not load objects.
+
+The C++ adapter was targeted-built and linked in the disposable UE 5.6.1 host. Actual MCP acceptance queried a saved generated `StaticMesh` and returned 28 supported properties while counting 35 omitted fields; it verified every returned item is labelled read-only and rejected an `/Engine` query. The build archive now advertises `asset_property_info`. Current acceptance is limited to this static-mesh fixture and scalar/common-struct profile; it does not establish complete property coverage or editing.
+
+## Reviewed Unreal asset property edits — 2026-10-11
+
+`unreal_preview_asset_property_edit` and `unreal_apply_asset_property_edit` now cover a bounded portion of the audited `set_asset_property` surface. They accept one exact `/Game` or `/JasperPrism` asset, one editable property and Unreal-native property text. Supported edits are scalar/enum/name/string and common vector/rotator/color types; object references and containers remain excluded. Preview validates against the real `FProperty`, binds object/class/property/current value and expires after five minutes. Apply is single-use, checks the package is still clean, records an Editor transaction, enables `RF_Transactional` when necessary, performs native edit notifications, verifies the result and leaves the package dirty and unsaved. It reports that an Editor transaction was recorded; actual interactive Undo behavior remains unverified. Saving remains a separate manual action.
+
+Native MCP acceptance passed on a generated `StaticMesh`: `LightMapResolution` changed from 64 to 128 in memory and was re-read as 128. Invalid integer text, NaN, wrong confirmation, replay, a stale concurrent preview and a new preview against the dirty package were rejected. The test asset was not saved. This does not provide disk persistence, backups, batch edits or broad property-type coverage; details are in `Documentation/AssetPropertyAutomation.md`.
+
+The final UE 5.6.1 development ZIP passed the clean Blueprint-only install/load verifier under `Saved/UnrealPackageAcceptance-b6b4db0856434da0bd72795757559411`; native health advertised both property-edit commands. Package SHA-256 is `8f0d558c461fbb792784b53f11ec4a17e3dc7b7e9abba932c09042164d4ba6a7`. All 253 Python tests passed, as did scoped Ruff. The user project and interactive Blender scene were not modified.
+
+## Stable Unreal / Blender mesh bindings — 2026-10-11
+
+Static-mesh transfers now carry a stable binding ID and source snapshot SHA-256
+computed from transferable content rather than process-local object addresses.
+Blender previews establish or reuse the ID and attach it to the object only after
+the confirmed export succeeds. Unreal saves the ID and Blender revision fingerprint
+with imported mesh metadata. Unreal-to-Blender reads an existing ID or derives one
+from the explicit project and asset path; Blender stores it on the received object.
+No scene auto-save or existing asset replacement is performed.
+
+Actual MCP stdio round-trip fixtures verified the same ID Blender → Unreal →
+Blender → Unreal over FBX and OBJ, restarted the disposable UE Editor, reloaded the
+saved asset and verified the ID and content fingerprint again. Evidence:
+`Saved/RoundtripValidation-20261011/HostProject/Saved/RoundtripAcceptance-c81bd65ae3254bec9f6d152e43add025/acceptance.json`
+and
+`Saved/RoundtripValidation-20261011/HostProject/Saved/RoundtripAcceptance-067bae889d9c45ce9a49fb04d6924b01/acceptance.json`.
+UE 5.6.1 compiled/linked; clean-project Unreal plugin load passed; Blender 0.2.17
+clean-profile install and native export checks passed; 253 Python tests and scoped
+Ruff passed. Unreal ZIP SHA-256:
+`966952417301ff7c81950d6d34a438b88e51c454aed70af8f1014c472a827021`; Blender ZIP
+SHA-256: `ca305c61b53f6ca2f9cdcb9e321c3cf2cdf834de27b10d6663ca8806ffbb93a3`.
+
+Read-only revision comparison now exposes the states `synchronized`,
+`blender_changed`, `unreal_changed`, `both_changed_conflict`, `binding_mismatch`,
+`unbound` and `baseline_unavailable` through `forge_compare_mesh_binding`,
+`blender_inspect_mesh_binding` and `unreal_inspect_mesh_binding`. Actual MCP stdio
+acceptance observed synchronized and Blender-changed states in both FBX and OBJ
+round trips; coordinator tests cover the full state table. Changes to referenced
+material graphs are outside the current Unreal mesh fingerprint.
+
+Reviewed Blender-to-Unreal replacement is implemented for an existing bound
+static mesh. The native MCP acceptance run verifies package backup, retained
+material assignment, synchronized binding comparison and revision metadata after
+Editor restart. Failure-injection/recovery verification and package sidecar cases
+remain. Live synchronization must wait for a tested two-sided conflict policy,
+debounce, loop suppression and an explicit enable switch.
+
+## Native MCP acceptance for Blender UV-layer creation — 2026-10-11
+
+The reviewed `create_uv_layer` operation is now covered through the actual MCP
+stdio server, not only the add-on's direct package verifier. A disposable
+UE 5.6.1/Blender 5.2.2 run created a new layer, edited all six loop coordinates
+in the same reviewed recipe, and inspected the values through MCP. A fault
+injected immediately after a second layer was created caused a clean rollback;
+the apply result had no rollback errors and an MCP inspection confirmed that
+the failed layer was absent. Evidence is retained at
+`Saved/TransferImportValidation-f81c125453ba42a7871d9b9f8f9176fe/HostProject/Saved/WorkflowAcceptance-a94a2f5d780c4f3ba4b4941b3bdb96d8/acceptance.json`.
+
+Blender 5.2.2 clean-profile package 0.2.24 passed installation, UV layer
+create/edit/read-back, lifecycle and export acceptance. All 277 Python tests
+and Ruff passed. This closes UV-layer initialization for bounded static mesh
+work; unwrap/seam tools and broader recovery, sidecar, material/texture,
+skeletal/animation transfer and real-time synchronization remain outstanding.
+
+## Reviewed Blender Smart UV Project — 2026-10-11
+
+Added a typed `smart_uv_project` scene operation backed by Blender's native Smart
+UV Project operator. It accepts one exact layer name, a 0-to-90-degree angle
+limit and a bounded island margin; it creates the target layer when missing and
+is limited to 200,000 loops. The bridge temporarily manages selection and Edit
+Mode, validates the resulting coordinates, and restores the previous selection
+and mode. Preview fingerprints include topology, target layer names and all UV
+values on the layer. Mutations use the copied-mesh rollback transaction.
+
+Actual native MCP stdio acceptance projected and read back six loop UVs, rejected
+a competing preview after the mesh changed, injected failure after projection,
+and verified exact UV restoration with zero rollback errors. Evidence:
+`Saved/TransferImportValidation-f81c125453ba42a7871d9b9f8f9176fe/HostProject/Saved/WorkflowAcceptance-e130c52eb760434dac3c4fc90c53599e/acceptance.json`.
+Blender 5.2.2 clean-profile package 0.2.25 passed create/edit/project/read-back,
+lifecycle and export checks. All 278 Python tests and Ruff passed. Seam tools and
+packing optimization remain open, along with replacement recovery, sidecars,
+material/texture and skeletal/animation transfer, and real-time synchronization.
+
+## Reviewed Blender mesh seam inspection/editing — 2026-10-11
+
+Added native `mesh_edge_info` and MCP tool `blender_inspect_mesh_edges` for
+bounded pages of edge indices, endpoints, seam flags and sharp flags. The typed
+`set_mesh_edge_seams` scene operation changes up to 512 unique edge flags in a
+reviewed recipe. Preview fingerprints include the requested edge seam values;
+apply copies the mesh datablock, writes and verifies the changes, and uses the
+existing rollback path on failure.
+
+The real MCP stdio run on disposable Blender 5.2.2 inspected five edges, applied
+a seam, rejected a stale competing preview, injected a post-write failure and
+verified the seam stayed at its original value after rollback, with zero rollback
+errors. Evidence:
+`Saved/TransferImportValidation-f81c125453ba42a7871d9b9f8f9176fe/HostProject/Saved/WorkflowAcceptance-3dff767e4bf442b19f41ae0056c5cbe9/acceptance.json`.
+Clean-profile Blender package 0.2.26 passed seam and UV operations plus lifecycle
+and export checks. All 279 Python tests and Ruff passed. Sharp-flag editing,
+seam-aware unwrap/packing, broader transfer payloads and live sync remain open.
+
+## Reviewed Blender seam-aware UV unwrap — 2026-10-11
+
+Added the `unwrap_uv` scene operation for Blender's native ANGLE_BASED and
+CONFORMAL unwrap methods. It requires at least one seam edge, accepts a bounded
+UV margin, can create the named UV layer if needed and is limited to 200,000
+loops. The helper activates the requested layer, switches selection and Edit
+Mode safely, verifies finite normalized coordinates and restores prior editor
+selection/mode. Preview fingerprints include every target UV coordinate and the
+mesh's full seam map; apply edits a copied mesh for rollback.
+
+Actual MCP stdio acceptance marked all 12 edges on the disposable factory Cube,
+unwrapped and inspected all 24 loop UVs, rejected a stale competing preview,
+then injected a failure after unwrap and verified exact restoration with zero
+rollback errors. Evidence:
+`Saved/TransferImportValidation-f81c125453ba42a7871d9b9f8f9176fe/HostProject/Saved/WorkflowAcceptance-07ee4d942c9544b5be9ffc2989bb6ac4/acceptance.json`.
+Blender 5.2.2 package 0.2.27 passed clean-profile seam/unwrap and lifecycle/export
+checks. All 280 tests and Ruff passed. Automated seam placement, UV packing,
+remaining transfer payloads and real-time synchronization remain outstanding.
+
+## Reviewed Blender UV island packing — 2026-10-11
+
+Added the typed `pack_uv_islands` recipe for Blender's native island packer. It
+requires an existing named UV layer, local mesh in Object Mode, a margin from 0
+to 0.5, and no more than 200,000 loops. Preview fingerprints bind topology and
+the target layer's current UV values; apply uses a copied mesh, validates
+normalized output and restores selection/active object. Actual MCP stdio
+acceptance packed and read back all 24 UV loops, rejected stale previews, and
+verified exact rollback after an injected post-pack failure. The Blender 5.2.2
+clean-profile 0.2.28 ZIP passed UV, export, install and lifecycle checks. All
+281 Python tests and Ruff passed. Evidence and package hash are recorded in
+`Development_Status.md`. Remaining priorities include seam placement, richer
+mesh/material/texture/skeletal/animation transfer, and eventual live sync.
+
+## Reviewed Unreal actor search — 2026-10-11
+
+Added read-only `unreal_find_actors` for bounded active-world search by
+case-insensitive name/label substring, exact class path and exact actor tag, with
+combined filters, pagination and optional transform output. Server/plugin version
+0.2.1 passed UE 5.6.1 compile/link, clean package load, MCP stdio result verification,
+and missing-filter rejection. The current Blender 0.2.29 package also passed its
+clean-profile verifier; no Blender version bump was needed for this Unreal-only
+change. The reference catalog now records
+both actor-search registrations as partial rather than missing. Exact tag search
+and optional transforms are implemented; property predicates and exact/wildcard
+name patterns remain open. See `Development_Status.md` for native MCP acceptance
+evidence. The connected editor still requires the updated plugin and reconnect to
+expose this increment in its live tool registry.
+
+## Reviewed Blender existing Action key editing
+
+`blender_inspect_animation` provides bounded, paged inspection of active Action
+F-curves and keys. The reviewed `set_keyframe` recipe edits one inspected curve
+and key index, with bounded frame/value data, collision rejection, stale-scene
+fingerprinting, a copied Action and native read-back. The Blender add-on advanced
+to 0.2.30. Clean-profile ZIP and disposable MCP acceptance passed; see
+`Development_Status.md` for evidence and package hash. Key deletion, interpolation
+and handle editing, NLA, retargeting and animation transfer remain separate work.
+The live Blender add-on is still 0.2.3 and does not expose this increment yet.
+
+For the cross-application workflow, the roadmap's user-facing handoff labels are
+**Send to Unreal** in Blender and **Send to Blender** / **Import from Blender** in
+Unreal. These are staged transfer operations today. Keep real-time synchronization
+as a later milestone requiring revision detection, two-sided conflict resolution,
+loop suppression, recovery and an explicit enable/disable control; do not describe
+the current transfer tools as live synchronization.
+
+## Unreal Content Browser and session discovery — server 0.2.4 / plugin 0.2.3
+
+The Unreal 0.2.3 plugin and server 0.2.4 expose bounded Content Browser selection inspection, native opening of one exact project/plugin asset, and Content Browser synchronization. These are UI-level navigation operations with no asset edit/save behavior. The plugin build, clean package load, stdio tool registration, and disposable cross-application MCP acceptance passed. A headless native run returned a valid empty selection and accepted the sync request; visible navigation could not be verified. Server 0.2.4 checks the 64 most recent regular registration files after testing exposed alphabetical truncation hiding a new Editor session behind stale registrations. A regression test covers this case. Asset opening explicitly rejects unattended hosts; the interactive editor path still needs verification after an Editor session reconnects. Keep Blender add-on version 0.2.30 unchanged until a validated Blender-specific change lands.
+
+Live connector checkpoint: Codex currently reports ForgeMCP server 0.2.0 and zero connected sessions. Restart/reconnect ForgeMCP and relaunch the intended Unreal and Blender applications to activate and verify these source/package increments.
+
+## Current development continuation — DataAsset editing and Blender graph completion
+
+Unreal's DataAsset class/instance discovery and native class property-schema
+inspection now cover a broader read-only slice of the audited DataAsset module.
+The next Unreal increment should extend reviewed edits to existing DataAsset
+instances, with stale-state checks, atomic rollback, explicit save and reopen
+verification, then widen existing material graph editing. Do not treat generic
+asset scalar edits as full DataAsset authoring.
+
+For Blender, the first existing-graph edit slice now adds allowlisted nodes and
+links onto unoccupied inputs; it verifies endpoint types and cycles, fingerprints
+the inspected graph for stale-preview rejection, reads native results back and
+removes added nodes/links on rollback. Existing-node edits now support bounded
+positions, selected Math/VectorMath operations, MixRGB blend modes and supported
+unlinked scalar/vector/color defaults, with stale-preview and rollback checks.
+Existing-node/link removal/replacement and broader node coverage remain open.
+Continue filling animation/NLA, rig controls, texture transfer and two-sided
+synchronization afterward. Advance component versions only with native acceptance
+and clean package verification; v1.0 remains gated on the full roadmap and
+interactive activation.
+
+
+Current release checkpoint: Unreal plugin 0.2.8, MCP server 0.3.1, Blender add-on
+0.2.32. Guarded DataAsset creation and reviewed Blender existing-node graph edits
+passed disposable native acceptance. Both packages passed fresh-project/profile
+load checks; the broader Unreal host Editor target build remains unresolved. Next,
+extend existing DataAsset instance editing and Blender graph node/link management,
+then broaden session activation and recovery acceptance before v1.0.0.

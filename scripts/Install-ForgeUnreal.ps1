@@ -17,14 +17,20 @@ $openEditors = @(Get-CimInstance Win32_Process | Where-Object {
 })
 if ($openEditors.Count) { throw 'Save your work and close this project in Unreal first. Its plugin cannot be replaced while the editor is running.' }
 if (-not $PackageDirectory) {
-    if (-not $PackageArchive) { $PackageArchive = Join-Path $workspaceRoot 'Artifacts\ForgeMCP-Unreal-Development-0.2.0-UE5.6.1-Win64.zip' }
+    if (-not $PackageArchive) {
+        $sourceDescriptor = Join-Path $workspaceRoot 'Plugins\Forge\MajesticForge.uplugin'
+        $sourceInfo = Get-Content -LiteralPath $sourceDescriptor -Raw | ConvertFrom-Json
+        $channel = if ($sourceInfo.VersionName -like '*-alpha.*') { 'Alpha' } else { 'Development' }
+        $packageName = 'ForgeMCP-Unreal-{0}-{1}-UE5.6.1-Win64.zip' -f $channel, $sourceInfo.VersionName
+        $PackageArchive = Join-Path $workspaceRoot ('Artifacts\' + $packageName)
+    }
     $archivePath = (Resolve-Path -LiteralPath $PackageArchive).Path
     $python = Join-Path $workspaceRoot '.venv\Scripts\python.exe'
     if (-not (Test-Path -LiteralPath $python)) { throw 'The ForgeMCP Python environment is required to validate this archive. Set it up first, or use an independently verified extracted PackageDirectory.' }
     $staging = Join-Path $projectRoot ('Saved\ForgeInstallStaging\' + [Guid]::NewGuid().ToString('N'))
     & $python (Join-Path $PSScriptRoot 'extract_unreal_package.py') --archive $archivePath --destination $staging
     if ($LASTEXITCODE -ne 0) { throw 'Archive validation failed; the project plugin was not modified.' }
-    $PackageDirectory = Join-Path $staging 'MajesticForge'
+    $PackageDirectory = Join-Path $staging 'Forge'
 }
 $packageRoot = (Resolve-Path -LiteralPath $PackageDirectory).Path
 $pluginDescriptor = Join-Path $packageRoot 'MajesticForge.uplugin'
@@ -40,13 +46,13 @@ $project = Get-Content -LiteralPath $projectPath -Raw | ConvertFrom-Json
 if ($project.EngineAssociation -ne '5.6') {
     throw 'This binary package was built for Unreal 5.6.1. Build it for your engine version before installing.'
 }
-$destination = Join-Path $projectRoot 'Plugins\MajesticForge'
+$destination = Join-Path $projectRoot 'Plugins\Forge'
 if ($packageRoot.TrimEnd('\') -eq $destination.TrimEnd('\')) { throw 'Package and destination must be separate directories.' }
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
 if (Test-Path -LiteralPath $destination) {
     $backupRoot = Join-Path $projectRoot "Saved\MajesticForgeInstallBackups\$stamp"
     New-Item -ItemType Directory -Path $backupRoot -Force | Out-Null
-    Copy-Item -LiteralPath $destination -Destination (Join-Path $backupRoot 'MajesticForge') -Recurse
+    Copy-Item -LiteralPath $destination -Destination (Join-Path $backupRoot 'Forge') -Recurse
     Write-Output "Previous plugin backed up to $backupRoot"
 }
 New-Item -ItemType Directory -Path $destination -Force | Out-Null

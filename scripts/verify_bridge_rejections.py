@@ -62,7 +62,7 @@ async def main():
             writer.close()
             await writer.wait_closed()
         health = await manager.request(session, "health")
-        assert health["version"] in {"0.1.2", "0.2.0"}, health
+        assert health["version"] in {"0.1.2", "0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4", "0.2.5", "0.2.6", "0.2.7", "0.2.8"}, health
         print(f"{session.kind}: {health['version']} remains responsive after rejected requests")
 
 

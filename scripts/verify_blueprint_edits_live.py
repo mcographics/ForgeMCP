@@ -162,6 +162,27 @@ async def main():
             assert sequence["class"].endswith(".K2Node_ExecutionSequence")
             assert len(next(p for p in sequence["pins"] if p["direction"] == "output" and p["name"] == "then_2")["links"]) == 0
             assert next(p for p in sequence["pins"] if p["direction"] == "output" and p["name"] == "then_0")["links"]
+            function_recipe = {"asset_path": path, "operations": [], "variables": [], "components": [],
+                "functions": [{"name": "ReviewedScale", "inputs": [{"name": "Value", "type": "float"}],
+                    "outputs": [{"name": "Result", "type": "float"}], "pure": True}],
+                "nodes": [{"id": "scale_entry", "kind": "function_entry", "name": "Entry", "graph": "ReviewedScale"},
+                    {"id": "scale_return", "kind": "function_result", "name": "Return", "graph": "ReviewedScale"}],
+                "connections": [{"graph": "ReviewedScale", "from_node": "scale_entry", "from_pin": "Value",
+                    "to_node": "scale_return", "to_pin": "Result"}]}
+            function_preview = await call("unreal_preview_blueprint_edits", {
+                "session_id": session, "recipe": function_recipe})
+            assert await inspect() == after, "Function preview mutated the graph"
+            function_apply = await call("unreal_apply_blueprint_edits", {
+                "session_id": session, "preview_id": function_preview["preview_id"],
+                "confirmation": function_preview["preview_id"]})
+            assert function_apply["state"] == "completed" and function_apply["compiler_errors"] == 0, function_apply
+            assert function_apply["created_functions"] == ["ReviewedScale"] and not function_apply["saved"]
+            after_function = await inspect()
+            scale_graph = next(g for g in after_function["graphs"] if g["name"] == "ReviewedScale")
+            scale_entry = next(n for n in scale_graph["nodes"] if n["class"].endswith(".K2Node_FunctionEntry"))
+            scale_return = next(n for n in scale_graph["nodes"] if n["class"].endswith(".K2Node_FunctionResult"))
+            assert next(p for p in scale_entry["pins"] if p["name"] == "Value")["links"]
+            assert next(p for p in scale_return["pins"] if p["name"] == "Result")["links"]
             # Structurally valid endpoints with incompatible object -> exec types:
             # the preceding move must be restored when native connection fails.
             bad = await preview_edit([
@@ -172,11 +193,25 @@ async def main():
             rollback = await apply(bad)
             assert rollback["state"] == "rolled_back", rollback
             assert await inspect() == after, "Rollback failed to restore exact inspected graph state"
+            rollback_function_preview = await call("unreal_preview_blueprint_edits", {"session_id": session,
+                "recipe": {"asset_path": path, "operations": [
+                    {"op": "connect", "graph": "EventGraph", "node_id": actor["id"], "pin": "self",
+                     "to_node": printer["id"], "to_pin": "execute"}],
+                    "functions": [{"name": "RollbackFunction", "inputs": [], "outputs": []}],
+                    "nodes": [], "connections": []}})
+            rollback_function = await call("unreal_apply_blueprint_edits", {"session_id": session,
+                "preview_id": rollback_function_preview["preview_id"],
+                "confirmation": rollback_function_preview["preview_id"]})
+            assert rollback_function["state"] == "rolled_back", rollback_function
+            assert await inspect() == after_function, "Function graph rollback did not restore exact Blueprint state"
             assert hashlib.sha256(asset_file.read_bytes()).hexdigest() == original_hash, "Edit overwrote the saved asset"
-            assert len((await client.list_tools()).tools) == 23
+            registered_tools = {tool.name for tool in (await client.list_tools()).tools}
+            assert {"unreal_preview_blueprint_edits", "unreal_apply_blueprint_edits"} <= registered_tools
             (expected / "Saved/blueprint-edits-live-report.json").write_text(
                 json.dumps({"project": project, "asset_path": path, "before": before,
                             "apply": result, "add_nodes_apply": added, "after": after,
+                            "function_preview": function_preview, "function_apply": function_apply,
+                            "function_inspection": scale_graph, "function_rollback": rollback_function,
                             "rollback": rollback,
                             "saved_asset_hash_unchanged": True}, indent=2), encoding="utf-8")
     print("FORGE_LIVE_MCP_EXISTING_BLUEPRINT_NODE_CREATE_WIRE_EDIT_JOURNAL_STALE_REPLAY_ROLLBACK_PASS")

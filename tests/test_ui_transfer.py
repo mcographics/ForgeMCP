@@ -16,12 +16,19 @@ class Client:
         self.calls.append((name, args))
         if name == "forge_list_sessions":
             value = {"ok": True, "data": {"sessions": self.targets}}
-        elif name == "forge_preview_transfer":
+        elif name in {"forge_preview_transfer", "forge_preview_send_to_blender"}:
             value = self.preview_error or {"ok": True, "data": {"preview_id": "a" * 32,
                 "operation_id": "a" * 32, "changes": args["request"]}}
         else:
             value = {"ok": True, "data": {"state": "completed"}}
         return SimpleNamespace(isError=False, structuredContent=value)
+
+
+def test_async_worker_exception_groups_classify_leaves_without_exposing_messages():
+    assert ui_transfer.known_worker_error(ExceptionGroup("private", [
+        ExceptionGroup("private", [OSError("private")]), ValueError("private")]))
+    assert not ui_transfer.known_worker_error(ExceptionGroup("private", [
+        ValueError("private"), RuntimeError("private")]))
 
 
 def intent(target="unreal-123"):
@@ -90,3 +97,58 @@ async def test_unknown_request_fields_rejected():
     with pytest.raises(ValueError, match="invalid_panel_request"):
         await ui_transfer.transfer(client, {**intent(), "execute_python": "anything"}, confirm)
     assert not client.calls
+
+
+@pytest.mark.asyncio
+async def test_send_to_blender_uses_reverse_preview_apply(capsys):
+    client = Client([{"kind": "blender", "connected": True, "session_id": "blender-456"}])
+    async def confirm():
+        return {"confirmation": "a" * 32}
+    await ui_transfer.transfer(client, {"mode": "send_to_blender", "source_session_id": "unreal-123",
+        "source_asset_path": "/Game/Test/SM_Cube.SM_Cube", "target_session_id": "", "target_object": "Editable"}, confirm)
+    assert [name for name, _ in client.calls] == ["forge_list_sessions", "forge_preview_send_to_blender", "forge_apply_send_to_blender"]
+    assert client.calls[1][1]["request"]["target_session_id"] == "blender-456"
+    assert json.loads(capsys.readouterr().out.splitlines()[-1])["state"] == "completed"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("field,value,code", [
+    ("source_asset_path", "C:/private/secret.fbx", "invalid_source_asset_path"),
+    ("target_object", "../Cube", "invalid_target_object_name"),
+])
+async def test_reverse_panel_invalid_input_is_reported_before_mcp_task_group_exit(capsys, field, value, code):
+    client = Client()
+    async def confirm():
+        raise AssertionError("Invalid input must not reach confirmation")
+    request = {"mode": "send_to_blender", "source_session_id": "unreal-123",
+               "source_asset_path": "/Game/Test/SM_Cube.SM_Cube",
+               "target_session_id": "blender-456", "target_object": "Editable", field: value}
+    await ui_transfer.transfer(client, request, confirm)
+    result = capsys.readouterr().out
+    assert json.loads(result) == {"state": "failed", "error": {"code": code}}
+    assert value not in result
+    assert client.calls == []
+
+
+@pytest.mark.asyncio
+async def test_import_from_blender_resolves_source_not_unreal_destination():
+    client = Client([{"kind": "blender", "connected": True, "session_id": "blender-456"}])
+    async def confirm():
+        return {}
+    await ui_transfer.transfer(client, {**intent("unreal-123"), "mode": "import_from_blender", "source_session_id": ""}, confirm)
+    request = client.calls[1][1]["request"]
+    assert request["source_session_id"] == "blender-456"
+    assert request["target_session_id"] == "unreal-123"
+    assert all(name != "forge_apply_transfer" for name, _ in client.calls)
+
+
+@pytest.mark.asyncio
+async def test_import_worker_preserves_explicit_replacement_choice():
+    client = Client()
+    async def confirm():
+        return {}
+    await ui_transfer.transfer(client, {**intent("unreal-123"), "mode": "import_from_blender",
+        "source_session_id": "blender-456", "replace_existing": True, "place": False}, confirm)
+    request = client.calls[0][1]["request"]
+    assert request["replace_existing"] is True
+    assert request["place"] is False

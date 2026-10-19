@@ -24,10 +24,11 @@
     "widgets": 11
   },
   "coverage": {
-    "partial": 26,
-    "missing": 259,
+    "partial": 46,
+    "missing": 238,
     "intentionally-excluded": 1,
-    "equivalent-purpose": 1
+    "equivalent-purpose": 1,
+    "supported": 1
   },
   "commands": [
     {
@@ -145,9 +146,11 @@
       "cpp_dispatch_mentions": {
         "open_asset": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_open_asset"
+      ],
+      "coverage_note": "unreal_open_asset opens one exact /Game or /JasperPrism asset in its native editor; asset edits and saving are not performed.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -201,10 +204,12 @@
       "cpp_dispatch_mentions": {
         "get_asset_properties": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
-      "runtime_verified": false,
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_inspect_asset_properties"
+      ],
+      "coverage_note": "Loads one /Game or /JasperPrism asset and returns bounded simple reflected values; complex, container and reference values are omitted. Native StaticMesh acceptance passed.",
+      "runtime_verified": true,
       "duplicate_registration": false
     },
     {
@@ -240,10 +245,13 @@
       "cpp_dispatch_mentions": {
         "set_asset_property": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
-      "runtime_verified": false,
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_preview_asset_property_edit",
+        "unreal_apply_asset_property_edit"
+      ],
+      "coverage_note": "Reviewed in-memory edits for editable scalar, enum, name/string and common math/color properties; stale and dirty targets are rejected. Saving is manual; complex/object/container edits are omitted. Native StaticMesh acceptance passed.",
+      "runtime_verified": true,
       "duplicate_registration": false
     },
     {
@@ -546,9 +554,11 @@
       "cpp_dispatch_mentions": {
         "get_selected_assets": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_get_selected_assets"
+      ],
+      "coverage_note": "unreal_get_selected_assets returns sorted, bounded Content Browser selection metadata.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -573,9 +583,11 @@
       "cpp_dispatch_mentions": {
         "sync_browser": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_sync_content_browser"
+      ],
+      "coverage_note": "unreal_sync_content_browser requests Content Browser navigation to one exact /Game or /JasperPrism asset; visual focus is not verified.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -1113,10 +1125,12 @@
       "coverage": "partial",
       "majestic_tools": [
         "unreal_preview_blueprint",
-        "unreal_apply_blueprint"
+        "unreal_apply_blueprint",
+        "unreal_preview_blueprint_edits",
+        "unreal_apply_blueprint_edits"
       ],
-      "coverage_note": "New Blueprint recipes support empty void functions, without signatures.",
-      "runtime_verified": false,
+      "coverage_note": "New Blueprint recipes and reviewed edits to existing normal Blueprints add typed function signatures and validated entry/return pin connections; existing function signature changes remain unsupported.",
+      "runtime_verified": true,
       "duplicate_registration": false
     },
     {
@@ -1795,9 +1809,9 @@
       "cpp_dispatch_mentions": {
         "list_data_asset_classes": true
       },
-      "coverage": "missing",
+      "coverage": "partial",
       "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage_note": "unreal_list_data_asset_classes discovers loaded UDataAsset-derived classes with bounded filtering and pagination; abstract classes are optional and unrelated unloaded/plugin types are not enumerated.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -1834,10 +1848,13 @@
       "cpp_dispatch_mentions": {
         "create_data_asset": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
-      "runtime_verified": false,
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_preview_data_asset",
+        "unreal_apply_data_asset"
+      ],
+      "coverage_note": "Creates one new asset from an exact loaded concrete UDataAsset class with up to 32 supported editable initial values and optional explicit save; arrays/references and existing-instance edits are not covered.",
+      "runtime_verified": true,
       "duplicate_registration": false
     },
     {
@@ -1873,9 +1890,12 @@
       "cpp_dispatch_mentions": {
         "get_data_asset_properties": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_inspect_data_asset_schema",
+        "unreal_inspect_asset_properties"
+      ],
+      "coverage_note": "Class schema is bounded/read-only; instance value inspection is limited to generic supported simple reflected properties.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -1912,9 +1932,12 @@
       "cpp_dispatch_mentions": {
         "set_data_asset_property": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_preview_asset_property_edit",
+        "unreal_apply_asset_property_edit"
+      ],
+      "coverage_note": "Generic reviewed asset edits cover supported editable scalar/math fields; DataAsset-specific nested/reference editing is absent.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -2242,9 +2265,9 @@
       "cpp_dispatch_mentions": {
         "list_data_assets": true
       },
-      "coverage": "missing",
+      "coverage": "partial",
       "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage_note": "unreal_list_data_assets queries recursive Asset Registry results derived from UDataAsset, with bounded content paths, class filtering and pagination.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -2269,9 +2292,11 @@
       "cpp_dispatch_mentions": {
         "get_data_table_rows": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_list_data_table_rows"
+      ],
+      "coverage_note": "unreal_list_data_table_rows returns sorted DataTable row names with bounded pagination.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -2302,9 +2327,11 @@
       "cpp_dispatch_mentions": {
         "get_data_table_row": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_inspect_data_table_row"
+      ],
+      "coverage_note": "unreal_inspect_data_table_row returns bounded simple reflected values for one exact row; nested containers are omitted.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -2329,9 +2356,11 @@
       "cpp_dispatch_mentions": {
         "get_data_table_schema": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_inspect_data_table_schema"
+      ],
+      "coverage_note": "unreal_inspect_data_table_schema returns bounded row-struct field metadata; nested types are described but not traversed.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -2614,9 +2643,11 @@
       "cpp_dispatch_mentions": {
         "find_actors_by_name": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_find_actors"
+      ],
+      "coverage_note": "unreal_find_actors performs bounded case-insensitive substring matching on actor names and labels; wildcard/exact-name syntax is not implemented.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -4065,10 +4096,12 @@
       "cpp_dispatch_mentions": {
         "get_selected_actors": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
-      "runtime_verified": false,
+      "coverage": "supported",
+      "majestic_tools": [
+        "unreal_get_selected_actors"
+      ],
+      "coverage_note": "Read-only bounded Editor selection query returns actor identity, level and truncation metadata; the native MCP stdio workflow verified the response shape.",
+      "runtime_verified": true,
       "duplicate_registration": false
     },
     {
@@ -4183,9 +4216,9 @@
       },
       "coverage": "partial",
       "majestic_tools": [
-        "unreal_inspect_actor"
+        "unreal_inspect_actor_properties"
       ],
-      "coverage_note": "unreal_inspect_actor reads identity, transform and game-hidden state, not generic properties.",
+      "coverage_note": "unreal_inspect_actor_properties reads bounded simple reflected actor values; unreal_inspect_actor_components reads hierarchy/transforms and unreal_inspect_component_properties reads bounded simple reflected component values. Containers, nested references and component edits remain unsupported.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -4228,9 +4261,12 @@
       "cpp_dispatch_mentions": {
         "set_actor_property": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_preview_actor_property_edit",
+        "unreal_apply_actor_property_edit"
+      ],
+      "coverage_note": "Actor and component preview/apply tools parse bounded native reflected values, bind previews to exact object/class/world/property/current value and apply with Editor transactions; component float and bitfield-boolean edits are verified. Component coverage remains limited to supported simple reflected fields; level saving is separate.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -4315,9 +4351,11 @@
       "cpp_dispatch_mentions": {
         "get_actor_property_metadata": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_inspect_actor_properties"
+      ],
+      "coverage_note": "Actor/component inspection returns native property type and editability for bounded simple fields; category filtering, property-path metadata and recursive object metadata remain unsupported.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -4432,10 +4470,12 @@
       "cpp_dispatch_mentions": {
         "find_actors": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
-      "runtime_verified": false,
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_find_actors"
+      ],
+      "coverage_note": "unreal_find_actors searches by name/label substring, exact class path or exact actor tag with pagination and optional transforms; wildcard/exact name patterns and property predicates remain unsupported.",
+      "runtime_verified": true,
       "duplicate_registration": false
     },
     {
@@ -4558,9 +4598,14 @@
       "cpp_dispatch_mentions": {
         "create_material_instance": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_preview_material_instance",
+        "unreal_apply_material_instance",
+        "unreal_preview_material_instance_save",
+        "unreal_save_material_instance"
+      ],
+      "coverage_note": "Typed new-instance creation with scalar/vector/texture overrides; existing-instance updates are saved only after a same-session ForgeMCP edit and verified package backup. Static switches and other parameter families remain unsupported. Native parameter/save execution remains unverified.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -5203,9 +5248,11 @@
       "cpp_dispatch_mentions": {
         "get_material_instance_parameters": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_inspect_material_instance"
+      ],
+      "coverage_note": "Inspects already-loaded UMaterialInstanceConstant global scalar/vector/texture parameters with inherited values and override flags; other parameter families remain unsupported. Native execution remains unverified.",
       "runtime_verified": false,
       "duplicate_registration": false
     },
@@ -5248,9 +5295,12 @@
       "cpp_dispatch_mentions": {
         "set_material_instance_parameter": true
       },
-      "coverage": "missing",
-      "majestic_tools": [],
-      "coverage_note": "No corresponding typed Majestic Forge operation.",
+      "coverage": "partial",
+      "majestic_tools": [
+        "unreal_preview_material_instance",
+        "unreal_apply_material_instance"
+      ],
+      "coverage_note": "Typed preview/apply for scalar/vector/texture overrides on loaded instances; separate save preview supports new assets or same-session ForgeMCP updates with a verified backup before overwriting an existing package. Native parameter/save execution remains unverified.",
       "runtime_verified": false,
       "duplicate_registration": false
     },

@@ -5,6 +5,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import secrets
 import stat
 import time
@@ -126,11 +127,7 @@ def _snapshot(name):
         )
         materials.append(info)
     state = {
-        "scene": bpy.context.scene.as_pointer(),
-        "object": obj.as_pointer(),
-        "mesh": mesh.as_pointer(),
-        "file": bpy.data.filepath,
-        "frame": bpy.context.scene.frame_current,
+        "object_name": name,
         "units": [unit.system, unit.scale_length],
         "vertices": vertices,
         "edges": [list(e.vertices) for e in mesh.edges],
@@ -139,9 +136,19 @@ def _snapshot(name):
         "materials": materials,
         "matrix": [list(row) for row in obj.matrix_world],
     }
+    revision_state = {**state, "materials": [
+        {"name": material["name"], "surface": material["transfer_surface"]}
+        for material in materials
+    ]}
+    live_state = {**state, "scene_ptr": bpy.context.scene.as_pointer(),
+        "object_ptr": obj.as_pointer(), "mesh_ptr": mesh.as_pointer(),
+        "file": bpy.data.filepath, "frame": bpy.context.scene.frame_current}
     try:
+        revision = hashlib.sha256(
+            json.dumps(revision_state, sort_keys=True, allow_nan=False).encode()
+        ).hexdigest()
         digest = hashlib.sha256(
-            json.dumps(state, sort_keys=True, allow_nan=False).encode()
+            json.dumps(live_state, sort_keys=True, allow_nan=False).encode()
         ).hexdigest()
     except (ValueError, TypeError) as error:
         raise RecipeError(
@@ -155,7 +162,7 @@ def _snapshot(name):
         digest,
         {
             "source_object": name,
-            "source_snapshot_sha256": digest,
+            "source_snapshot_sha256": revision,
             "source_bounds_min": bounds_min,
             "source_bounds_max": bounds_max,
             "vertex_count": len(vertices),
@@ -192,6 +199,7 @@ class StaticMeshExporter:
     def __init__(self, staging_root):
         self.staging_root = Path(staging_root)
         self.previews = {}
+        self.binding_commit_previews = {}
 
     def preview(self, name):
         _, digest, metadata = _snapshot(name)
@@ -200,11 +208,17 @@ class StaticMeshExporter:
         if len(self.previews) >= 32:
             raise RecipeError("preview_limit", "Too many pending export previews.")
         preview_id = secrets.token_hex(16)
-        self.previews[preview_id] = {"name": name, "digest": digest, "expires": now + 300}
+        binding_id = bpy.data.objects[name].get("forge_binding_id")
+        if not isinstance(binding_id, str) or not re.fullmatch(r"[0-9a-f]{32}", binding_id):
+            binding_id = secrets.token_hex(16)
+        self.previews[preview_id] = {
+            "name": name, "digest": digest, "binding_id": binding_id, "expires": now + 300
+        }
         return {
             "preview_id": preview_id,
             "expires_in_seconds": 300,
             "source_session_id": f"blender-{os.getpid()}",
+            "binding_id": binding_id,
             **metadata,
             "format": "fbx_binary",
             "overwrite": False,
@@ -224,6 +238,74 @@ class StaticMeshExporter:
                 "Write a new FBX and export report in private transfer staging; do not save the scene"
             ],
         }
+
+    @staticmethod
+    def binding_info(name):
+        """Read a stable source revision and binding without allocating a preview."""
+        obj, _, metadata = _snapshot(name)
+        binding_id = obj.get("forge_binding_id")
+        if not isinstance(binding_id, str) or not re.fullmatch(r"[0-9a-f]{32}", binding_id):
+            binding_id = None
+        return {"name": name, "binding_id": binding_id,
+            "source_revision_sha256": metadata["source_snapshot_sha256"],
+            "baseline_revision_sha256": obj.get("forge_target_revision"),
+            "vertex_count": metadata["vertex_count"],
+            "triangle_count": metadata["triangle_count"],
+            "meters_per_source_unit": metadata["meters_per_source_unit"],
+            "saves_blend": False}
+
+    def binding_commit_preview(self, name, binding_id, source_revision, expected_previous_revision):
+        obj, digest, metadata = _snapshot(name)
+        if (not isinstance(binding_id, str) or not re.fullmatch(r"[0-9a-f]{32}", binding_id)
+                or obj.get("forge_binding_id") != binding_id
+                or not isinstance(source_revision, str) or not re.fullmatch(r"[0-9a-f]{64}", source_revision)
+                or metadata["source_snapshot_sha256"] != source_revision
+                or not isinstance(expected_previous_revision, str)
+                or not re.fullmatch(r"[0-9a-f]{64}", expected_previous_revision)):
+            raise RecipeError("binding_commit_rejected", "The exact bound Blender revision does not match the reviewed Unreal replacement.")
+        previous = obj.get("forge_target_revision")
+        if previous not in (None, expected_previous_revision):
+            raise RecipeError("stale_preview", "The Blender baseline changed after replacement review.")
+        now = time.monotonic()
+        self.binding_commit_previews = {key: plan for key, plan in self.binding_commit_previews.items()
+            if plan["expires"] > now}
+        if len(self.binding_commit_previews) >= 32:
+            raise RecipeError("preview_limit", "Too many pending binding-baseline previews.")
+        preview_id = secrets.token_hex(16)
+        self.binding_commit_previews[preview_id] = {"name": name, "binding_id": binding_id,
+            "source_revision": source_revision, "snapshot": digest, "previous": previous,
+            "expected_previous": expected_previous_revision, "expires": now + 300}
+        return {"preview_id": preview_id, "name": name, "binding_id": binding_id,
+            "previous_revision_sha256": previous, "accepted_revision_sha256": source_revision,
+            "mutated": False, "saves_blend": False, "expires_in_seconds": 300}
+
+    def binding_commit_apply(self, preview_id, confirmation):
+        if not isinstance(preview_id, str) or confirmation != preview_id:
+            raise RecipeError("confirmation_required", "Confirmation must match the binding-baseline preview.")
+        plan = self.binding_commit_previews.pop(preview_id, None)
+        if plan is None or plan["expires"] <= time.monotonic():
+            raise RecipeError("preview_not_found", "Binding-baseline preview expired or was consumed.")
+        obj, digest, metadata = _snapshot(plan["name"])
+        if (obj.get("forge_binding_id") != plan["binding_id"] or digest != plan["snapshot"]
+                or metadata["source_snapshot_sha256"] != plan["source_revision"]
+                or obj.get("forge_target_revision") != plan["previous"]):
+            raise RecipeError("stale_preview", "The Blender object or its baseline changed after preview.")
+        try:
+            obj["forge_target_revision"] = plan["source_revision"]
+            if obj.get("forge_target_revision") != plan["source_revision"]:
+                raise RuntimeError("baseline_write_failed")
+        except Exception as error:
+            try:
+                if plan["previous"] is None:
+                    del obj["forge_target_revision"]
+                else:
+                    obj["forge_target_revision"] = plan["previous"]
+            except Exception:
+                raise RecipeError("binding_commit_partial", "Blender baseline update failed and could not be restored.") from error
+            raise RecipeError("binding_commit_failed", "Blender baseline update failed; the original baseline was restored.") from error
+        return {"state": "accepted", "name": plan["name"], "binding_id": plan["binding_id"],
+            "previous_revision_sha256": plan["previous"], "baseline_revision_sha256": plan["source_revision"],
+            "source_revision_sha256": plan["source_revision"], "saves_blend": False}
 
     @staticmethod
     def _record(directory, report):
@@ -303,6 +385,7 @@ class StaticMeshExporter:
         path = directory / "mesh.fbx"
         report = {
             "transfer_id": preview_id,
+            "binding_id": plan["binding_id"],
             "source_session_id": f"blender-{os.getpid()}",
             **metadata,
             "artifact_name": path.name,
@@ -321,6 +404,9 @@ class StaticMeshExporter:
         try:
             if self._write_fbx(obj, path) != {"FINISHED"}:
                 raise RecipeError("export_failed", "Native FBX exporter did not finish.")
+            # Attach stable identity only after the confirmed native export succeeds.
+            # The scene stays unsaved until its owner chooses to save it.
+            obj["forge_binding_id"] = plan["binding_id"]
             protect_path(path)
             if not 23 <= path.stat().st_size <= MAX_BYTES:
                 raise RecipeError("export_limit", "Exported artifact exceeds size limits.")

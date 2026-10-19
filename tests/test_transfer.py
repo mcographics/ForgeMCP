@@ -180,6 +180,20 @@ def test_material_staging_requires_supported_surface_and_generates_new_packages(
     assert definition["metallic"] == 0.63
 
 
+def test_replacement_staging_carries_only_reviewed_revisions_and_slot_identity(tmp_path):
+    source, target, manifest, _ = staging_fixture(tmp_path)
+    recipe = stage_unreal_artifact(source, manifest, save=True, replace_existing=True,
+        expected_source_baseline_sha256="a" * 64, expected_target_revision_sha256="b" * 64)
+    assert recipe["replace_existing"] is True
+    assert recipe["expected_source_baseline_sha256"] == "a" * 64
+    assert recipe["expected_target_revision_sha256"] == "b" * 64
+    assert recipe["material_slot_names"] == [slot.name for slot in manifest.materials]
+    assert "material_definitions" not in recipe
+    with pytest.raises(TransferArtifactError, match="Replacement requires"):
+        stage_unreal_artifact(source, manifest, replace_existing=True,
+            expected_source_baseline_sha256="a" * 64, expected_target_revision_sha256="b" * 64)
+
+
 @pytest.mark.parametrize("field,value", [
     ("base_color", [0.1, 0.2, 2]), ("base_color", [0.1, 0.2]),
     ("roughness", float("nan")), ("metallic", -1),

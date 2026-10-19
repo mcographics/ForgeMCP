@@ -38,7 +38,7 @@ def extract(archive_path, destination):
         if not isinstance(files, dict) or set(names) != set(files) | {"package-manifest.json"}:
             raise ValueError("Archive does not match manifest scope")
         for name, checksum in files.items():
-            if (not re.fullmatch(r"MajesticForge/(?:[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+", name)
+            if (not re.fullmatch(r"Forge/(?:[A-Za-z0-9_.-]+/)*[A-Za-z0-9_.-]+", name)
                     or any(part in {".", ".."} or part.endswith((".", " ")) for part in name.split("/"))
                     or not isinstance(checksum, str) or not re.fullmatch(r"[0-9a-f]{64}", checksum)):
                 raise ValueError("Unsafe package path or checksum")
@@ -46,9 +46,9 @@ def extract(archive_path, destination):
             if hashlib.sha256(data).hexdigest() != checksum:
                 raise ValueError("Package checksum mismatch")
             payloads[name] = data
-        required = {"MajesticForge/MajesticForge.uplugin", "MajesticForge/Binaries/Win64/UnrealEditor.modules",
-                    "MajesticForge/Binaries/Win64/UnrealEditor-MajesticForge.dll",
-                    "MajesticForge/Binaries/Win64/UnrealEditor-MajesticForgeRuntime.dll"}
+        required = {"Forge/MajesticForge.uplugin", "Forge/Binaries/Win64/UnrealEditor.modules",
+                    "Forge/Binaries/Win64/UnrealEditor-MajesticForge.dll",
+                    "Forge/Binaries/Win64/UnrealEditor-MajesticForgeRuntime.dll"}
         if not required <= payloads.keys():
             raise ValueError("Required plugin modules missing")
     # No filesystem writes until the entire archive has passed validation.
@@ -59,7 +59,7 @@ def extract(archive_path, destination):
         with path.open("xb") as handle:
             handle.write(data)
     (destination / "package-manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    return destination / "MajesticForge"
+    return destination / "Forge"
 
 
 if __name__ == "__main__":

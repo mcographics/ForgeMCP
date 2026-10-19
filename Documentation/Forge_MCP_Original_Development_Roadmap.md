@@ -4,10 +4,230 @@ Original Development Roadmap — Unreal Engine + Blender + VS Code + OpenAI Code
 
 Organization: Majestic Creations
 Project name: ForgeMCP
-Document version: 1.0 — Initial Planning
-Date: October 8, 2026
-Project status: Concept and architecture planning
+Document version: 1.1 — Roadmap updated against implementation
+Date: October 11, 2026
+Project status: Active implementation; pre-v1.0
 Primary development environment: Visual Studio Code with OpenAI Codex
+
+## October 16, 2026 — Native Landscape extension
+
+The native Landscape extension targets bounded disposable test maps.
+See [Landscape automation](LandscapeAutomation.md) for typed operations, native
+APIs, progressive jobs, recovery, and explicit limits. The phased objective still
+includes World Partition streaming-proxy/external-package compatibility; those
+mutations remain unsupported pending their own implementation and acceptance.
+This work does not authorize constructing the nine-kilometre city or changing
+Ultra Dynamic Sky. Compilation and live acceptance are reported separately in
+[the dated Landscape acceptance evidence](Landscape_Acceptance_20261016.md).
+
+## Next Unreal priority — Splines, PCG and reference-based cities
+
+October 16, 2026: prioritize comprehensive native spline and PCG exposure for
+roads, junctions, city blocks and realistic city reconstruction from reference
+images. Include standard splines, spline meshes, Landscape splines, PCG graph
+authoring/execution/debugging, district generation and calibrated references.
+The target is 1:1 real-world scale with measured geometric and visual fidelity;
+exact reconstruction requires sufficient calibrated source data and declared
+tolerances. A single uncalibrated photograph cannot guarantee exact dimensions.
+
+The [implementation specification](Splines_PCG_City_Reconstruction.md) defines
+coverage, delivery order, architecture, recovery and acceptance criteria. This is
+the next development priority, not a claim of implemented spline/PCG support;
+the full existing roadmap and remaining release gates remain in scope.
+
+## October 16, 2026 — Engine-wide Unreal alpha
+
+Plugin **0.2.13-alpha.1** introduces a separately packaged UE **5.6.1 Win64
+Development Editor** alpha and a validated engine-wide installer. Feature work
+continues in the project-local development plugin. Engine installation makes the
+alpha available across projects using that engine; each project explicitly enables
+it. This milestone does not close the remaining v1.0 feature or acceptance gates.
+See [UE 5.6 alpha](UE56_Alpha.md) for installation, updating, rollback and scope.
+
+The engine-installed alpha is now **0.2.13-alpha.9**, with MCP server source
+**0.3.13** and Blender add-on **0.2.35-alpha.6**. Alpha.9 brings a locally bundled
+React interface into the Unreal editor tab while retaining its native C++ bridge and
+reviewed transfer flow. The initial file-based bundle showed a white panel; its
+self-contained bundle fix is verified and documented in [alpha.9 white-tab fix](UE56_Alpha9_White_Tab_Fix_20261016.md). See also [alpha.9 UI acceptance](UE56_Alpha9_React_Tab_UI_20261016.md).
+The transfer actions now use the official Unreal Engine and Blender marks; see
+[alpha.9 logo integration evidence](UE56_Alpha9_Official_Partner_Logos_20261016.md).
+The compact reference-matched spacing and icons are documented in
+[alpha.9 layout refinement](UE56_Alpha9_Compact_Layout_20261016.md).
+Alpha.4 uses `/Game/Content/Returns/` for Blender-to-Unreal transfers and retains
+the exact source object name in both directions. It reports exact-name collisions
+instead of generating prefixes or numeric suffixes. Native source remains
+engine-wide at the user's request. See [alpha.4 transfer-name evidence](UE56_Alpha4_Transfer_Names_20261016.md),
+[alpha.3 evidence](UE56_Alpha3_Transfer_UX_20261016.md), and
+[alpha.2 evidence](UE56_Alpha2_Transfer_Fix_20261016.md) for the earlier engine
+mesh handoff fix and acceptance results.
+
+The Blender add-on release is **0.2.35-alpha.6** (Blender's numeric add-on
+metadata remains **0.2.35**); its package and bridge health report the full
+prerelease version. The Blender sidebar refinement is recorded in
+[alpha.6 UI acceptance](Blender_Alpha6_Tab_Visual_Refinement_20261016.md).
+
+## October 13, 2026 — Blender flexibility checkpoint
+
+The latest server source is **0.3.6** and Blender add-on **0.2.33**, with **104 MCP
+tools** in the source registry. The original October 11 baseline below is retained
+as historical evidence. Blender now exposes complete registered operator discovery
+and native parameter/RNA schemas, plus reviewed creative authoring, camera/light
+and render configuration, expanded shader graphs, numeric animation, modifiers,
+constraints, new `.blend` copies and asynchronous PNG render jobs/cancellation.
+Disposable native and real stdio MCP tests produced and decoded 4096 × 2304
+animated frames. Complete operator discovery is not universal operator execution.
+See [Blender creative automation](Blender_Creative_Automation.md) for coverage,
+installation and the remaining adapters.
+
+## Current implementation baseline — October 11, 2026
+
+This document retains the original product vision and records the implementation
+state so that future work builds on verified systems instead of treating ForgeMCP as
+a greenfield project. The authoritative execution plan and evidence log are
+`Documentation/Active_Development_Plan.md` and
+`Documentation/Development_Status.md`; this roadmap supplies the product direction
+and v1.0 completion gates.
+
+Current component versions are MCP server source **0.3.1**, Unreal plugin **0.2.8**,
+and Blender add-on **0.2.32**. These are development versions, not a v1.0 release.
+The source registers 85 MCP tools. On October 11, the Codex-connected ForgeMCP host
+reported server 0.3.1 and connected Unreal session `unreal-12640` in ForgeMCPDev,
+with Unreal bridge 0.2.8. Project/asset/actor queries and reviewed Blueprint
+creation, compilation, saving and opening succeeded through that host. A fresh
+source stdio subprocess independently discovered 85 tools and verified the saved
+showcase graph and unchanged package bytes. This validates those operations in
+ForgeMCPDev; the newest DataAsset operations and the user's JasperPrismDev Editor
+still need their own live acceptance. See `Unreal_MCP_Showcase.md` for evidence.
+
+The current implementation already includes authenticated local Unreal and Blender
+bridges; explicit session selection; typed, preview/apply operations; bounded
+inspection; stale-state checks; and transaction/rollback behavior across several
+workflows. Unreal support includes actor and component inspection/editing, Blueprint
+creation and selected existing-graph edits, native material and material-instance
+graph authoring, asset discovery, DataTable inspection, DataAsset discovery/schema/
+creation and reviewed edits, mesh import/export, and transfer binding operations.
+Blender support includes object, mesh, material, collection, rig and animation
+inspection; selected mesh, material-node, modifier and animation edits; and transfer
+operations. Static-mesh transfer supports reviewed FBX and OBJ paths, revision checks,
+stable bindings and guarded replacement workflows.
+
+The latest DataAsset editing increment adds `unreal_preview_data_asset_edit` and
+`unreal_apply_data_asset_edit`. In a disposable UE 5.6.1 project, the tests verified
+guarded changes to two boolean fields, rejection of wrong confirmation and stale
+preview, preservation of the original package, and persisted values after reopening
+in a fresh Editor process. The Unreal 0.2.8 package passed clean-project plugin-load
+verification. The full ForgeMCPDev Editor target and interactive JasperPrismDev
+session were not verified for that increment.
+
+Progress is estimated at **55% overall** toward v1.0: Unreal automation **58%**,
+Blender automation **62%**, bidirectional file transfer **60%**, and installation,
+live integration and recovery **42%**. These are engineering estimates based on
+feature breadth, workflow validation and release gates, not a count of MCP tools.
+
+## Product workflow direction
+
+ForgeMCP's first cross-application milestone is a reliable, user-directed round trip:
+
+1. In Blender, users send a selected supported asset to Unreal using the action label
+   **Send to Unreal**. The operation exports and transfers a supported FBX or OBJ,
+   then Unreal imports it through a reviewed workflow with a clear receipt.
+2. In Unreal, users can choose **Send to Blender** to export a selected supported
+   asset as FBX or OBJ for Blender work. **Import from Blender** provides a separate
+   pull/import route for an asset already prepared in the Blender handoff location,
+   including cases where the user did not start from Unreal's Send to Blender action.
+3. Both directions report source, destination, format, target session, binding or
+   revision state, and the outcome. Existing assets are protected by previews,
+   conflict checks, explicit replacement choices and recovery evidence.
+
+These are explicit user-triggered transfers, not live synchronization. Real-time
+two-way updating remains a later goal. It requires a defined ownership/conflict
+model, debounced change detection, stable asset identity, cancellable transfer jobs,
+recovery across either application's failure, and clear UI feedback. Do not describe
+the current round-trip workflow as seamless or real time until those properties are
+implemented and tested.
+
+## Revised delivery path to v1.0
+
+### Track A — Restore the live integration baseline
+
+- Refresh or restart the Codex-connected ForgeMCP server so it runs the current
+  source, and confirm the MCP tool registry exposes the current operations.
+- Start the intended Unreal and Blender editors, rediscover their registrations,
+  and prove session identity and `connected: true` through the MCP host.
+- Run harmless project/scene and asset queries through that same host. Recheck after
+  reconnects so stale session files cannot be mistaken for a live editor.
+- Use JasperPrismDev as a read-only integration target until the user authorizes
+  specific asset edits; use disposable projects for mutation acceptance by default.
+
+### Track B — Complete dependable Unreal workflows
+
+- Expand reviewed Blueprint graph editing in bounded, typed increments, preserving
+  compile feedback, scratch-asset rollback and existing-asset protection.
+- Continue material and material-instance workflows with inspect, preview, validate,
+  apply, compile, save and read-back evidence; validate visual output separately.
+- Broaden asset and level operations only with explicit target selection, path and
+  class validation, stale-preview rejection, save boundaries and recoverable failure.
+- Prioritize common gaps such as UMG, World Partition/data layers, PCG and Niagara
+  only after each operation has a safe typed contract and an isolated acceptance test.
+- Establish skeletal mesh, animation and retargeting workflows; these currently lack
+  asset-specific implementation and acceptance.
+
+### Track C — Complete dependable Blender workflows
+
+- Extend rig and weight editing with deformation checks and rollback.
+- Add safe editing/removal for existing modifiers and material graph nodes/links,
+  plus broader mesh/object operations with topology and custom-data safeguards.
+- Continue animation editing with copied Actions, key/interpolation validation and
+  explicit activation behavior.
+- Verify transfer panels and operations in clean Blender profiles and live sessions.
+
+### Track D — Harden cross-application handoff
+
+- Complete matching **Send to Unreal**, **Send to Blender**, and **Import from Blender**
+  user flows for supported FBX/OBJ static meshes, with deterministic paths and
+  transfer receipts.
+- Validate source and destination identities, formats, transforms, material/mesh
+  scope, binding/revision comparison, duplicate handling, cancellation and recovery.
+- Treat broader content (materials, rigs, animation, scenes) as separate profiles;
+  do not imply those are included in static-mesh support.
+- Design real-time synchronization only after file handoff is reliable. Specify
+  conflict ownership, change detection, latency targets, pause/resume, and recovery
+  before adding watchers or background updates.
+
+### Track E — Release and operational readiness
+
+- Provide repeatable clean installation and upgrade/uninstall paths for both adapters
+  and the server, with version compatibility checks and no machine-specific paths.
+- Verify supported Unreal/Blender versions, package contents, signatures/hashes,
+  startup, reconnect, logging and actionable failure messages.
+- Test failure recovery, stale previews, repeated requests, editor shutdown/restart,
+  network/bridge loss, save failure and rollback behavior.
+- Publish capability boundaries and known limitations; do not promote development
+  package evidence as an end-user release.
+
+## v1.0 completion gates
+
+The coordinated v1.0.0 release is ready only when all of these gates pass:
+
+- **Live MCP integration:** current server, Unreal and Blender sessions are discoverable
+  and connected through the intended Codex MCP host; project identity and harmless
+  read-only queries succeed through that host.
+- **Core workflows:** supported Unreal and Blender inspection/editing tasks complete
+  with target validation, preview/confirmation where appropriate, application-level
+  result checks and clear limitations.
+- **Round trip:** both send directions and the Blender pull/import route work for the
+  declared formats, with duplicate/conflict handling and recoverable errors.
+- **Safety and recovery:** stale state and wrong confirmation are rejected; failures
+  do not silently leave partial changes; saved outputs can be reopened and verified.
+- **Clean installation:** packages install and load in fresh supported environments,
+  survive restart/reconnect and report incompatible versions clearly.
+- **Documentation and release:** capabilities, setup, constraints, tests, versions
+  and known gaps match the shipped artifacts. Real-time sync is either validated as
+  a v1.0 feature or clearly remains outside the v1.0 promise.
+
+Until these gates are evidenced, maintain component development versions and report
+progress by validated workflow. Do not use the 1.0 label merely because the initial
+feature list is present.
 
 1. Project Decision: Build Our Own From Scratch
 
@@ -55,7 +275,7 @@ Producing clear status reports, diagnostic information, and recoverable changes.
 
 Codex is the preferred user-facing AI agent, not a hard dependency built into the MCP protocol server. The server should expose standards-compliant tools to any client that is appropriately configured and authorized.
 
-3. Original System Architecture
+3.  Original System Architecture
 
                   ┌──────────────────────────────────┐
                   │  Visual Studio Code + Codex     │
@@ -502,34 +722,34 @@ Keep branding, architecture, and release decisions under Majestic Creations.
 ForgeMCP/
 │
 ├── server/
-│   ├── main.py
-│   ├── core/
-│   │   ├── connection_manager.py
-│   │   ├── task_router.py
-│   │   ├── safety_manager.py
-│   │   └── project_context.py
-│   ├── adapters/
-│   │   ├── unreal_adapter.py
-│   │   └── blender_adapter.py
-│   └── tools/
-│       ├── forge.py
-│       ├── editor.py
-│       ├── blueprints.py
-│       ├── animations.py
-│       └── asset_pipeline.py
+│ ├── main.py
+│ ├── core/
+│ │ ├── connection_manager.py
+│ │ ├── task_router.py
+│ │ ├── safety_manager.py
+│ │ └── project_context.py
+│ ├── adapters/
+│ │ ├── unreal_adapter.py
+│ │ └── blender_adapter.py
+│ └── tools/
+│ ├── forge.py
+│ ├── editor.py
+│ ├── blueprints.py
+│ ├── animations.py
+│ └── asset_pipeline.py
 │
 ├── unreal-plugin/
-│   └── ForgeMCP/
-│       ├── Source/
-│       └── Resources/
+│ └── ForgeMCP/
+│ ├── Source/
+│ └── Resources/
 │
 ├── blender-addon/
-│   └── forgemcp/
+│ └── forgemcp/
 │
 ├── pipelines/
-│   ├── manifests/
-│   ├── exporters/
-│   └── validators/
+│ ├── manifests/
+│ ├── exporters/
+│ └── validators/
 │
 ├── knowledge/
 ├── tests/
@@ -597,6 +817,7 @@ Blender Python API: https://docs.blender.org/api/current/
 Document note: This is a planning roadmap, not a claim that any plugin, server, Blueprint tool, or cross-application feature has already been implemented or tested. API availability and version compatibility must be confirmed during development.
 
 © 2026 Majestic Creations — Project planning document.
+
 ## Public Unreal-MCP reference audit
 
 The public reference command catalog and conservative Forge coverage comparison are
@@ -608,7 +829,20 @@ subject to native APIs, explicit task authorization and the security requirement
 
 ## Current implementation record
 
+The manual bidirectional handoff stage uses **Send to Unreal** in Blender and
+**Send to Blender** / **Import from Blender** in Unreal. Its scope, preservation
+rules and future real-time synchronization stages are documented in
+[Roundtrip_Workflow.md](Roundtrip_Workflow.md). It is a bounded static-mesh stage;
+the full feature roadmap remains the target.
+
 The roadmap remains the full target. Concrete source progress, build/test results, and
 remaining work are tracked separately in
 [Development_Status.md](Development_Status.md); current implementation must not be
 inferred from this planning document alone.
+
+The current reference-city construction workflow is documented in
+[Reference_City_Nine_Regions.md](Reference_City_Nine_Regions.md). It divides the
+numbered image into nine regions with smaller spatial mesh chunks and native
+editor loading-volume controllers. Saved assets, persisted level placement,
+interactive streaming and performance are tracked as separate acceptance steps.
+This construction workflow does not establish full spline or PCG API exposure.

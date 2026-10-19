@@ -8,10 +8,10 @@ from scripts.extract_unreal_package import extract
 
 
 def archive(tmp_path, *, extra=None, corrupt=False, duplicate=False):
-    files = {"MajesticForge/MajesticForge.uplugin": b"{}",
-             "MajesticForge/Binaries/Win64/UnrealEditor.modules": b"{}",
-             "MajesticForge/Binaries/Win64/UnrealEditor-MajesticForge.dll": b"editor fixture",
-             "MajesticForge/Binaries/Win64/UnrealEditor-MajesticForgeRuntime.dll": b"runtime fixture"}
+    files = {"Forge/MajesticForge.uplugin": b"{}",
+             "Forge/Binaries/Win64/UnrealEditor.modules": b"{}",
+             "Forge/Binaries/Win64/UnrealEditor-MajesticForge.dll": b"editor fixture",
+             "Forge/Binaries/Win64/UnrealEditor-MajesticForgeRuntime.dll": b"runtime fixture"}
     if extra:
         files[extra] = b"escape fixture"
     manifest = {"package_kind": "development_editor_plugin", "engine_version": "5.6.1",
@@ -22,7 +22,7 @@ def archive(tmp_path, *, extra=None, corrupt=False, duplicate=False):
         for name, data in files.items():
             output.writestr(name, data + b"corrupt" if corrupt else data)
         if duplicate:
-            output.writestr("MAJESTICFORGE/MAJESTICFORGE.UPLUGIN", b"alias fixture")
+            output.writestr("FORGE/MAJESTICFORGE.UPLUGIN", b"alias fixture")
     return path
 
 
@@ -37,8 +37,8 @@ def test_valid_package_extracts_to_new_directory_and_never_overwrites(tmp_path):
     assert descriptor.read_text() == "preserved work"
 
 
-@pytest.mark.parametrize("extra", ["MajesticForge/../../escape.txt", "MajesticForge/C:/escape.txt",
-                                   "MajesticForge/Source/../escape.txt", "MajesticForge/Source/trailing."])
+@pytest.mark.parametrize("extra", ["Forge/../../escape.txt", "Forge/C:/escape.txt",
+                                   "Forge/Source/../escape.txt", "Forge/Source/trailing."])
 def test_unsafe_paths_rejected_before_any_extraction(tmp_path, extra):
     destination = tmp_path / "extracted"
     with pytest.raises(ValueError):

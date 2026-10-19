@@ -1,5 +1,9 @@
 # ForgeMCP
 
+The **UE 5.6.1 Win64 engine-wide alpha** can be installed once for the engine and
+enabled in individual projects while feature development continues separately.
+See [alpha installation, updates and rollback](Documentation/UE56_Alpha.md).
+
 **Free and open source.** All original ForgeMCP source uses the [MIT license](LICENSE).
 See [credits and upstream notices](CREDITS.md) for separately licensed material.
 The Unreal plugin, Blender add-on and external MCP server live in this repository;
@@ -56,15 +60,22 @@ MCP export and clean-profile ZIP-install verifiers are respectively
 `scripts/verify_blender_export.py`, `scripts/verify_blender_export_mcp.py`, and
 `scripts/verify_blender_package.py`.
 
-The Blender 0.2.12 add-on includes **Export to Unreal** in the 3D Viewport sidebar
+The Blender 0.2.32 add-on includes **Send to Unreal** in the 3D Viewport sidebar
 under **ForgeMCP**. Select an active static mesh in Object mode, choose a new
 `/Game/.../SM_Name` asset path, and click the button. Review the connected Unreal
-project, asset path, save option and placement before clicking **Confirm Export
+project, asset path, save option and placement before clicking **Confirm Send
 to Unreal**. Placement defaults to `(0,0,0)` in Unreal centimeters. Leave the
 session field empty only when exactly one Unreal bridge is connected; otherwise
 enter the intended `unreal-PID` session ID. The Blender bridge must be running.
 The **ForgeMCP folder** setting points to this development checkout and its
 `.venv`; the source-only add-on ZIP does not bundle the external MCP runtime.
+
+The Unreal **Window > ForgeMCP** panel also provides **Send to Blender** and
+**Import from Blender**. Send exports one selected static mesh through a reviewed
+binary FBX handoff into a new Blender object. Import pulls a named or active Blender
+mesh into a new Unreal asset. These are manual round-trip operations; existing
+destinations are not replaced and real-time synchronization is not enabled.
+See [round-trip workflow and limits](Documentation/Roundtrip_Workflow.md).
 
 Transfers use the existing authenticated MCP preview/apply tools and durable
 receipts. Existing assets are not overwritten, scenes and levels are not saved,
@@ -76,8 +87,8 @@ Blender operators and Unreal import/placement in disposable sessions; it does
 not claim visual interaction or rendered acceptance.
 
 The current Unreal development installer is
-`Artifacts/ForgeMCP-Unreal-Development-0.2.0-UE5.6.1-Win64.zip`. Extract its
-`MajesticForge` folder into a closed project's `Plugins` directory, or pass that
+`Artifacts/ForgeMCP-Unreal-Development-0.2.8-UE5.6.1-Win64.zip`. Extract its
+`Forge` folder into a closed project's `Plugins` directory, or pass that
 extracted folder as `-PackageDirectory` to `scripts/Install-ForgeUnreal.ps1`.
 The installer now defaults to this ZIP and accepts `-PackageArchive` explicitly;
 it validates checksums, bounded archive scope and paths before extraction into
@@ -92,12 +103,11 @@ It is a development package; other engine builds require a matching rebuild.
 `scripts/verify_unreal_package.py` validates extraction and native loading separately.
 
 The current Blender installer is
-`Artifacts/ForgeMCP-Blender-Addon-0.2.1.zip`. Install the ZIP through Blender's
-Install from Disk action and enable ForgeMCP. Version 0.2.1 reloads cached helper
-modules in dependency order when Blender imports/reloads an updated add-on,
-fixing `cannot import name 'transfer_surface'` after replacing an older version.
-Clean installation and the stale-module update regression passed in an isolated
-Blender 5.2.2 session; this does not assert installation in an existing user session.
+`Artifacts/ForgeMCP-Blender-Addon-0.2.35-alpha.4.zip`. Install the ZIP through Blender's
+Install from Disk action and enable ForgeMCP. The add-on reports its own component
+version in the bridge health response. Clean-profile install and feature-specific
+native acceptance are recorded in `Documentation/Development_Status.md`; these
+checks do not assert installation in an existing user session.
 
 The external Python server uses the official MCP Python SDK. The Unreal C++ plugin,
 Blender Python add-on, session protocol, and routing code were authored here. No
@@ -110,13 +120,18 @@ AI is required by the server or adapters.
 | --- | --- |
 | `forge_status` | Server version and live health of registered adapters |
 | `forge_list_sessions` | Session IDs, adapter kinds, connection state, and diagnostics |
+| `forge_ensure_connected` | Rediscover and authenticate one live Unreal and Blender bridge; selects only unique live sessions |
 | `unreal_project_info` | Engine version, project file, current editor world, PIE state |
 | `unreal_list_actors` | Loaded world actors: IDs, labels, classes, paths; capped results |
 | `blender_scene_info` | Version, file, scene, object counts/types, frame range and frame rate |
 
 Application tools accept an optional `session_id`. If multiple registrations exist,
 choose explicitly using `forge_list_sessions`; the server does not guess which project
-you intended. Actor `limit` defaults to 200 and accepts 1–1000. Scene object samples are
+you intended. `forge_ensure_connected` retries discovery and performs authenticated
+health checks for both adapters, returning explicit session IDs when unique. It cannot
+start an application bridge; if one is unavailable, open that app and start ForgeMCP.
+MCP calls use short-lived authenticated requests rather than persistent sockets. Actor
+`limit` defaults to 200 and accepts 1–1000. Scene object samples are
 capped at 200. Each result contains `ok` and either `data` or `error`; an unavailable
 application is reported rather than replaced with simulated data. SDK validation
 errors use MCP's `isError` result.
@@ -127,8 +142,10 @@ scene and bone-animation recipes. `forge_search_api_docs` retrieves installed Un
 reference data for an exact version. Engineering tools require explicit session IDs.
 Reviewed actor recipes support native spawning, transforms and game-hidden state;
 Blender recipes also duplicate local mesh/empty objects with independent mesh/Action data.
-There are currently 36 MCP tools in development source, including reviewed saving
-of a persistent Unreal level to a new map destination. The local application
+The development source currently registers 85 MCP tools, including reviewed saving
+of a persistent Unreal level to a new map destination and guarded multi-property
+edits to existing Unreal DataAssets. The live Codex ForgeMCP connector still needs
+reconnection to expose the latest source registry. The local application
 packages and the older combined release ZIP have different validation histories.
 See [engineering interfaces](Documentation/Engineering.md)
 and [the current roadmap status](Documentation/Development_Status.md).
@@ -144,7 +161,7 @@ the external server, build the Unreal plugin in your own project and package the
 Blender add-on. See [repository layout](Documentation/Repository_Layout.md) for
 published components and excluded local development files.
 
-The Unreal plugin lives in `Plugins/MajesticForge`; the Blender add-on lives in
+The Unreal plugin lives in `Plugins/Forge`; the Blender add-on lives in
 `blender-addon/majestic_forge`. Their internal identifiers remain stable while both
 appear as **ForgeMCP** in the applications. The local `ForgeMCPDev.uproject`, root
 `Config`, `Content` and `Source` remain on disk for development but are excluded from

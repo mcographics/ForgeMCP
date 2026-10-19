@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "majestic-forge-mcp"
-version = "0.2.0"
+version = "0.3.13"
 description = "Original local Unreal Engine and Blender inspection bridges"
 license = {file = "LICENSE"}
 requires-python = ">=3.11"

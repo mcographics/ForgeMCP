@@ -4,16 +4,17 @@ ForgeMCP contains three separately running components:
 
 | Directory | Purpose |
 | --- | --- |
-| `Plugins/MajesticForge` | Unreal plugin source and descriptor; displayed as ForgeMCP |
+| `Plugins/Forge` | Unreal plugin source and descriptor; displayed as ForgeMCP |
 | `blender-addon/majestic_forge` | Blender add-on source; displayed as ForgeMCP |
 | `server` | External authenticated MCP server and shared workflow coordination |
 | `scripts` | Setup, packaging, installation, host creation and native verification |
 | `tests` | Python unit and MCP subprocess regression tests |
 | `Documentation` | Installation, security, capability evidence and original roadmap |
 
-The internal `MajesticForge` module and `majestic_forge` Python package names remain
-stable for Unreal build compatibility and Blender updates. Product-facing names are
-ForgeMCP. Renaming those identifiers is a separate migration, not a display change.
+The on-disk Unreal plugin directory is `Forge`. Its descriptor filename,
+`MajesticForge` Unreal module IDs and `majestic_forge` Python package name remain
+stable for existing project and add-on compatibility. The shared session folder
+also remains `%LOCALAPPDATA%/MajesticForge/sessions`.
 
 The working `ForgeMCPDev.uproject`, root `Source`, `Config`, `Content`, build outputs
 and application state remain local. They are ignored by Git and are not removed

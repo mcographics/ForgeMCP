@@ -11,7 +11,9 @@ from pathlib import Path
 MODULES = (
     "__init__.py",
     "automation.py",
+    "creative.py",
     "exporting.py",
+    "importing.py",
     "materials.py",
     "rigging.py",
     "security.py",
@@ -26,19 +28,27 @@ def main():
     payloads = {name: (source / name).read_bytes() for name in MODULES}
     tree = ast.parse(payloads["__init__.py"])
     version = None
+    release = None
     for node in tree.body:
         if isinstance(node, ast.Assign) and any(
             isinstance(target, ast.Name) and target.id == "bl_info" for target in node.targets
         ):
             version = ast.literal_eval(node.value)["version"]
+        if isinstance(node, ast.Assign) and any(
+            isinstance(target, ast.Name) and target.id == "ADDON_VERSION" for target in node.targets
+        ):
+            release = ast.literal_eval(node.value)
     if version is None or len(version) != 3 or any(type(n) is not int for n in version):
         raise ValueError("Add-on metadata must declare a three-part numeric version")
+    if not isinstance(release, str) or not release.startswith(".".join(map(str, version)) + "-"):
+        raise ValueError("ADDON_VERSION must match the Blender numeric metadata and include its prerelease")
     for name, data in payloads.items():
         ast.parse(data, filename=name)
     payloads["LICENSE.txt"] = (root / "LICENSE").read_bytes()
+    payloads["resources/logo.png"] = (source / "resources" / "logo.png").read_bytes()
     artifacts = root / "Artifacts"
     artifacts.mkdir(exist_ok=True)
-    destination = artifacts / f"ForgeMCP-Blender-Addon-{'.'.join(map(str, version))}.zip"
+    destination = artifacts / f"ForgeMCP-Blender-Addon-{release}.zip"
     with tempfile.NamedTemporaryFile(dir=artifacts, suffix=".zip", delete=False) as temporary:
         staging = Path(temporary.name)
     try:
