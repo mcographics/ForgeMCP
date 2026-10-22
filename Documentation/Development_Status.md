@@ -1,3 +1,22 @@
+# Current coordinated release status — October 20, 2026
+
+The current local candidates are ForgeMCP core **0.3.14**, Unreal plugin
+**0.2.14-alpha.3**, and Blender add-on **0.2.36-alpha.1**. Their packages passed
+the bounded core, Blender clean-profile, and disposable isolated Unreal tests
+described in the [release record](ForgeMCP_Release_0.3.14_2026-10-20.md).
+The Unreal Editor target compiled, while the full UAT `BuildPlugin` pipeline
+remains blocked by the installed engine's missing `BuildSettings.precompiled`
+manifest. The Unreal acceptance used `-NullRHI` and a small non-World-Partition
+level. Neither existing Editor was updated; Phase 6C remains **NO-GO**.
+
+The native dirty-package observer enumerates loaded `UPackage` objects, but the
+disposable acceptance surfaced one dirty `/Script/SlateCore` row with incomplete
+classification and truncated associated objects. Treat unresolved rows as a
+preservation blocker. This feature does not prove that all in-memory state is
+captured or that restart is safe.
+
+The original roadmap and prior dated status below remain historical evidence.
+
 # Roadmap implementation status — October 16, 2026
 
 The full user goal remains active. The original roadmap is preserved as supplied.

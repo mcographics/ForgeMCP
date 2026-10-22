@@ -3,6 +3,23 @@
 The authoritative source location is `G:\ForgeMCP`. The original roadmap remains
 the historical vision; this plan governs completion evidence for ongoing development.
 
+## Current coordinated release candidate — October 20, 2026
+
+Current local versions are core **0.3.14**, Unreal plugin **0.2.14-alpha.3**, and
+Blender add-on **0.2.36-alpha.1**. The exact artifact hashes, acceptance evidence,
+and limitations are recorded in the
+[coordinated release record](ForgeMCP_Release_0.3.14_2026-10-20.md). The core
+suite passes 469 tests; Blender clean-profile acceptance passes; and the
+packaged Unreal plugin passes a bounded disposable isolated Landscape test.
+The full UAT `BuildPlugin` pipeline remains blocked by the installed engine's
+missing `BuildSettings.precompiled` manifest. No existing Editor was updated.
+
+Next safe work is a separately authorized deployment to a disposable or
+preserved isolated project, followed by a controlled World Partition/Landscape
+test. The observer's unresolved dirty `/Script/SlateCore` row must remain a
+review blocker. Do not install into the current long-running Editor or advance
+Phase 6C from the disposable smoke result; Phase 6C remains **NO-GO**.
+
 ## Next Unreal milestone — Splines, PCG and city reconstruction
 
 Prioritize the [Splines/PCG implementation specification](Splines_PCG_City_Reconstruction.md)
@@ -15,10 +32,9 @@ contracts from the first increment. The specification records the live baseline,
 acceptance gates and 1:1-scale accuracy contract; these capabilities are not yet
 implemented. Existing roadmap obligations and release gates remain active.
 
-Component versions advance when that component receives a validated change: the
-MCP server source is 0.3.13, the engine-installed Unreal plugin is 0.2.13-alpha.9,
-and the latest Blender add-on is 0.2.35-alpha.4. Keep component versions truthful instead
-of bumping an unchanged component.
+Component versions advance when that component receives a validated change.
+The versions above are the current local release candidates; component versions
+remain independent and do not imply that every feature or workflow is complete.
 The coordinated v1.0.0 release is reserved for completion of the roadmap's clean
 installation, live-session, capability, recovery, and package acceptance criteria.
 

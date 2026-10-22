@@ -1,0 +1,41 @@
+{
+	"FileVersion": 3,
+	"Version": 27,
+	"VersionName": "0.2.14-alpha.2",
+	"FriendlyName": "ForgeMCP",
+	"Description": "ForgeMCP alpha: authenticated local inspection and reviewed native automation. Features remain in active development.",
+	"Category": "Editor",
+	"CreatedBy": "Majestic Creations",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EngineVersion": "5.6.1",
+	"CanContainContent": false,
+	"Installed": true,
+	"EnabledByDefault": true,
+	"IsBetaVersion": true,
+	"SupportedTargetPlatforms": ["Win64"],
+	"Modules": [
+		{
+			"Name": "MajesticForgeRuntime",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "MajesticForge",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "GameplayAbilities",
+			"Enabled": true
+		},
+		{
+			"Name": "WebBrowserWidget",
+			"Enabled": true
+		}
+	]
+}

@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "majestic-forge-mcp"
-version = "0.3.13"
+version = "0.3.15"
 description = "Original local Unreal Engine and Blender inspection bridges"
 license = {file = "LICENSE"}
 requires-python = ">=3.11"

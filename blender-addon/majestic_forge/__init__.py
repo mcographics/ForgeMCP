@@ -44,7 +44,7 @@ from .skinning import skin_info
 bl_info = {
     "name": "ForgeMCP",
     "author": "Majestic Creations",
-    "version": (0, 2, 35),
+    "version": (0, 2, 36),
     "blender": (4, 2, 0),
     "location": "3D Viewport > Sidebar > ForgeMCP; Preferences > Add-ons",
     "description": "Authenticated native inspection and reviewed scene recipes for ForgeMCP",
@@ -54,7 +54,9 @@ _bridge = None
 _ui_registered = False
 _exit_registered = False
 _next_redraw = 0.0
-ADDON_VERSION = "0.2.35-alpha.6"
+ADDON_VERSION = "0.2.36-alpha.1"
+BRIDGE_PROTOCOL_VERSION = 1
+TRANSFER_CONTRACT_VERSION = 1
 _logo_previews = None
 
 
@@ -150,7 +152,7 @@ class Bridge:
         self.importer = StaticMeshImporter(root / "transfers" / self.session_id)
         self.creative = creative.CreativeAutomation(root / "renders" / self.session_id)
         data = {
-            "protocol_version": 1,
+            "protocol_version": BRIDGE_PROTOCOL_VERSION,
             "session_id": self.session_id,
             "kind": "blender",
             "host": "127.0.0.1",
@@ -176,7 +178,7 @@ class Bridge:
             request_id = request.get("request_id")
             if (
                 type(request.get("protocol_version")) is not int
-                or request.get("protocol_version") != 1
+                or request.get("protocol_version") != BRIDGE_PROTOCOL_VERSION
                 or not isinstance(request_id, str)
                 or not 1 <= len(request_id) <= 128
             ):
@@ -191,7 +193,8 @@ class Bridge:
             if command == "health":
                 data = {
                     "adapter": "ForgeMCP Blender",
-                    "transfer_contract_version": 1,
+                    "bridge_protocol_version": BRIDGE_PROTOCOL_VERSION,
+                    "transfer_contract_version": TRANSFER_CONTRACT_VERSION,
                     "version": ADDON_VERSION,
                     "blender_version": bpy.app.version_string,
                     "read_only": False,
@@ -520,6 +523,10 @@ class MAJESTICFORGE_PT_Connection(bpy.types.Panel):
             status.label(text="Bridge running", icon="RADIOBUT_ON")
             status.label(text=f"127.0.0.1:{_bridge.listener.getsockname()[1]}", icon="LINKED")
             status.label(text=f"Session: {_bridge.session_id}", icon="USER")
+            status.label(
+                text=f"Protocol {BRIDGE_PROTOCOL_VERSION} / transfer {TRANSFER_CONTRACT_VERSION}",
+                icon="INFO",
+            )
             if _bridge.last_request is None:
                 status.label(text="Waiting for an authenticated request", icon="TIME")
             else:

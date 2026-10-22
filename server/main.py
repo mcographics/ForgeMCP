@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 from __future__ import annotations
 
+import asyncio
 import base64
 import binascii
 import logging
@@ -20,6 +21,7 @@ from server.core.blender_creative import BlenderCreativeRequest, BlenderTarget
 from server.core.collision import CollisionQueryRequest
 from server.core.connection_monitor import connection_monitor_lifespan
 from server.core.connections import BridgeError, ConnectionManager
+from server.core.dirty_packages import DirtyPackageInspectionRequest
 from server.core.knowledge import search_api
 from server.core.landscape import LandscapeRequest
 from server.core.level_creation import EmptyOpenWorldCreations, EmptyOpenWorldRequest
@@ -77,19 +79,59 @@ MUTATION = ToolAnnotations(
 PREVIEW = ToolAnnotations(
     readOnlyHint=True, destructiveHint=False, idempotentHint=False, openWorldHint=False
 )
+ISOLATED_TOOL_ALLOWLIST = frozenset({
+    "forge_status",
+    "forge_list_sessions",
+    "forge_ensure_connected",
+    "unreal_project_info",
+    "unreal_read_editor_log",
+    "unreal_capture_screenshot",
+    "unreal_list_actors",
+    "unreal_find_actors",
+    "unreal_get_selected_actors",
+    "unreal_inspect_landscape",
+    "unreal_query_collision",
+    "unreal_inspect_dirty_packages",
+})
+ISOLATED_LANDSCAPE_TOOL_ALLOWLIST = frozenset({
+    "unreal_inspect_landscape",
+    "unreal_preview_landscape",
+    "unreal_apply_landscape",
+    "unreal_landscape_job_status",
+    "unreal_cancel_landscape_job",
+})
+
+
+async def restrict_isolated_tool_catalog(
+    server: FastMCP, *, profile: str = "readonly",
+) -> None:
+    """Restrict isolated tools; landscape_smoke adds only the five typed terrain tools."""
+    if profile not in {"readonly", "landscape_smoke"}:
+        raise ValueError("Unsupported isolated tool profile")
+    allowed = ISOLATED_TOOL_ALLOWLIST
+    if profile == "landscape_smoke":
+        allowed = allowed | ISOLATED_LANDSCAPE_TOOL_ALLOWLIST
+    registered = await server.list_tools()
+    names = {tool.name for tool in registered}
+    missing = allowed - names
+    if missing:
+        raise RuntimeError("An expected read-only isolated-host tool is not registered")
+    for tool in registered:
+        if tool.name not in allowed:
+            server.remove_tool(tool.name)
 
 
 @mcp.tool(annotations=READ_ONLY)
-async def forge_status() -> dict[str, Any]:
-    """Report MCP health and the live connection state of all registered bridges."""
-    sessions = await connections.inspect_sessions()
+async def forge_status(session_id: str | None = None) -> dict[str, Any]:
+    """Report MCP health and registered bridge state; isolated mode requires an explicit session_id."""
+    sessions = await connections.inspect_sessions(session_id)
     return {
         "ok": True,
         "data": {
             "server": "ForgeMCP",
-            "version": "0.3.13",
+            "version": "0.3.15",
             "transport": "stdio",
-            "read_only": False,
+            "read_only": connections.isolated_config is not None,
             "sessions": sessions,
             "connected_count": sum(s["connected"] for s in sessions),
         },
@@ -97,9 +139,9 @@ async def forge_status() -> dict[str, Any]:
 
 
 @mcp.tool(annotations=READ_ONLY)
-async def forge_list_sessions() -> dict[str, Any]:
-    """Discover authorized application sessions and check whether they are responding."""
-    return {"ok": True, "data": {"sessions": await connections.inspect_sessions()}}
+async def forge_list_sessions(session_id: str | None = None) -> dict[str, Any]:
+    """Discover authorized application sessions; isolated mode requires an explicit session_id for health probes."""
+    return {"ok": True, "data": {"sessions": await connections.inspect_sessions(session_id)}}
 
 
 @mcp.tool(annotations=READ_ONLY)
@@ -109,9 +151,9 @@ async def forge_ensure_connected(
 ) -> dict[str, Any]:
     """Rediscover and authenticate one responsive Unreal and Blender bridge.
 
-    Selects a session automatically when exactly one live session exists for
-    that app. Supply a session ID to select one explicitly when several are
-    registered. ForgeMCP opens a short authenticated request; it does not keep
+    Production mode can select the sole live session automatically. Isolated
+    mode requires an explicit allowlisted Unreal session ID and does not expose
+    Blender. ForgeMCP opens a short authenticated request; it does not keep
     sockets open. If a bridge is not running, start it in that application.
     """
     result = await connections.ensure_app_sessions({
@@ -553,6 +595,40 @@ async def unreal_query_collision(request: CollisionQueryRequest, session_id: str
     """
     return await connections.dispatch("unreal", "collision_query", session_id,
                                       {"request": request.model_dump(exclude_none=True)})
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def unreal_inspect_dirty_packages(
+    request: DirtyPackageInspectionRequest, session_id: str
+) -> dict[str, Any]:
+    """Page through one short-lived, read-only snapshot of dirty loaded Editor packages.
+
+    The first request captures the snapshot and returns its snapshot_id. Pass that ID for
+    subsequent pages within 60 seconds. Older native adapters call the response field
+    inventory_id; this API exposes snapshot_id and retains inventory_id as a compatibility
+    alias. This does not load or save packages and cannot classify packages absent from the
+    loaded UObject inventory as clean.
+    """
+    result = await connections.dispatch(
+        "unreal",
+        "inspect_dirty_packages",
+        session_id,
+        request.model_dump(exclude_none=True),
+    )
+    if not result.get("ok") or not isinstance(result.get("data"), dict):
+        return result
+
+    data = result["data"]
+    native_snapshot_id = data.get("snapshot_id", data.get("inventory_id"))
+    if not isinstance(native_snapshot_id, str):
+        return result
+
+    # The released UE 0.2.14-alpha.3 adapter returns inventory_id. Normalize it at
+    # the MCP boundary while retaining the old field for callers already using it.
+    normalized_data = dict(data)
+    normalized_data.setdefault("snapshot_id", native_snapshot_id)
+    normalized_data.setdefault("inventory_id", native_snapshot_id)
+    return {**result, "data": normalized_data}
 
 
 @mcp.tool(annotations=PREVIEW)
@@ -1577,7 +1653,12 @@ async def forge_search_api_docs(
 
 
 def main():
-    log_root = connections.roots[0].parent / "MajesticForgeLogs"
+    if connections.isolated_config is not None:
+        connections.isolated_config.prepare_private_directories()
+        asyncio.run(restrict_isolated_tool_catalog(
+            mcp, profile=connections.isolated_config.tool_profile
+        ))
+    log_root = connections.log_root
     log_root.mkdir(parents=True, exist_ok=True)
     file_log = RotatingFileHandler(
         log_root / f"server-{os.getpid()}.log",

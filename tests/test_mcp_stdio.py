@@ -25,6 +25,7 @@ ADDITIONAL = {
     "unreal_inspect_landscape", "unreal_preview_landscape", "unreal_apply_landscape",
     "unreal_landscape_job_status", "unreal_cancel_landscape_job",
     "unreal_query_collision",
+    "unreal_inspect_dirty_packages",
     "blender_list_commands", "blender_inspect_command", "blender_list_rna_types",
     "blender_inspect_rna_type", "blender_inspect_properties", "blender_preview_creative",
     "blender_apply_creative", "blender_render_job_status", "blender_cancel_render_job",
@@ -143,6 +144,16 @@ async def test_real_stdio_discovery_and_disconnected_tools(tmp_path):
             assert initialized.serverInfo.name == "ForgeMCP"
             tools = (await client.list_tools()).tools
             assert {tool.name for tool in tools} == TOOLS | ADDITIONAL
+            dirty_tool = next(tool for tool in tools if tool.name == "unreal_inspect_dirty_packages")
+            request_schema = dirty_tool.inputSchema["$defs"]["DirtyPackageInspectionRequest"]
+            assert "snapshot_id" in request_schema["properties"]
+            assert "snapshot_id" not in request_schema.get("required", [])
+            snapshot_schema = request_schema["properties"]["snapshot_id"]
+            assert {"type": "null"} in snapshot_schema["anyOf"]
+            assert any(
+                item.get("type") == "string" and item.get("minLength") == 32 and item.get("maxLength") == 32
+                for item in snapshot_schema["anyOf"]
+            )
             for tool in tools:
                 assert tool.annotations.readOnlyHint == (tool.name not in {
                     "blender_apply_creative", "blender_cancel_render_job",
@@ -181,6 +192,7 @@ async def test_real_stdio_discovery_and_disconnected_tools(tmp_path):
                 else:
                     assert result.structuredContent["error"]["code"] == "session_not_found"
             for name, arguments in (
+                ("unreal_inspect_dirty_packages", {"request": {}, "session_id": "missing"}),
                 ("unreal_get_selected_assets", {"session_id": "missing"}),
                 ("unreal_open_asset", {"asset_path": "/Game/Test/SM_Test", "session_id": "missing"}),
                 ("unreal_sync_content_browser", {"asset_path": "/JasperPrism/Materials/M_Test.M_Test", "session_id": "missing"}),

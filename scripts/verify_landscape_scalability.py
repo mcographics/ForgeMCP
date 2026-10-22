@@ -322,7 +322,8 @@ async def run(args):
                         status = accepted
                     elapsed_ms = (time.perf_counter() - start) * 1000
                     assert (status["state"] == "completed" and status["height_readback_validated"]
-                            and status["collision_height_validated"]), status
+                            and status["collision_validation_deferred_until_save_reload"]
+                            and status["collision_height_source"] == "deferred_until_save_reload"), status
                     after = await inspect()
                     assert status["validated_after_height_md5"] == edit_preview["after_height_md5"], status
                     record = {

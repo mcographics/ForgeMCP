@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import shutil
+import tomllib
 import uuid
 import zipfile
 from datetime import datetime, timezone
@@ -18,12 +19,18 @@ def main():
     parser.add_argument("--engine", type=Path, required=True)
     parser.add_argument("--channel", choices=("development", "alpha"), default="development")
     parser.add_argument("--source", type=Path, help="Authoritative plugin source, if kept outside this checkout")
+    parser.add_argument("--output-dir", type=Path, help="Package output directory; defaults to Artifacts")
+    parser.add_argument("--interactive-acceptance-complete", action="store_true",
+                        help="Set only after disposable runtime acceptance has passed")
     args = parser.parse_args()
     repository = Path(__file__).resolve().parents[1]
     host = args.host.resolve(strict=True)
     relative = host.relative_to(repository / "Saved")
-    if len(relative.parts) != 2 or not relative.parts[0].startswith(("TransferImportValidation-", "RoundtripValidation-", "AlphaValidation-", "EngineWideAlpha")) or relative.parts[1] != "HostProject":
-        raise ValueError("Only an isolated transfer, roundtrip or alpha validation build is allowed")
+    if len(relative.parts) != 2 or not relative.parts[0].startswith((
+        "TransferImportValidation-", "RoundtripValidation-", "AlphaValidation-",
+        "EngineWideAlpha", "A7K37-", "A7K38-",
+    )) or relative.parts[1] != "HostProject":
+        raise ValueError("Only an isolated validation build is allowed")
     source = (args.source or repository / "Plugins" / "Forge").resolve(strict=True)
     built = host / "Plugins" / "Forge"
     assert source != built.resolve(), "Validate against a separate authoritative source directory"
@@ -45,6 +52,7 @@ def main():
     if ui_entry.is_file():
         validate_html(ui_entry.read_text(encoding="utf-8"))
     plugin_version = descriptor_data["VersionName"]
+    core_version = tomllib.loads((repository / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
     assert isinstance(plugin_version, str) and all(c.isalnum() or c in ".-" for c in plugin_version)
     if args.channel == "alpha":
         assert "-alpha." in plugin_version and descriptor_data.get("EnabledByDefault") is True
@@ -65,14 +73,19 @@ def main():
     payloads["Forge/Binaries/Win64/UnrealEditor.modules"] = modules_path.read_bytes()
     manifest = {"package_kind": "development_editor_plugin", "platform": "Win64",
                 "plugin_version": plugin_version, "release_channel": args.channel,
+                "core_compatibility": {"package": "majestic-forge-mcp",
+                                       "tested_version": core_version,
+                                       "minimum_version": core_version},
+                "landscape_write_scope_schema": 2,
+                "dirty_package_classification_schema": 2,
                 "installation_scopes": ["project", "engine"],
                 "engine_version": "5.6.1",
                 "engine_build_id": modules["BuildId"], "source_matches_isolated_build": True,
-                "interactive_acceptance_complete": False,
+                "interactive_acceptance_complete": args.interactive_acceptance_complete,
                 "files": {name: hashlib.sha256(data).hexdigest() for name, data in payloads.items()}}
     payloads["package-manifest.json"] = json.dumps(manifest, indent=2).encode()
-    artifacts = repository / "Artifacts"
-    artifacts.mkdir(exist_ok=True)
+    artifacts = (args.output_dir or repository / "Artifacts").resolve()
+    artifacts.mkdir(parents=True, exist_ok=True)
     destination = artifacts / f"ForgeMCP-Unreal-{args.channel.title()}-{plugin_version}-UE5.6.1-Win64.zip"
     temporary = artifacts / ("package-" + uuid.uuid4().hex + ".tmp")
     try:

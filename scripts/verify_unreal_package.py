@@ -19,8 +19,9 @@ from mcp.client.stdio import stdio_client
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from server.core.connections import BridgeError, ConnectionManager
 from verify_unreal_tab_ui import validate_html
+
+from server.core.connections import BridgeError, ConnectionManager
 
 
 async def verify_live_mcp(repository, root, session_id, project):
