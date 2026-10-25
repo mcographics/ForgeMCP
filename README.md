@@ -1,5 +1,7 @@
 # ForgeMCP
 
+![ForgeMCP — AI-Powered Unreal & Blender Automation](assets/Banner.png)
+
 Local MCP integration for **Unreal Engine and Blender**, developed by **Majestic Creations**.
 ForgeMCP connects an MCP client to native application adapters for project inspection,
 reviewed editing, and asset-transfer workflows.
