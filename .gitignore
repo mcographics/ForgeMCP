@@ -42,3 +42,11 @@ Artifacts/
 *.pdb
 *.dll
 *.exe
+
+# Local recovery payloads and workstation configuration; retain on disk.
+/ForgeMCP_Recovery_Checkpoints/
+/ForgeMCP-Backups/
+/.codex/
+/.vscode/
+/Screenshot*.png
+/System.Management.Automation.Internal.Host.InternalHost

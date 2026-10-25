@@ -9,12 +9,17 @@ import math
 import os
 import re
 import stat
+import time
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from server.core.host_config import HostConfigurationError, IsolatedHostConfig
+from server.core.persistent_listener_worker import PersistentListenerWorker
 from server.core.process_identity import (
+    IDENTITY_DEADLINE,
+    IDENTITY_ORIGIN,
+    IDENTITY_PROBE_TIMEOUT_SECONDS,
     ProcessIdentityError,
     ProcessIdentityProbe,
     WindowsProcessIdentityProbe,
@@ -30,12 +35,20 @@ COMMANDS = {
         "health",
         "project_info",
         "landscape_info",
+        "landscape_read_region",
+        "landscape_adoption_preflight",
+        "landscape_adoption_request",
+        "landscape_edit_session_preflight",
+        "landscape_edit_session_request",
+        "landscape_edit_session_status",
+        "landscape_edit_session_revoke",
         "landscape_preview",
         "landscape_apply",
         "landscape_job_status",
         "landscape_job_cancel",
         "collision_query",
         "inspect_dirty_packages",
+        "world_save_scope",
         "list_actors",
         "find_actors",
         "get_selected_actors",
@@ -130,6 +143,10 @@ class Session:
 
 
 class ConnectionManager:
+    @property
+    def isolated_identity_busy(self) -> bool:
+        return self._identity_lock is not None and self._identity_lock.locked()
+
     def __init__(
         self,
         roots: list[Path],
@@ -148,6 +165,7 @@ class ConnectionManager:
         self.isolated_config = isolated_config
         self.log_root = log_root or ((roots[0].parent if roots else Path.cwd()) / "MajesticForgeLogs")
         self.process_identity_probe = process_identity_probe
+        self._identity_lock = asyncio.Lock() if isolated_config is not None else None
         if isolated_config is not None and process_identity_probe is None:
             raise ValueError("Isolated hosts require a passive process identity probe")
 
@@ -160,7 +178,7 @@ class ConnectionManager:
                 [config.unreal_registry_root, config.blender_registry_root],
                 isolated_config=config,
                 log_root=config.log_root,
-                process_identity_probe=WindowsProcessIdentityProbe(),
+                process_identity_probe=WindowsProcessIdentityProbe(PersistentListenerWorker()),
             )
         if mode != "production":
             raise HostConfigurationError("FORGE_HOST_MODE must be production or isolated")
@@ -320,11 +338,40 @@ class ConnectionManager:
             except ValueError as exc:
                 raise BridgeError("session_not_allowed", str(exc)) from None
             try:
-                snapshot = await asyncio.to_thread(
-                    self.process_identity_probe,
-                    self.isolated_config.expected_pid,
-                    self.isolated_config.expected_port,
+                origin_token = IDENTITY_ORIGIN.set(
+                    command if command in {"health", "project_info"} else "other"
                 )
+                deadline = time.monotonic() + IDENTITY_PROBE_TIMEOUT_SECONDS
+                deadline_token = IDENTITY_DEADLINE.set(deadline)
+                try:
+                    remaining = deadline - time.monotonic()
+                    if remaining <= 0:
+                        raise ProcessIdentityError("Identity queue deadline expired.", category="identity_queue_timeout")
+                    try:
+                        await asyncio.wait_for(self._identity_lock.acquire(), timeout=remaining)
+                    except TimeoutError:
+                        raise ProcessIdentityError("Identity queue deadline expired.", category="identity_queue_timeout") from None
+                    probe_task = asyncio.create_task(asyncio.to_thread(
+                        self.process_identity_probe,
+                        self.isolated_config.expected_pid,
+                        self.isolated_config.expected_port,
+                    ))
+                    try:
+                        snapshot = await asyncio.shield(probe_task)
+                    finally:
+                        if probe_task.done():
+                            self._identity_lock.release()
+                        else:
+                            # Cancellation must not allow a second subprocess probe
+                            # while the first worker thread is still running.
+                            def release_after_probe(task: asyncio.Task) -> None:
+                                if not task.cancelled():
+                                    task.exception()
+                                self._identity_lock.release()
+                            probe_task.add_done_callback(release_after_probe)
+                finally:
+                    IDENTITY_DEADLINE.reset(deadline_token)
+                    IDENTITY_ORIGIN.reset(origin_token)
                 validate_process_snapshot(snapshot, self.isolated_config)
             except ProcessIdentityError as error:
                 # The process identity errors contain only bounded diagnostic

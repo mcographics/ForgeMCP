@@ -1,0 +1,2611 @@
+{
+  "original_export_preview": {
+    "preview_id": "15e6b0792001127be8a71ada7dcae7be",
+    "expires_in_seconds": 300,
+    "source_session_id": "blender-26920",
+    "source_object": "Wooden_Box",
+    "source_snapshot_sha256": "deb9710dd3796c765a732aa6895b20fd62923e78959ba9cbe7adb2d18afde270",
+    "source_bounds_min": [
+      -0.6000000238418579,
+      -0.44999998807907104,
+      0.0
+    ],
+    "source_bounds_max": [
+      0.6000000238418579,
+      0.44999998807907104,
+      0.6499999761581421
+    ],
+    "vertex_count": 40,
+    "triangle_count": 60,
+    "meters_per_source_unit": 1.0,
+    "source_world_matrix": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "source_world_bounds_min": [
+      -0.6000000238418579,
+      -0.44999998807907104,
+      0.0
+    ],
+    "source_world_bounds_max": [
+      0.6000000238418579,
+      0.44999998807907104,
+      0.6499999761581421
+    ],
+    "source_world_vertices": [
+      [
+        -0.6000000238418579,
+        -0.44999998807907104,
+        0.0
+      ],
+      [
+        0.6000000238418579,
+        -0.44999998807907104,
+        0.0
+      ],
+      [
+        0.6000000238418579,
+        0.44999998807907104,
+        0.0
+      ],
+      [
+        -0.6000000238418579,
+        0.44999998807907104,
+        0.0
+      ],
+      [
+        -0.6000000238418579,
+        -0.44999998807907104,
+        0.05999999865889549
+      ],
+      [
+        0.6000000238418579,
+        -0.44999998807907104,
+        0.05999999865889549
+      ],
+      [
+        0.6000000238418579,
+        0.44999998807907104,
+        0.05999999865889549
+      ],
+      [
+        -0.6000000238418579,
+        0.44999998807907104,
+        0.05999999865889549
+      ],
+      [
+        -0.6000000238418579,
+        -0.44999998807907104,
+        0.05999999865889549
+      ],
+      [
+        0.6000000238418579,
+        -0.44999998807907104,
+        0.05999999865889549
+      ],
+      [
+        0.6000000238418579,
+        -0.38999998569488525,
+        0.05999999865889549
+      ],
+      [
+        -0.6000000238418579,
+        -0.38999998569488525,
+        0.05999999865889549
+      ],
+      [
+        -0.6000000238418579,
+        -0.44999998807907104,
+        0.6499999761581421
+      ],
+      [
+        0.6000000238418579,
+        -0.44999998807907104,
+        0.6499999761581421
+      ],
+      [
+        0.6000000238418579,
+        -0.38999998569488525,
+        0.6499999761581421
+      ],
+      [
+        -0.6000000238418579,
+        -0.38999998569488525,
+        0.6499999761581421
+      ],
+      [
+        -0.6000000238418579,
+        0.38999998569488525,
+        0.05999999865889549
+      ],
+      [
+        0.6000000238418579,
+        0.38999998569488525,
+        0.05999999865889549
+      ],
+      [
+        0.6000000238418579,
+        0.44999998807907104,
+        0.05999999865889549
+      ],
+      [
+        -0.6000000238418579,
+        0.44999998807907104,
+        0.05999999865889549
+      ],
+      [
+        -0.6000000238418579,
+        0.38999998569488525,
+        0.6499999761581421
+      ],
+      [
+        0.6000000238418579,
+        0.38999998569488525,
+        0.6499999761581421
+      ],
+      [
+        0.6000000238418579,
+        0.44999998807907104,
+        0.6499999761581421
+      ],
+      [
+        -0.6000000238418579,
+        0.44999998807907104,
+        0.6499999761581421
+      ],
+      [
+        -0.6000000238418579,
+        -0.38999998569488525,
+        0.05999999865889549
+      ],
+      [
+        -0.5400000214576721,
+        -0.38999998569488525,
+        0.05999999865889549
+      ],
+      [
+        -0.5400000214576721,
+        0.38999998569488525,
+        0.05999999865889549
+      ],
+      [
+        -0.6000000238418579,
+        0.38999998569488525,
+        0.05999999865889549
+      ],
+      [
+        -0.6000000238418579,
+        -0.38999998569488525,
+        0.6499999761581421
+      ],
+      [
+        -0.5400000214576721,
+        -0.38999998569488525,
+        0.6499999761581421
+      ],
+      [
+        -0.5400000214576721,
+        0.38999998569488525,
+        0.6499999761581421
+      ],
+      [
+        -0.6000000238418579,
+        0.38999998569488525,
+        0.6499999761581421
+      ],
+      [
+        0.5400000214576721,
+        -0.38999998569488525,
+        0.05999999865889549
+      ],
+      [
+        0.6000000238418579,
+        -0.38999998569488525,
+        0.05999999865889549
+      ],
+      [
+        0.6000000238418579,
+        0.38999998569488525,
+        0.05999999865889549
+      ],
+      [
+        0.5400000214576721,
+        0.38999998569488525,
+        0.05999999865889549
+      ],
+      [
+        0.5400000214576721,
+        -0.38999998569488525,
+        0.6499999761581421
+      ],
+      [
+        0.6000000238418579,
+        -0.38999998569488525,
+        0.6499999761581421
+      ],
+      [
+        0.6000000238418579,
+        0.38999998569488525,
+        0.6499999761581421
+      ],
+      [
+        0.5400000214576721,
+        0.38999998569488525,
+        0.6499999761581421
+      ]
+    ],
+    "world_vertices_truncated": false,
+    "materials": [
+      {
+        "index": 0,
+        "name": "ForgeMCP_Wood",
+        "surface": {
+          "model": "unsupported",
+          "reason": "shader_graph"
+        }
+      }
+    ],
+    "format": "fbx_binary",
+    "overwrite": false,
+    "export_settings": {
+      "axis_forward": "-Y",
+      "axis_up": "Z",
+      "apply_scale_options": "FBX_SCALE_UNITS"
+    },
+    "limitations": [
+      "static mesh only",
+      "textures are not copied",
+      "Unreal import is a separate stage"
+    ],
+    "changes": [
+      "Write a new FBX and export report in private transfer staging; do not save the scene"
+    ]
+  },
+  "copy_preview": {
+    "ok": true,
+    "session_id": "blender-26920",
+    "data": {
+      "preview_id": "e534114653f8c35a17d3b6906f55dac8",
+      "expires_in_seconds": 600,
+      "scene": "Scene",
+      "changes": [
+        {
+          "op": "set_material_input",
+          "name": "ForgeMCP_Wood_Unreal",
+          "vertices": [],
+          "faces": [],
+          "location": null,
+          "rotation": null,
+          "scale": null,
+          "color": null,
+          "material": "",
+          "collection": "",
+          "source": "",
+          "bone": "",
+          "node": "Principled BSDF",
+          "socket": "Roughness",
+          "value": 0.62,
+          "data_path": "location",
+          "frame": 1,
+          "fps": 30,
+          "frame_start": 1,
+          "frame_end": 250,
+          "shader_nodes": [],
+          "shader_links": [],
+          "bones": []
+        },
+        {
+          "op": "create_mesh",
+          "name": "Wooden_Box_Export",
+          "vertices": [
+            [
+              -0.6,
+              -0.45,
+              0.0
+            ],
+            [
+              0.6,
+              -0.45,
+              0.0
+            ],
+            [
+              0.6,
+              0.45,
+              0.0
+            ],
+            [
+              -0.6,
+              0.45,
+              0.0
+            ],
+            [
+              -0.6,
+              -0.45,
+              0.06
+            ],
+            [
+              0.6,
+              -0.45,
+              0.06
+            ],
+            [
+              0.6,
+              0.45,
+              0.06
+            ],
+            [
+              -0.6,
+              0.45,
+              0.06
+            ],
+            [
+              -0.6,
+              -0.45,
+              0.06
+            ],
+            [
+              0.6,
+              -0.45,
+              0.06
+            ],
+            [
+              0.6,
+              -0.39,
+              0.06
+            ],
+            [
+              -0.6,
+              -0.39,
+              0.06
+            ],
+            [
+              -0.6,
+              -0.45,
+              0.65
+            ],
+            [
+              0.6,
+              -0.45,
+              0.65
+            ],
+            [
+              0.6,
+              -0.39,
+              0.65
+            ],
+            [
+              -0.6,
+              -0.39,
+              0.65
+            ],
+            [
+              -0.6,
+              0.39,
+              0.06
+            ],
+            [
+              0.6,
+              0.39,
+              0.06
+            ],
+            [
+              0.6,
+              0.45,
+              0.06
+            ],
+            [
+              -0.6,
+              0.45,
+              0.06
+            ],
+            [
+              -0.6,
+              0.39,
+              0.65
+            ],
+            [
+              0.6,
+              0.39,
+              0.65
+            ],
+            [
+              0.6,
+              0.45,
+              0.65
+            ],
+            [
+              -0.6,
+              0.45,
+              0.65
+            ],
+            [
+              -0.6,
+              -0.39,
+              0.06
+            ],
+            [
+              -0.54,
+              -0.39,
+              0.06
+            ],
+            [
+              -0.54,
+              0.39,
+              0.06
+            ],
+            [
+              -0.6,
+              0.39,
+              0.06
+            ],
+            [
+              -0.6,
+              -0.39,
+              0.65
+            ],
+            [
+              -0.54,
+              -0.39,
+              0.65
+            ],
+            [
+              -0.54,
+              0.39,
+              0.65
+            ],
+            [
+              -0.6,
+              0.39,
+              0.65
+            ],
+            [
+              0.54,
+              -0.39,
+              0.06
+            ],
+            [
+              0.6,
+              -0.39,
+              0.06
+            ],
+            [
+              0.6,
+              0.39,
+              0.06
+            ],
+            [
+              0.54,
+              0.39,
+              0.06
+            ],
+            [
+              0.54,
+              -0.39,
+              0.65
+            ],
+            [
+              0.6,
+              -0.39,
+              0.65
+            ],
+            [
+              0.6,
+              0.39,
+              0.65
+            ],
+            [
+              0.54,
+              0.39,
+              0.65
+            ]
+          ],
+          "faces": [
+            [
+              0,
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              5,
+              6,
+              7
+            ],
+            [
+              0,
+              1,
+              5,
+              4
+            ],
+            [
+              1,
+              2,
+              6,
+              5
+            ],
+            [
+              2,
+              3,
+              7,
+              6
+            ],
+            [
+              3,
+              0,
+              4,
+              7
+            ],
+            [
+              8,
+              11,
+              10,
+              9
+            ],
+            [
+              12,
+              13,
+              14,
+              15
+            ],
+            [
+              8,
+              9,
+              13,
+              12
+            ],
+            [
+              9,
+              10,
+              14,
+              13
+            ],
+            [
+              10,
+              11,
+              15,
+              14
+            ],
+            [
+              11,
+              8,
+              12,
+              15
+            ],
+            [
+              16,
+              19,
+              18,
+              17
+            ],
+            [
+              20,
+              21,
+              22,
+              23
+            ],
+            [
+              16,
+              17,
+              21,
+              20
+            ],
+            [
+              17,
+              18,
+              22,
+              21
+            ],
+            [
+              18,
+              19,
+              23,
+              22
+            ],
+            [
+              19,
+              16,
+              20,
+              23
+            ],
+            [
+              24,
+              27,
+              26,
+              25
+            ],
+            [
+              28,
+              29,
+              30,
+              31
+            ],
+            [
+              24,
+              25,
+              29,
+              28
+            ],
+            [
+              25,
+              26,
+              30,
+              29
+            ],
+            [
+              26,
+              27,
+              31,
+              30
+            ],
+            [
+              27,
+              24,
+              28,
+              31
+            ],
+            [
+              32,
+              35,
+              34,
+              33
+            ],
+            [
+              36,
+              37,
+              38,
+              39
+            ],
+            [
+              32,
+              33,
+              37,
+              36
+            ],
+            [
+              33,
+              34,
+              38,
+              37
+            ],
+            [
+              34,
+              35,
+              39,
+              38
+            ],
+            [
+              35,
+              32,
+              36,
+              39
+            ]
+          ],
+          "location": null,
+          "rotation": null,
+          "scale": null,
+          "color": null,
+          "material": "",
+          "collection": "ForgeMCP_WoodenBox",
+          "source": "",
+          "bone": "",
+          "node": "",
+          "socket": "",
+          "value": null,
+          "data_path": "location",
+          "frame": 1,
+          "fps": 30,
+          "frame_start": 1,
+          "frame_end": 250,
+          "shader_nodes": [],
+          "shader_links": [],
+          "bones": []
+        },
+        {
+          "op": "assign_material",
+          "name": "Wooden_Box_Export",
+          "vertices": [],
+          "faces": [],
+          "location": null,
+          "rotation": null,
+          "scale": null,
+          "color": null,
+          "material": "ForgeMCP_Wood_Unreal",
+          "collection": "",
+          "source": "",
+          "bone": "",
+          "node": "",
+          "socket": "",
+          "value": null,
+          "data_path": "location",
+          "frame": 1,
+          "fps": 30,
+          "frame_start": 1,
+          "frame_end": 250,
+          "shader_nodes": [],
+          "shader_links": [],
+          "bones": []
+        }
+      ],
+      "saves_file": false,
+      "material_edits": [
+        {
+          "name": "ForgeMCP_Wood_Unreal",
+          "library": null,
+          "users": 1,
+          "diffuse_color": [
+            0.27000001072883606,
+            0.11500000208616257,
+            0.03200000151991844,
+            1.0
+          ],
+          "use_nodes": true,
+          "nodes": [
+            {
+              "id": "Principled BSDF",
+              "type": "ShaderNodeBsdfPrincipled",
+              "operation": null,
+              "blend_type": null,
+              "location": [
+                -200.0,
+                100.0
+              ],
+              "inputs": [
+                {
+                  "name": "Base Color",
+                  "identifier": "Base Color",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    0.27000001072883606,
+                    0.11500000208616257,
+                    0.03200000151991844,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Metallic",
+                  "identifier": "Metallic",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Roughness",
+                  "identifier": "Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.5
+                },
+                {
+                  "name": "IOR",
+                  "identifier": "IOR",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.5
+                },
+                {
+                  "name": "Alpha",
+                  "identifier": "Alpha",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.0
+                },
+                {
+                  "name": "Thin Wall",
+                  "identifier": "Thin Wall",
+                  "type": "BOOLEAN",
+                  "linked": false,
+                  "default": false
+                },
+                {
+                  "name": "Normal",
+                  "identifier": "Normal",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Weight",
+                  "identifier": "Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Diffuse Roughness",
+                  "identifier": "Diffuse Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Subsurface Weight",
+                  "identifier": "Subsurface Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Subsurface Radius",
+                  "identifier": "Subsurface Radius",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    0.20000000298023224,
+                    0.10000000149011612
+                  ]
+                },
+                {
+                  "name": "Subsurface Scale",
+                  "identifier": "Subsurface Scale",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.004999999888241291
+                },
+                {
+                  "name": "Subsurface IOR",
+                  "identifier": "Subsurface IOR",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.399999976158142
+                },
+                {
+                  "name": "Subsurface Anisotropy",
+                  "identifier": "Subsurface Anisotropy",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Specular IOR Level",
+                  "identifier": "Specular IOR Level",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.5
+                },
+                {
+                  "name": "Specular Tint",
+                  "identifier": "Specular Tint",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Anisotropic",
+                  "identifier": "Anisotropic",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Anisotropic Rotation",
+                  "identifier": "Anisotropic Rotation",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Tangent",
+                  "identifier": "Tangent",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Transmission Weight",
+                  "identifier": "Transmission Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Coat Weight",
+                  "identifier": "Coat Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Coat Roughness",
+                  "identifier": "Coat Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.029999999329447746
+                },
+                {
+                  "name": "Coat IOR",
+                  "identifier": "Coat IOR",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.5
+                },
+                {
+                  "name": "Coat Tint",
+                  "identifier": "Coat Tint",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Coat Normal",
+                  "identifier": "Coat Normal",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Sheen Weight",
+                  "identifier": "Sheen Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Sheen Roughness",
+                  "identifier": "Sheen Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.5
+                },
+                {
+                  "name": "Sheen Tint",
+                  "identifier": "Sheen Tint",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Emission Color",
+                  "identifier": "Emission Color",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Emission Strength",
+                  "identifier": "Emission Strength",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Thin Film Thickness",
+                  "identifier": "Thin Film Thickness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Thin Film IOR",
+                  "identifier": "Thin Film IOR",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.3300000429153442
+                }
+              ],
+              "outputs": [
+                {
+                  "name": "BSDF",
+                  "identifier": "BSDF",
+                  "type": "SHADER",
+                  "linked": true
+                }
+              ],
+              "sockets_truncated": false
+            },
+            {
+              "id": "Material Output",
+              "type": "ShaderNodeOutputMaterial",
+              "operation": null,
+              "blend_type": null,
+              "location": [
+                200.0,
+                100.0
+              ],
+              "inputs": [
+                {
+                  "name": "Surface",
+                  "identifier": "Surface",
+                  "type": "SHADER",
+                  "linked": true
+                },
+                {
+                  "name": "Volume",
+                  "identifier": "Volume",
+                  "type": "SHADER",
+                  "linked": false
+                },
+                {
+                  "name": "Displacement",
+                  "identifier": "Displacement",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Thickness",
+                  "identifier": "Thickness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                }
+              ],
+              "outputs": [],
+              "sockets_truncated": false
+            }
+          ],
+          "links": [
+            {
+              "from_node": "Principled BSDF",
+              "from_socket": "BSDF",
+              "to_node": "Material Output",
+              "to_socket": "Surface",
+              "valid": true
+            }
+          ],
+          "object_users": [
+            "Wooden_Box_Unreal"
+          ],
+          "total_object_users": 1,
+          "object_users_truncated": false,
+          "total_nodes": 2,
+          "total_links": 1,
+          "truncated": false
+        }
+      ],
+      "recovery": "Failed batches remove newly created datablocks and restore touched objects, material defaults, and scene timing."
+    }
+  },
+  "copy_apply": {
+    "ok": true,
+    "session_id": "blender-26920",
+    "data": {
+      "state": "completed",
+      "operations": [
+        {
+          "op": "set_material_input",
+          "name": "ForgeMCP_Wood_Unreal",
+          "state": "completed"
+        },
+        {
+          "op": "create_mesh",
+          "name": "Wooden_Box_Export",
+          "state": "completed"
+        },
+        {
+          "op": "assign_material",
+          "name": "Wooden_Box_Export",
+          "state": "completed"
+        }
+      ],
+      "objects": [
+        {
+          "name": "Wooden_Box_Export",
+          "type": "MESH",
+          "location": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_euler": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_mode": "XYZ",
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "collections": [
+            "ForgeMCP_WoodenBox"
+          ],
+          "materials": [
+            "ForgeMCP_Wood_Unreal"
+          ],
+          "modifiers": [],
+          "mesh": {
+            "vertices": 40,
+            "edges": 60,
+            "faces": 30
+          },
+          "action": null
+        }
+      ],
+      "saved": false,
+      "materials": [
+        {
+          "name": "ForgeMCP_Wood_Unreal",
+          "library": null,
+          "users": 2,
+          "diffuse_color": [
+            0.27000001072883606,
+            0.11500000208616257,
+            0.03200000151991844,
+            1.0
+          ],
+          "use_nodes": true,
+          "nodes": [
+            {
+              "id": "Principled BSDF",
+              "type": "ShaderNodeBsdfPrincipled",
+              "operation": null,
+              "blend_type": null,
+              "location": [
+                -200.0,
+                100.0
+              ],
+              "inputs": [
+                {
+                  "name": "Base Color",
+                  "identifier": "Base Color",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    0.27000001072883606,
+                    0.11500000208616257,
+                    0.03200000151991844,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Metallic",
+                  "identifier": "Metallic",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Roughness",
+                  "identifier": "Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.6200000047683716
+                },
+                {
+                  "name": "IOR",
+                  "identifier": "IOR",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.5
+                },
+                {
+                  "name": "Alpha",
+                  "identifier": "Alpha",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.0
+                },
+                {
+                  "name": "Thin Wall",
+                  "identifier": "Thin Wall",
+                  "type": "BOOLEAN",
+                  "linked": false,
+                  "default": false
+                },
+                {
+                  "name": "Normal",
+                  "identifier": "Normal",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Weight",
+                  "identifier": "Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Diffuse Roughness",
+                  "identifier": "Diffuse Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Subsurface Weight",
+                  "identifier": "Subsurface Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Subsurface Radius",
+                  "identifier": "Subsurface Radius",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    0.20000000298023224,
+                    0.10000000149011612
+                  ]
+                },
+                {
+                  "name": "Subsurface Scale",
+                  "identifier": "Subsurface Scale",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.004999999888241291
+                },
+                {
+                  "name": "Subsurface IOR",
+                  "identifier": "Subsurface IOR",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.399999976158142
+                },
+                {
+                  "name": "Subsurface Anisotropy",
+                  "identifier": "Subsurface Anisotropy",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Specular IOR Level",
+                  "identifier": "Specular IOR Level",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.5
+                },
+                {
+                  "name": "Specular Tint",
+                  "identifier": "Specular Tint",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Anisotropic",
+                  "identifier": "Anisotropic",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Anisotropic Rotation",
+                  "identifier": "Anisotropic Rotation",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Tangent",
+                  "identifier": "Tangent",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Transmission Weight",
+                  "identifier": "Transmission Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Coat Weight",
+                  "identifier": "Coat Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Coat Roughness",
+                  "identifier": "Coat Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.029999999329447746
+                },
+                {
+                  "name": "Coat IOR",
+                  "identifier": "Coat IOR",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.5
+                },
+                {
+                  "name": "Coat Tint",
+                  "identifier": "Coat Tint",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Coat Normal",
+                  "identifier": "Coat Normal",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Sheen Weight",
+                  "identifier": "Sheen Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Sheen Roughness",
+                  "identifier": "Sheen Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.5
+                },
+                {
+                  "name": "Sheen Tint",
+                  "identifier": "Sheen Tint",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Emission Color",
+                  "identifier": "Emission Color",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Emission Strength",
+                  "identifier": "Emission Strength",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Thin Film Thickness",
+                  "identifier": "Thin Film Thickness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Thin Film IOR",
+                  "identifier": "Thin Film IOR",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.3300000429153442
+                }
+              ],
+              "outputs": [
+                {
+                  "name": "BSDF",
+                  "identifier": "BSDF",
+                  "type": "SHADER",
+                  "linked": true
+                }
+              ],
+              "sockets_truncated": false
+            },
+            {
+              "id": "Material Output",
+              "type": "ShaderNodeOutputMaterial",
+              "operation": null,
+              "blend_type": null,
+              "location": [
+                200.0,
+                100.0
+              ],
+              "inputs": [
+                {
+                  "name": "Surface",
+                  "identifier": "Surface",
+                  "type": "SHADER",
+                  "linked": true
+                },
+                {
+                  "name": "Volume",
+                  "identifier": "Volume",
+                  "type": "SHADER",
+                  "linked": false
+                },
+                {
+                  "name": "Displacement",
+                  "identifier": "Displacement",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Thickness",
+                  "identifier": "Thickness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                }
+              ],
+              "outputs": [],
+              "sockets_truncated": false
+            }
+          ],
+          "links": [
+            {
+              "from_node": "Principled BSDF",
+              "from_socket": "BSDF",
+              "to_node": "Material Output",
+              "to_socket": "Surface",
+              "valid": true
+            }
+          ],
+          "object_users": [
+            "Wooden_Box_Export",
+            "Wooden_Box_Unreal"
+          ],
+          "total_object_users": 2,
+          "object_users_truncated": false,
+          "total_nodes": 2,
+          "total_links": 1,
+          "truncated": false
+        }
+      ],
+      "preserved_datablocks": []
+    }
+  },
+  "transfer_preview": {
+    "ok": true,
+    "data": {
+      "operation_id": "50c71e325c10494a84de7f222cf752cb",
+      "preview_id": "50c71e325c10494a84de7f222cf752cb",
+      "expires_in_seconds": 300,
+      "source": {
+        "schema_version": 1,
+        "asset_kind": "static_mesh",
+        "format": "fbx_binary",
+        "transfer_id": "0ebe464d5be3057895c0c1197aede5dc",
+        "source_session_id": "blender-26920",
+        "target_session_id": "unreal-19684",
+        "source_object": "Wooden_Box_Export",
+        "source_snapshot_sha256": "950fb883868266b6195fdb9b2d957888c8d4927b482190c0a0e6519134c3c740",
+        "target_project_file": "G:\\ForgeMCP\\ForgeMCPDev.uproject",
+        "target_asset_path": "/Game/ForgeMCP/WoodenBox/SM_WoodenBox",
+        "artifact_name": "mesh.fbx",
+        "source_coordinates": "blender_native",
+        "target_coordinates": "unreal_native",
+        "meters_per_source_unit": 1.0,
+        "source_bounds_min": [
+          -0.6000000238418579,
+          -0.44999998807907104,
+          0.0
+        ],
+        "source_bounds_max": [
+          0.6000000238418579,
+          0.44999998807907104,
+          0.6499999761581421
+        ],
+        "source_world_bounds_min": [
+          -0.6000000238418579,
+          -0.44999998807907104,
+          0.0
+        ],
+        "source_world_bounds_max": [
+          0.6000000238418579,
+          0.44999998807907104,
+          0.6499999761581421
+        ],
+        "source_world_vertices": [
+          [
+            -0.6000000238418579,
+            -0.44999998807907104,
+            0.0
+          ],
+          [
+            0.6000000238418579,
+            -0.44999998807907104,
+            0.0
+          ],
+          [
+            0.6000000238418579,
+            0.44999998807907104,
+            0.0
+          ],
+          [
+            -0.6000000238418579,
+            0.44999998807907104,
+            0.0
+          ],
+          [
+            -0.6000000238418579,
+            -0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            -0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            -0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            -0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            -0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            -0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            -0.44999998807907104,
+            0.6499999761581421
+          ],
+          [
+            0.6000000238418579,
+            -0.44999998807907104,
+            0.6499999761581421
+          ],
+          [
+            0.6000000238418579,
+            -0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            -0.6000000238418579,
+            -0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            -0.6000000238418579,
+            0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            0.6000000238418579,
+            0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            0.6000000238418579,
+            0.44999998807907104,
+            0.6499999761581421
+          ],
+          [
+            -0.6000000238418579,
+            0.44999998807907104,
+            0.6499999761581421
+          ],
+          [
+            -0.6000000238418579,
+            -0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            -0.5400000214576721,
+            -0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            -0.5400000214576721,
+            0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            -0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            -0.5400000214576721,
+            -0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            -0.5400000214576721,
+            0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            -0.6000000238418579,
+            0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            0.5400000214576721,
+            -0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            -0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            0.5400000214576721,
+            0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            0.5400000214576721,
+            -0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            0.6000000238418579,
+            -0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            0.6000000238418579,
+            0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            0.5400000214576721,
+            0.38999998569488525,
+            0.6499999761581421
+          ]
+        ],
+        "world_vertices_truncated": false,
+        "vertex_count": 40,
+        "triangle_count": 60,
+        "materials": [
+          {
+            "index": 0,
+            "name": "ForgeMCP_Wood_Unreal",
+            "surface": {
+              "model": "pbr_constants",
+              "color_space": "scene_linear",
+              "base_color": [
+                0.27000001072883606,
+                0.11500000208616257,
+                0.03200000151991844
+              ],
+              "roughness": 0.6200000047683716,
+              "metallic": 0.0,
+              "two_sided": true
+            }
+          }
+        ],
+        "overwrite": false
+      },
+      "target": {
+        "project_file": "G:\\ForgeMCP\\ForgeMCPDev.uproject",
+        "level": "/Temp/Untitled_1.Untitled_1"
+      },
+      "changes": {
+        "source_session_id": "blender-26920",
+        "target_session_id": "unreal-19684",
+        "source_object": "Wooden_Box_Export",
+        "target_asset_path": "/Game/ForgeMCP/WoodenBox/SM_WoodenBox",
+        "save_assets": true,
+        "place": true,
+        "location": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "saves_source_scene": false,
+      "saves_level": false,
+      "overwrite": false,
+      "limitations": [
+        "opaque constant-PBR material profile",
+        "shader/visual verification remains separate",
+        "complete vertex-position comparison is limited to 256 vertices; all meshes receive bounds/count checks"
+      ]
+    }
+  },
+  "transfer_apply": {
+    "ok": true,
+    "data": {
+      "operation_id": "50c71e325c10494a84de7f222cf752cb",
+      "state": "completed",
+      "receipt": {
+        "schema_version": 1,
+        "operation_id": "50c71e325c10494a84de7f222cf752cb",
+        "revision": 10,
+        "state": "completed",
+        "active_stage": null,
+        "completed_stages": [
+          "export",
+          "staging",
+          "import",
+          "verification",
+          "placement"
+        ],
+        "planned_stages": [
+          "export",
+          "staging",
+          "import",
+          "verification",
+          "placement"
+        ],
+        "created_at": "2026-10-10T15:00:31.696854+00:00",
+        "updated_at": "2026-10-10T15:00:32.942353+00:00",
+        "plan": {
+          "request": {
+            "source_session_id": "blender-26920",
+            "target_session_id": "unreal-19684",
+            "source_object": "Wooden_Box_Export",
+            "target_asset_path": "/Game/ForgeMCP/WoodenBox/SM_WoodenBox",
+            "save_assets": true,
+            "place": true,
+            "location": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "target": {
+            "project_file": "G:\\ForgeMCP\\ForgeMCPDev.uproject",
+            "level": "/Temp/Untitled_1.Untitled_1"
+          },
+          "export_preview_id": "0ebe464d5be3057895c0c1197aede5dc"
+        },
+        "events": [
+          {
+            "stage": "export",
+            "outcome": "started",
+            "at": "2026-10-10T15:00:31.720354+00:00",
+            "evidence": {}
+          },
+          {
+            "stage": "export",
+            "outcome": "completed",
+            "at": "2026-10-10T15:00:32.076853+00:00",
+            "evidence": {
+              "transfer_id": "0ebe464d5be3057895c0c1197aede5dc",
+              "source_session_id": "blender-26920",
+              "source_object": "Wooden_Box_Export",
+              "source_snapshot_sha256": "950fb883868266b6195fdb9b2d957888c8d4927b482190c0a0e6519134c3c740",
+              "source_bounds_min": [
+                -0.6000000238418579,
+                -0.44999998807907104,
+                0.0
+              ],
+              "source_bounds_max": [
+                0.6000000238418579,
+                0.44999998807907104,
+                0.6499999761581421
+              ],
+              "vertex_count": 40,
+              "triangle_count": 60,
+              "meters_per_source_unit": 1.0,
+              "source_world_matrix": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "source_world_bounds_min": [
+                -0.6000000238418579,
+                -0.44999998807907104,
+                0.0
+              ],
+              "source_world_bounds_max": [
+                0.6000000238418579,
+                0.44999998807907104,
+                0.6499999761581421
+              ],
+              "source_world_vertices": [
+                [
+                  -0.6000000238418579,
+                  -0.44999998807907104,
+                  0.0
+                ],
+                [
+                  0.6000000238418579,
+                  -0.44999998807907104,
+                  0.0
+                ],
+                [
+                  0.6000000238418579,
+                  0.44999998807907104,
+                  0.0
+                ],
+                [
+                  -0.6000000238418579,
+                  0.44999998807907104,
+                  0.0
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  -0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  -0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  -0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.44999998807907104,
+                  0.6499999761581421
+                ],
+                [
+                  0.6000000238418579,
+                  -0.44999998807907104,
+                  0.6499999761581421
+                ],
+                [
+                  0.6000000238418579,
+                  -0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  -0.6000000238418579,
+                  0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  0.6000000238418579,
+                  0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  0.6000000238418579,
+                  0.44999998807907104,
+                  0.6499999761581421
+                ],
+                [
+                  -0.6000000238418579,
+                  0.44999998807907104,
+                  0.6499999761581421
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  -0.5400000214576721,
+                  -0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  -0.5400000214576721,
+                  0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  -0.5400000214576721,
+                  -0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  -0.5400000214576721,
+                  0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  -0.6000000238418579,
+                  0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  0.5400000214576721,
+                  -0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  -0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  0.5400000214576721,
+                  0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  0.5400000214576721,
+                  -0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  0.6000000238418579,
+                  -0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  0.6000000238418579,
+                  0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  0.5400000214576721,
+                  0.38999998569488525,
+                  0.6499999761581421
+                ]
+              ],
+              "world_vertices_truncated": false,
+              "materials": [
+                {
+                  "index": 0,
+                  "name": "ForgeMCP_Wood_Unreal",
+                  "surface": {
+                    "model": "pbr_constants",
+                    "color_space": "scene_linear",
+                    "base_color": [
+                      0.27000001072883606,
+                      0.11500000208616257,
+                      0.03200000151991844
+                    ],
+                    "roughness": 0.6200000047683716,
+                    "metallic": 0.0,
+                    "two_sided": true
+                  }
+                }
+              ],
+              "artifact_name": "mesh.fbx",
+              "format": "fbx_binary",
+              "status": "exported",
+              "saved_scene": false,
+              "overwrite": false,
+              "artifact_bytes": 15388,
+              "artifact_sha256": "d5f277de4194167c278a0dcb7eb056d5d8a06c3c8ec0fdd80ae337775f02ea4f"
+            }
+          },
+          {
+            "stage": "staging",
+            "outcome": "started",
+            "at": "2026-10-10T15:00:32.091352+00:00",
+            "evidence": {}
+          },
+          {
+            "stage": "staging",
+            "outcome": "completed",
+            "at": "2026-10-10T15:00:32.194853+00:00",
+            "evidence": {
+              "recipe": {
+                "transfer_id": "0ebe464d5be3057895c0c1197aede5dc",
+                "artifact_sha256": "d5f277de4194167c278a0dcb7eb056d5d8a06c3c8ec0fdd80ae337775f02ea4f",
+                "artifact_bytes": 15388,
+                "asset_path": "/Game/ForgeMCP/WoodenBox/SM_WoodenBox",
+                "target_project_file": "G:\\ForgeMCP\\ForgeMCPDev.uproject",
+                "target_session_id": "unreal-19684",
+                "save": true,
+                "material_definitions": [
+                  {
+                    "index": 0,
+                    "source_name": "ForgeMCP_Wood_Unreal",
+                    "asset_path": "/Game/ForgeMCP/WoodenBox/M_0ebe464d5be3057895c0c1197aede5dc_0",
+                    "color_space": "scene_linear",
+                    "base_color": [
+                      0.27000001072883606,
+                      0.11500000208616257,
+                      0.03200000151991844
+                    ],
+                    "roughness": 0.6200000047683716,
+                    "metallic": 0.0,
+                    "two_sided": true
+                  }
+                ]
+              },
+              "recoverable_export_retained": true
+            }
+          },
+          {
+            "stage": "import",
+            "outcome": "started",
+            "at": "2026-10-10T15:00:32.209351+00:00",
+            "evidence": {}
+          },
+          {
+            "stage": "import",
+            "outcome": "completed",
+            "at": "2026-10-10T15:00:32.701352+00:00",
+            "evidence": {
+              "transfer_id": "0ebe464d5be3057895c0c1197aede5dc",
+              "target_project_file": "../../../../../../ForgeMCP/ForgeMCPDev.uproject",
+              "state": "imported",
+              "planned_asset_package": "/Game/ForgeMCP/WoodenBox/SM_WoodenBox",
+              "planned_material_packages": [
+                "/Game/ForgeMCP/WoodenBox/M_0ebe464d5be3057895c0c1197aede5dc_0"
+              ],
+              "saved": true,
+              "placed": false,
+              "native_diagnostics": [
+                {
+                  "category": "LogStaticMesh",
+                  "severity": "warning",
+                  "message": "SM_WoodenBox has degenerate tangent bases which will result in incorrect shading.  MikkTSpace relies on tangent bases and may result in mesh corruption, consider disabling this option."
+                },
+                {
+                  "category": "LogStaticMesh",
+                  "severity": "warning",
+                  "message": "SM_WoodenBox has some nearly zero bi-normals which can create some issues. (Tolerance of 1E-4)"
+                },
+                {
+                  "category": "FBXImport",
+                  "severity": "warning",
+                  "message": "SM_WoodenBox has degenerate tangent bases which will result in incorrect shading.  MikkTSpace relies on tangent bases and may result in mesh corruption, consider disabling this option. "
+                },
+                {
+                  "category": "FBXImport",
+                  "severity": "warning",
+                  "message": "SM_WoodenBox has some nearly zero bi-normals which can create some issues. (Tolerance of 1E-4) "
+                }
+              ],
+              "native_diagnostics_limit_reached": false,
+              "asset_path": "/Game/ForgeMCP/WoodenBox/SM_WoodenBox.SM_WoodenBox",
+              "class_path": "/Script/Engine.StaticMesh",
+              "vertex_count": 40,
+              "triangle_count": 60,
+              "bounds_min_cm": [
+                -45.000003814697266,
+                -60.00000762939453,
+                0
+              ],
+              "bounds_max_cm": [
+                45.000003814697266,
+                60.00000762939453,
+                65
+              ],
+              "vertex_positions_cm": [
+                [
+                  45.000003814697266,
+                  60,
+                  0
+                ],
+                [
+                  44.99999237060547,
+                  -60.00000762939453,
+                  0
+                ],
+                [
+                  -45.000003814697266,
+                  -60,
+                  0
+                ],
+                [
+                  -44.99999237060547,
+                  60.00000762939453,
+                  0
+                ],
+                [
+                  45.000003814697266,
+                  60,
+                  6
+                ],
+                [
+                  44.99999237060547,
+                  -60.00000762939453,
+                  6
+                ],
+                [
+                  -45.000003814697266,
+                  -60,
+                  6
+                ],
+                [
+                  -44.99999237060547,
+                  60.00000762939453,
+                  6
+                ],
+                [
+                  45.000003814697266,
+                  60,
+                  6
+                ],
+                [
+                  44.99999237060547,
+                  -60.00000762939453,
+                  6
+                ],
+                [
+                  38.99999237060547,
+                  -60.00000762939453,
+                  6
+                ],
+                [
+                  39.000003814697266,
+                  60,
+                  6
+                ],
+                [
+                  45.000003814697266,
+                  60,
+                  65
+                ],
+                [
+                  44.99999237060547,
+                  -60.00000762939453,
+                  65
+                ],
+                [
+                  38.99999237060547,
+                  -60.00000762939453,
+                  65
+                ],
+                [
+                  39.000003814697266,
+                  60,
+                  65
+                ],
+                [
+                  -38.99999237060547,
+                  60.00000762939453,
+                  6
+                ],
+                [
+                  -39.000003814697266,
+                  -60,
+                  6
+                ],
+                [
+                  -45.000003814697266,
+                  -60,
+                  6
+                ],
+                [
+                  -44.99999237060547,
+                  60.00000762939453,
+                  6
+                ],
+                [
+                  -38.99999237060547,
+                  60.00000762939453,
+                  65
+                ],
+                [
+                  -39.000003814697266,
+                  -60,
+                  65
+                ],
+                [
+                  -45.000003814697266,
+                  -60,
+                  65
+                ],
+                [
+                  -44.99999237060547,
+                  60.00000762939453,
+                  65
+                ],
+                [
+                  39.000003814697266,
+                  60,
+                  6
+                ],
+                [
+                  39.000003814697266,
+                  54,
+                  6
+                ],
+                [
+                  -38.99999237060547,
+                  54.000003814697266,
+                  6
+                ],
+                [
+                  -38.99999237060547,
+                  60.00000762939453,
+                  6
+                ],
+                [
+                  39.000003814697266,
+                  60,
+                  65
+                ],
+                [
+                  39.000003814697266,
+                  54,
+                  65
+                ],
+                [
+                  -38.99999237060547,
+                  54.000003814697266,
+                  65
+                ],
+                [
+                  -38.99999237060547,
+                  60.00000762939453,
+                  65
+                ],
+                [
+                  38.99999237060547,
+                  -54.000003814697266,
+                  6
+                ],
+                [
+                  38.99999237060547,
+                  -60.00000762939453,
+                  6
+                ],
+                [
+                  -39.000003814697266,
+                  -60,
+                  6
+                ],
+                [
+                  -39.000003814697266,
+                  -54,
+                  6
+                ],
+                [
+                  38.99999237060547,
+                  -54.000003814697266,
+                  65
+                ],
+                [
+                  38.99999237060547,
+                  -60.00000762939453,
+                  65
+                ],
+                [
+                  -39.000003814697266,
+                  -60,
+                  65
+                ],
+                [
+                  -39.000003814697266,
+                  -54,
+                  65
+                ]
+              ],
+              "vertices_truncated": false,
+              "material_slots": [
+                {
+                  "slot_name": "ForgeMCP_Wood_Unreal",
+                  "imported_slot_name": "ForgeMCP_Wood_Unreal"
+                }
+              ],
+              "material_assets_imported": true,
+              "materials": [
+                {
+                  "asset_path": "/Game/ForgeMCP/WoodenBox/M_0ebe464d5be3057895c0c1197aede5dc_0.M_0ebe464d5be3057895c0c1197aede5dc_0",
+                  "model": "pbr_constants",
+                  "color_space": "scene_linear",
+                  "two_sided": true,
+                  "native_graph_verified": true,
+                  "shader_compile_verified": false,
+                  "base_color": [
+                    0.27000001072883606,
+                    0.11500000208616257,
+                    0.03200000151991844
+                  ],
+                  "roughness": 0.6200000047683716,
+                  "metallic": 0,
+                  "index": 0,
+                  "saved": true
+                }
+              ],
+              "material_assets_saved": true,
+              "saved_assets": [
+                "/Game/ForgeMCP/WoodenBox/M_0ebe464d5be3057895c0c1197aede5dc_0.M_0ebe464d5be3057895c0c1197aede5dc_0",
+                "/Game/ForgeMCP/WoodenBox/SM_WoodenBox.SM_WoodenBox"
+              ],
+              "cross_application_verified": false
+            }
+          },
+          {
+            "stage": "verification",
+            "outcome": "started",
+            "at": "2026-10-10T15:00:32.722352+00:00",
+            "evidence": {}
+          },
+          {
+            "stage": "verification",
+            "outcome": "completed",
+            "at": "2026-10-10T15:00:32.743851+00:00",
+            "evidence": {
+              "geometry_bounds_and_counts_verified": true,
+              "complete_vertex_positions_verified": true,
+              "material_constant_graphs_verified": true,
+              "shader_compile_verified": false,
+              "visual_equivalence_verified": false
+            }
+          },
+          {
+            "stage": "placement",
+            "outcome": "started",
+            "at": "2026-10-10T15:00:32.761852+00:00",
+            "evidence": {}
+          },
+          {
+            "stage": "placement",
+            "outcome": "completed",
+            "at": "2026-10-10T15:00:32.942353+00:00",
+            "evidence": {
+              "native_result": {
+                "state": "completed",
+                "actors": [
+                  {
+                    "path": "/Temp/Untitled_1.Untitled_1:PersistentLevel.StaticMeshActor_UAID_701CE7E46087C60903_1572060183",
+                    "class_path": "/Script/Engine.StaticMeshActor",
+                    "label": "ForgeTransfer_50c71e325c10494a84de7f222cf752cb",
+                    "guid": "D809C5ED4FC011144B4C03B0ABCA0085",
+                    "location": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "rotation": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "scale": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "hidden": false,
+                    "static_mesh": "/Game/ForgeMCP/WoodenBox/SM_WoodenBox.SM_WoodenBox",
+                    "bounds_origin": [
+                      0,
+                      0,
+                      32.5
+                    ],
+                    "bounds_extent": [
+                      45.000003814697266,
+                      60.00000762939453,
+                      32.5
+                    ],
+                    "material_assets": [
+                      "/Game/ForgeMCP/WoodenBox/M_0ebe464d5be3057895c0c1197aede5dc_0.M_0ebe464d5be3057895c0c1197aede5dc_0"
+                    ],
+                    "material_assets_truncated": false
+                  }
+                ],
+                "saved": false
+              },
+              "level_saved": false
+            }
+          }
+        ]
+      }
+    }
+  }
+}

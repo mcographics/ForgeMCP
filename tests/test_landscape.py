@@ -116,9 +116,10 @@ def test_world_partition_test_creation_is_typed_and_bounded():
     assert request.partition_grid_size_components == 2
 
 
-def test_in_place_world_partition_creation_is_typed_and_has_no_destination_map():
+def test_in_place_world_partition_creation_requires_exact_existing_world_package():
     request = LandscapeRequest(
         action="create_in_place",
+        map_path="/Game/Levels/L_City_World_Master",
         components_x=4,
         components_y=4,
         quads_per_section=63,
@@ -130,9 +131,12 @@ def test_in_place_world_partition_creation_is_typed_and_has_no_destination_map()
 
     with pytest.raises(ValidationError):
         LandscapeRequest(action="create_in_place", world_partition=True,
-                         map_path="/Game/ForgeMCPTests/Landscape/Elsewhere")
+                         map_path="../City")
     with pytest.raises(ValidationError):
         LandscapeRequest(action="create_in_place")
+    with pytest.raises(ValidationError):
+        LandscapeRequest(action="create_in_place", world_partition=True,
+                         map_path="/Game/Levels/L_City_World_Master.Actor")
     with pytest.raises(ValidationError):
         LandscapeRequest(action="create_in_place", world_partition=True,
                          actor_path="/Game/Test:Landscape")
@@ -214,3 +218,5 @@ def test_unknown_fields_and_missing_target_fail_closed():
         LandscapeRequest(action="raise")
     with pytest.raises(ValidationError):
         LandscapeRequest(action="save", actor_path="terrain", execute="arbitrary")
+    with pytest.raises(ValidationError):
+        LandscapeRequest(action="raise", actor_path="terrain", map_path="/Game/Levels/Other")

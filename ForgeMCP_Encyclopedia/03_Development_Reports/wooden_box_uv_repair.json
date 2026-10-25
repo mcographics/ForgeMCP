@@ -1,0 +1,1139 @@
+{
+  "preview": {
+    "ok": true,
+    "data": {
+      "operation_id": "1d8fa316fc894a2cb1c8754d1b690a7f",
+      "preview_id": "1d8fa316fc894a2cb1c8754d1b690a7f",
+      "expires_in_seconds": 300,
+      "source": {
+        "schema_version": 1,
+        "asset_kind": "static_mesh",
+        "format": "fbx_binary",
+        "transfer_id": "3f46d1dafe39819e44b044e137d28269",
+        "source_session_id": "blender-22408",
+        "target_session_id": "unreal-19684",
+        "source_object": "Wooden_Box_UV_Export",
+        "source_snapshot_sha256": "9aeafffbcf6eeefbb2bb2a5d3e4ebbe930c9c43c0342a5d973d0698df883015f",
+        "target_project_file": "G:\\ForgeMCP\\ForgeMCPDev.uproject",
+        "target_asset_path": "/Game/ForgeMCP/WoodenBoxUV/SM_WoodenBoxUV",
+        "artifact_name": "mesh.fbx",
+        "source_coordinates": "blender_native",
+        "target_coordinates": "unreal_native",
+        "meters_per_source_unit": 1.0,
+        "source_bounds_min": [
+          -0.6000000238418579,
+          -0.44999998807907104,
+          0.0
+        ],
+        "source_bounds_max": [
+          0.6000000238418579,
+          0.44999998807907104,
+          0.6499999761581421
+        ],
+        "source_world_bounds_min": [
+          -0.6000000238418579,
+          -0.44999998807907104,
+          0.0
+        ],
+        "source_world_bounds_max": [
+          0.6000000238418579,
+          0.44999998807907104,
+          0.6499999761581421
+        ],
+        "source_world_vertices": [
+          [
+            -0.6000000238418579,
+            -0.44999998807907104,
+            0.0
+          ],
+          [
+            0.6000000238418579,
+            -0.44999998807907104,
+            0.0
+          ],
+          [
+            0.6000000238418579,
+            0.44999998807907104,
+            0.0
+          ],
+          [
+            -0.6000000238418579,
+            0.44999998807907104,
+            0.0
+          ],
+          [
+            -0.6000000238418579,
+            -0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            -0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            -0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            -0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            -0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            -0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            -0.44999998807907104,
+            0.6499999761581421
+          ],
+          [
+            0.6000000238418579,
+            -0.44999998807907104,
+            0.6499999761581421
+          ],
+          [
+            0.6000000238418579,
+            -0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            -0.6000000238418579,
+            -0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            -0.6000000238418579,
+            0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            0.44999998807907104,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            0.6000000238418579,
+            0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            0.6000000238418579,
+            0.44999998807907104,
+            0.6499999761581421
+          ],
+          [
+            -0.6000000238418579,
+            0.44999998807907104,
+            0.6499999761581421
+          ],
+          [
+            -0.6000000238418579,
+            -0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            -0.5400000214576721,
+            -0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            -0.5400000214576721,
+            0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            -0.6000000238418579,
+            -0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            -0.5400000214576721,
+            -0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            -0.5400000214576721,
+            0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            -0.6000000238418579,
+            0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            0.5400000214576721,
+            -0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            -0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            0.6000000238418579,
+            0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            0.5400000214576721,
+            0.38999998569488525,
+            0.05999999865889549
+          ],
+          [
+            0.5400000214576721,
+            -0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            0.6000000238418579,
+            -0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            0.6000000238418579,
+            0.38999998569488525,
+            0.6499999761581421
+          ],
+          [
+            0.5400000214576721,
+            0.38999998569488525,
+            0.6499999761581421
+          ]
+        ],
+        "world_vertices_truncated": false,
+        "vertex_count": 40,
+        "triangle_count": 60,
+        "materials": [
+          {
+            "index": 0,
+            "name": "Wood_UV_Export",
+            "surface": {
+              "model": "pbr_constants",
+              "color_space": "scene_linear",
+              "base_color": [
+                0.27000001072883606,
+                0.11500000208616257,
+                0.03200000151991844
+              ],
+              "roughness": 0.6200000047683716,
+              "metallic": 0.0,
+              "two_sided": true
+            }
+          }
+        ],
+        "overwrite": false
+      },
+      "target": {
+        "project_file": "G:\\ForgeMCP\\ForgeMCPDev.uproject",
+        "level": "/Temp/Untitled_1.Untitled_1"
+      },
+      "changes": {
+        "source_session_id": "blender-22408",
+        "target_session_id": "unreal-19684",
+        "source_object": "Wooden_Box_UV_Export",
+        "target_asset_path": "/Game/ForgeMCP/WoodenBoxUV/SM_WoodenBoxUV",
+        "save_assets": true,
+        "place": true,
+        "location": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "saves_source_scene": false,
+      "saves_level": false,
+      "overwrite": false,
+      "limitations": [
+        "opaque constant-PBR material profile",
+        "shader/visual verification remains separate",
+        "complete vertex-position comparison is limited to 256 vertices; all meshes receive bounds/count checks"
+      ]
+    }
+  },
+  "apply": {
+    "ok": true,
+    "data": {
+      "operation_id": "1d8fa316fc894a2cb1c8754d1b690a7f",
+      "state": "completed",
+      "receipt": {
+        "schema_version": 1,
+        "operation_id": "1d8fa316fc894a2cb1c8754d1b690a7f",
+        "revision": 10,
+        "state": "completed",
+        "active_stage": null,
+        "completed_stages": [
+          "export",
+          "staging",
+          "import",
+          "verification",
+          "placement"
+        ],
+        "planned_stages": [
+          "export",
+          "staging",
+          "import",
+          "verification",
+          "placement"
+        ],
+        "created_at": "2026-10-10T15:05:26.063222+00:00",
+        "updated_at": "2026-10-10T15:05:27.366222+00:00",
+        "plan": {
+          "request": {
+            "source_session_id": "blender-22408",
+            "target_session_id": "unreal-19684",
+            "source_object": "Wooden_Box_UV_Export",
+            "target_asset_path": "/Game/ForgeMCP/WoodenBoxUV/SM_WoodenBoxUV",
+            "save_assets": true,
+            "place": true,
+            "location": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          },
+          "target": {
+            "project_file": "G:\\ForgeMCP\\ForgeMCPDev.uproject",
+            "level": "/Temp/Untitled_1.Untitled_1"
+          },
+          "export_preview_id": "3f46d1dafe39819e44b044e137d28269"
+        },
+        "events": [
+          {
+            "stage": "export",
+            "outcome": "started",
+            "at": "2026-10-10T15:05:26.086722+00:00",
+            "evidence": {}
+          },
+          {
+            "stage": "export",
+            "outcome": "completed",
+            "at": "2026-10-10T15:05:26.550220+00:00",
+            "evidence": {
+              "transfer_id": "3f46d1dafe39819e44b044e137d28269",
+              "source_session_id": "blender-22408",
+              "source_object": "Wooden_Box_UV_Export",
+              "source_snapshot_sha256": "9aeafffbcf6eeefbb2bb2a5d3e4ebbe930c9c43c0342a5d973d0698df883015f",
+              "source_bounds_min": [
+                -0.6000000238418579,
+                -0.44999998807907104,
+                0.0
+              ],
+              "source_bounds_max": [
+                0.6000000238418579,
+                0.44999998807907104,
+                0.6499999761581421
+              ],
+              "vertex_count": 40,
+              "triangle_count": 60,
+              "meters_per_source_unit": 1.0,
+              "source_world_matrix": [
+                [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "source_world_bounds_min": [
+                -0.6000000238418579,
+                -0.44999998807907104,
+                0.0
+              ],
+              "source_world_bounds_max": [
+                0.6000000238418579,
+                0.44999998807907104,
+                0.6499999761581421
+              ],
+              "source_world_vertices": [
+                [
+                  -0.6000000238418579,
+                  -0.44999998807907104,
+                  0.0
+                ],
+                [
+                  0.6000000238418579,
+                  -0.44999998807907104,
+                  0.0
+                ],
+                [
+                  0.6000000238418579,
+                  0.44999998807907104,
+                  0.0
+                ],
+                [
+                  -0.6000000238418579,
+                  0.44999998807907104,
+                  0.0
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  -0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  -0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  -0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.44999998807907104,
+                  0.6499999761581421
+                ],
+                [
+                  0.6000000238418579,
+                  -0.44999998807907104,
+                  0.6499999761581421
+                ],
+                [
+                  0.6000000238418579,
+                  -0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  -0.6000000238418579,
+                  0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  0.44999998807907104,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  0.6000000238418579,
+                  0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  0.6000000238418579,
+                  0.44999998807907104,
+                  0.6499999761581421
+                ],
+                [
+                  -0.6000000238418579,
+                  0.44999998807907104,
+                  0.6499999761581421
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  -0.5400000214576721,
+                  -0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  -0.5400000214576721,
+                  0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  -0.6000000238418579,
+                  -0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  -0.5400000214576721,
+                  -0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  -0.5400000214576721,
+                  0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  -0.6000000238418579,
+                  0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  0.5400000214576721,
+                  -0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  -0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  0.6000000238418579,
+                  0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  0.5400000214576721,
+                  0.38999998569488525,
+                  0.05999999865889549
+                ],
+                [
+                  0.5400000214576721,
+                  -0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  0.6000000238418579,
+                  -0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  0.6000000238418579,
+                  0.38999998569488525,
+                  0.6499999761581421
+                ],
+                [
+                  0.5400000214576721,
+                  0.38999998569488525,
+                  0.6499999761581421
+                ]
+              ],
+              "world_vertices_truncated": false,
+              "materials": [
+                {
+                  "index": 0,
+                  "name": "Wood_UV_Export",
+                  "surface": {
+                    "model": "pbr_constants",
+                    "color_space": "scene_linear",
+                    "base_color": [
+                      0.27000001072883606,
+                      0.11500000208616257,
+                      0.03200000151991844
+                    ],
+                    "roughness": 0.6200000047683716,
+                    "metallic": 0.0,
+                    "two_sided": true
+                  }
+                }
+              ],
+              "artifact_name": "mesh.fbx",
+              "format": "fbx_binary",
+              "status": "exported",
+              "saved_scene": false,
+              "overwrite": false,
+              "artifact_bytes": 16268,
+              "artifact_sha256": "749ab2561052305afc3eb23e8f85132713fdb3108d62cb7bcc5712f1b108fa31"
+            }
+          },
+          {
+            "stage": "staging",
+            "outcome": "started",
+            "at": "2026-10-10T15:05:26.563221+00:00",
+            "evidence": {}
+          },
+          {
+            "stage": "staging",
+            "outcome": "completed",
+            "at": "2026-10-10T15:05:26.653220+00:00",
+            "evidence": {
+              "recipe": {
+                "transfer_id": "3f46d1dafe39819e44b044e137d28269",
+                "artifact_sha256": "749ab2561052305afc3eb23e8f85132713fdb3108d62cb7bcc5712f1b108fa31",
+                "artifact_bytes": 16268,
+                "asset_path": "/Game/ForgeMCP/WoodenBoxUV/SM_WoodenBoxUV",
+                "target_project_file": "G:\\ForgeMCP\\ForgeMCPDev.uproject",
+                "target_session_id": "unreal-19684",
+                "save": true,
+                "material_definitions": [
+                  {
+                    "index": 0,
+                    "source_name": "Wood_UV_Export",
+                    "asset_path": "/Game/ForgeMCP/WoodenBoxUV/M_3f46d1dafe39819e44b044e137d28269_0",
+                    "color_space": "scene_linear",
+                    "base_color": [
+                      0.27000001072883606,
+                      0.11500000208616257,
+                      0.03200000151991844
+                    ],
+                    "roughness": 0.6200000047683716,
+                    "metallic": 0.0,
+                    "two_sided": true
+                  }
+                ]
+              },
+              "recoverable_export_retained": true
+            }
+          },
+          {
+            "stage": "import",
+            "outcome": "started",
+            "at": "2026-10-10T15:05:26.667220+00:00",
+            "evidence": {}
+          },
+          {
+            "stage": "import",
+            "outcome": "completed",
+            "at": "2026-10-10T15:05:27.061719+00:00",
+            "evidence": {
+              "transfer_id": "3f46d1dafe39819e44b044e137d28269",
+              "target_project_file": "../../../../../../ForgeMCP/ForgeMCPDev.uproject",
+              "state": "imported",
+              "planned_asset_package": "/Game/ForgeMCP/WoodenBoxUV/SM_WoodenBoxUV",
+              "planned_material_packages": [
+                "/Game/ForgeMCP/WoodenBoxUV/M_3f46d1dafe39819e44b044e137d28269_0"
+              ],
+              "saved": true,
+              "placed": false,
+              "native_diagnostics": [],
+              "native_diagnostics_limit_reached": false,
+              "asset_path": "/Game/ForgeMCP/WoodenBoxUV/SM_WoodenBoxUV.SM_WoodenBoxUV",
+              "class_path": "/Script/Engine.StaticMesh",
+              "vertex_count": 40,
+              "triangle_count": 60,
+              "bounds_min_cm": [
+                -45.000003814697266,
+                -60.00000762939453,
+                0
+              ],
+              "bounds_max_cm": [
+                45.000003814697266,
+                60.00000762939453,
+                65
+              ],
+              "vertex_positions_cm": [
+                [
+                  45.000003814697266,
+                  60,
+                  0
+                ],
+                [
+                  44.99999237060547,
+                  -60.00000762939453,
+                  0
+                ],
+                [
+                  -45.000003814697266,
+                  -60,
+                  0
+                ],
+                [
+                  -44.99999237060547,
+                  60.00000762939453,
+                  0
+                ],
+                [
+                  45.000003814697266,
+                  60,
+                  6
+                ],
+                [
+                  44.99999237060547,
+                  -60.00000762939453,
+                  6
+                ],
+                [
+                  -45.000003814697266,
+                  -60,
+                  6
+                ],
+                [
+                  -44.99999237060547,
+                  60.00000762939453,
+                  6
+                ],
+                [
+                  45.000003814697266,
+                  60,
+                  6
+                ],
+                [
+                  44.99999237060547,
+                  -60.00000762939453,
+                  6
+                ],
+                [
+                  38.99999237060547,
+                  -60.00000762939453,
+                  6
+                ],
+                [
+                  39.000003814697266,
+                  60,
+                  6
+                ],
+                [
+                  45.000003814697266,
+                  60,
+                  65
+                ],
+                [
+                  44.99999237060547,
+                  -60.00000762939453,
+                  65
+                ],
+                [
+                  38.99999237060547,
+                  -60.00000762939453,
+                  65
+                ],
+                [
+                  39.000003814697266,
+                  60,
+                  65
+                ],
+                [
+                  -38.99999237060547,
+                  60.00000762939453,
+                  6
+                ],
+                [
+                  -39.000003814697266,
+                  -60,
+                  6
+                ],
+                [
+                  -45.000003814697266,
+                  -60,
+                  6
+                ],
+                [
+                  -44.99999237060547,
+                  60.00000762939453,
+                  6
+                ],
+                [
+                  -38.99999237060547,
+                  60.00000762939453,
+                  65
+                ],
+                [
+                  -39.000003814697266,
+                  -60,
+                  65
+                ],
+                [
+                  -45.000003814697266,
+                  -60,
+                  65
+                ],
+                [
+                  -44.99999237060547,
+                  60.00000762939453,
+                  65
+                ],
+                [
+                  39.000003814697266,
+                  60,
+                  6
+                ],
+                [
+                  39.000003814697266,
+                  54,
+                  6
+                ],
+                [
+                  -38.99999237060547,
+                  54.000003814697266,
+                  6
+                ],
+                [
+                  -38.99999237060547,
+                  60.00000762939453,
+                  6
+                ],
+                [
+                  39.000003814697266,
+                  60,
+                  65
+                ],
+                [
+                  39.000003814697266,
+                  54,
+                  65
+                ],
+                [
+                  -38.99999237060547,
+                  54.000003814697266,
+                  65
+                ],
+                [
+                  -38.99999237060547,
+                  60.00000762939453,
+                  65
+                ],
+                [
+                  38.99999237060547,
+                  -54.000003814697266,
+                  6
+                ],
+                [
+                  38.99999237060547,
+                  -60.00000762939453,
+                  6
+                ],
+                [
+                  -39.000003814697266,
+                  -60,
+                  6
+                ],
+                [
+                  -39.000003814697266,
+                  -54,
+                  6
+                ],
+                [
+                  38.99999237060547,
+                  -54.000003814697266,
+                  65
+                ],
+                [
+                  38.99999237060547,
+                  -60.00000762939453,
+                  65
+                ],
+                [
+                  -39.000003814697266,
+                  -60,
+                  65
+                ],
+                [
+                  -39.000003814697266,
+                  -54,
+                  65
+                ]
+              ],
+              "vertices_truncated": false,
+              "material_slots": [
+                {
+                  "slot_name": "Wood_UV_Export",
+                  "imported_slot_name": "Wood_UV_Export"
+                }
+              ],
+              "material_assets_imported": true,
+              "materials": [
+                {
+                  "asset_path": "/Game/ForgeMCP/WoodenBoxUV/M_3f46d1dafe39819e44b044e137d28269_0.M_3f46d1dafe39819e44b044e137d28269_0",
+                  "model": "pbr_constants",
+                  "color_space": "scene_linear",
+                  "two_sided": true,
+                  "native_graph_verified": true,
+                  "shader_compile_verified": false,
+                  "base_color": [
+                    0.27000001072883606,
+                    0.11500000208616257,
+                    0.03200000151991844
+                  ],
+                  "roughness": 0.6200000047683716,
+                  "metallic": 0,
+                  "index": 0,
+                  "saved": true
+                }
+              ],
+              "material_assets_saved": true,
+              "saved_assets": [
+                "/Game/ForgeMCP/WoodenBoxUV/M_3f46d1dafe39819e44b044e137d28269_0.M_3f46d1dafe39819e44b044e137d28269_0",
+                "/Game/ForgeMCP/WoodenBoxUV/SM_WoodenBoxUV.SM_WoodenBoxUV"
+              ],
+              "cross_application_verified": false
+            }
+          },
+          {
+            "stage": "verification",
+            "outcome": "started",
+            "at": "2026-10-10T15:05:27.073719+00:00",
+            "evidence": {}
+          },
+          {
+            "stage": "verification",
+            "outcome": "completed",
+            "at": "2026-10-10T15:05:27.091221+00:00",
+            "evidence": {
+              "geometry_bounds_and_counts_verified": true,
+              "complete_vertex_positions_verified": true,
+              "material_constant_graphs_verified": true,
+              "shader_compile_verified": false,
+              "visual_equivalence_verified": false
+            }
+          },
+          {
+            "stage": "placement",
+            "outcome": "started",
+            "at": "2026-10-10T15:05:27.105719+00:00",
+            "evidence": {}
+          },
+          {
+            "stage": "placement",
+            "outcome": "completed",
+            "at": "2026-10-10T15:05:27.366222+00:00",
+            "evidence": {
+              "native_result": {
+                "state": "completed",
+                "actors": [
+                  {
+                    "path": "/Temp/Untitled_1.Untitled_1:PersistentLevel.StaticMeshActor_UAID_701CE7E46087C60903_1866489184",
+                    "class_path": "/Script/Engine.StaticMeshActor",
+                    "label": "ForgeTransfer_1d8fa316fc894a2cb1c8754d1b690a7f",
+                    "guid": "3A05C85047442FD491340480B0550C7E",
+                    "location": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "rotation": [
+                      0,
+                      0,
+                      0
+                    ],
+                    "scale": [
+                      1,
+                      1,
+                      1
+                    ],
+                    "hidden": false,
+                    "static_mesh": "/Game/ForgeMCP/WoodenBoxUV/SM_WoodenBoxUV.SM_WoodenBoxUV",
+                    "bounds_origin": [
+                      0,
+                      0,
+                      32.5
+                    ],
+                    "bounds_extent": [
+                      45.000003814697266,
+                      60.00000762939453,
+                      32.5
+                    ],
+                    "material_assets": [
+                      "/Game/ForgeMCP/WoodenBoxUV/M_3f46d1dafe39819e44b044e137d28269_0.M_3f46d1dafe39819e44b044e137d28269_0"
+                    ],
+                    "material_assets_truncated": false
+                  }
+                ],
+                "saved": false
+              },
+              "level_saved": false
+            }
+          }
+        ]
+      }
+    }
+  },
+  "tangent_warnings": [],
+  "actor": {
+    "ok": true,
+    "session_id": "unreal-19684",
+    "data": {
+      "actor": {
+        "path": "/Temp/Untitled_1.Untitled_1:PersistentLevel.StaticMeshActor_UAID_701CE7E46087C60903_1866489184",
+        "class_path": "/Script/Engine.StaticMeshActor",
+        "label": "ForgeTransfer_1d8fa316fc894a2cb1c8754d1b690a7f",
+        "guid": "3A05C85047442FD491340480B0550C7E",
+        "location": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ],
+        "hidden": false,
+        "static_mesh": "/Game/ForgeMCP/WoodenBoxUV/SM_WoodenBoxUV.SM_WoodenBoxUV",
+        "bounds_origin": [
+          0,
+          0,
+          32.5
+        ],
+        "bounds_extent": [
+          45.000003814697266,
+          60.00000762939453,
+          32.5
+        ],
+        "material_assets": [
+          "/Game/ForgeMCP/WoodenBoxUV/M_3f46d1dafe39819e44b044e137d28269_0.M_3f46d1dafe39819e44b044e137d28269_0"
+        ],
+        "material_assets_truncated": false
+      }
+    }
+  },
+  "old_actor_hidden": {
+    "ok": true,
+    "session_id": "unreal-19684",
+    "data": {
+      "state": "completed",
+      "actors": [
+        {
+          "path": "/Temp/Untitled_1.Untitled_1:PersistentLevel.StaticMeshActor_UAID_701CE7E46087C60903_1572060183",
+          "class_path": "/Script/Engine.StaticMeshActor",
+          "label": "ForgeTransfer_50c71e325c10494a84de7f222cf752cb",
+          "guid": "D809C5ED4FC011144B4C03B0ABCA0085",
+          "location": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "hidden": true,
+          "static_mesh": "/Game/ForgeMCP/WoodenBox/SM_WoodenBox.SM_WoodenBox",
+          "bounds_origin": [
+            0,
+            0,
+            32.5
+          ],
+          "bounds_extent": [
+            45.000003814697266,
+            60.00000762939453,
+            32.5
+          ],
+          "material_assets": [
+            "/Game/ForgeMCP/WoodenBox/M_0ebe464d5be3057895c0c1197aede5dc_0.M_0ebe464d5be3057895c0c1197aede5dc_0"
+          ],
+          "material_assets_truncated": false
+        }
+      ],
+      "saved": false
+    }
+  }
+}

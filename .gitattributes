@@ -1,0 +1,2 @@
+ForgeMCP_Encyclopedia/00_Master_Index/ForgeMCP_Master_File_Catalog.json filter=lfs diff=lfs merge=lfs -text
+ForgeMCP_Encyclopedia/00_Master_Index/ForgeMCP_Master_File_Catalog.csv filter=lfs diff=lfs merge=lfs -text

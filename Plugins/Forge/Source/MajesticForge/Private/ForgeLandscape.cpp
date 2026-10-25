@@ -41,8 +41,15 @@
 #include "Templates/UnrealTemplate.h"
 #include "HAL/FileManager.h"
 #include "HAL/PlatformMisc.h"
+#include "HAL/PlatformProcess.h"
+#include "HAL/IConsoleManager.h"
+#include "Misc/MessageDialog.h"
+#if WITH_DEV_AUTOMATION_TESTS
+#include "Misc/AutomationTest.h"
+#endif
 #include "ScopedTransaction.h"
 #include "UObject/Package.h"
+#include "UObject/SavePackage.h"
 #include "UObject/UObjectIterator.h"
 #include "UObject/UnrealType.h"
 #include "Serialization/JsonReader.h"
@@ -420,7 +427,8 @@ void CountLandscapeStreamingProxies(UWorld* W,int32& Total,int32& ActiveWorldLoa
 bool IsEditorStreamingAvailable(UWorld* W)
 {
     UWorldPartition* Partition=W?W->GetWorldPartition():nullptr;
-    return Partition && Partition->IsStreamingEnabled() && Partition->IsStreamingEnabledInEditor() &&
+    return FModuleManager::Get().IsModuleLoaded(TEXT("WorldPartitionEditor")) && Partition &&
+        Partition->IsStreamingEnabled() && Partition->IsStreamingEnabledInEditor() &&
         IWorldPartitionEditorModule::Get().GetEnableLoadingInEditor();
 }
 int32 GetRegisteredEditorLoaderCount(UWorld* W)
@@ -654,6 +662,11 @@ bool ReadRegion(ALandscape* L, const FGuid& Layer, const FIntRect& Requested, FI
     for(ULandscapeComponent* C:Components)
     {
         if(!C || C->ComponentSizeQuads<1 || C->ComponentSizeQuads>510) return false;
+        const FIntPoint Base=C->GetSectionBase();
+        const int32 LocalX1=FMath::Max(0,B.Min.X-Base.X), LocalY1=FMath::Max(0,B.Min.Y-Base.Y);
+        const int32 LocalX2=FMath::Min(C->ComponentSizeQuads,B.Max.X-1-Base.X);
+        const int32 LocalY2=FMath::Min(C->ComponentSizeQuads,B.Max.Y-1-Base.Y);
+        if(LocalX2<LocalX1 || LocalY2<LocalY1) continue;
         UTexture2D* Texture=C->GetHeightmap(Layer);
         if(!Texture || Texture->Source.GetFormat()!=TSF_BGRA8 || Texture->Source.GetSizeX()>1024 || Texture->Source.GetSizeY()>1024) return false;
         TArray64<uint8> Bytes;
@@ -662,12 +675,7 @@ bool ReadRegion(ALandscape* L, const FGuid& Layer, const FIntRect& Requested, FI
         if(U<1 || V<1 || Bytes.Num()!=int64(U)*V*sizeof(FColor)) return false;
         const FColor* Pixels=reinterpret_cast<const FColor*>(Bytes.GetData());
         FLandscapeComponentDataInterfaceBase Mapping(C,0,false);
-        FIntPoint Base=C->GetSectionBase();
         const int32 OX=int32(C->HeightmapScaleBias.Z*U), OY=int32(C->HeightmapScaleBias.W*V);
-        const int32 LocalX1=FMath::Max(0,B.Min.X-Base.X), LocalY1=FMath::Max(0,B.Min.Y-Base.Y);
-        const int32 LocalX2=FMath::Min(C->ComponentSizeQuads,B.Max.X-1-Base.X);
-        const int32 LocalY2=FMath::Min(C->ComponentSizeQuads,B.Max.Y-1-Base.Y);
-        if(LocalX2<LocalX1 || LocalY2<LocalY1) continue;
         for(int32 Y=LocalY1;Y<=LocalY2;++Y) for(int32 X=LocalX1;X<=LocalX2;++X)
         {
             int32 TX,TY; Mapping.VertexXYToTexelXY(X,Y,TX,TY); TX+=OX; TY+=OY;
@@ -759,15 +767,86 @@ bool HasNoLandscapeActorsOrProxies(UWorld* W)
     CountLandscapeStreamingProxies(W,Total,Loaded,Unloaded);
     return Total==0;
 }
-bool ApprovedInPlaceLandscapeWorld(UWorld* W)
+bool ExistingWorldPartitionConfiguration(UWorld* W)
 {
-    if(!W || W->GetOutermost()->GetName()!=InPlaceLandscapeWorld || W->GetOutermost()->IsDirty() ||
-        W->GetStreamingLevels().Num()!=0 || !W->PersistentLevel->IsUsingExternalActors()) return false;
+    if(!W || !W->GetOutermost() || !W->GetOutermost()->GetName().StartsWith(TEXT("/Game/")) ||
+        W->GetStreamingLevels().Num()!=0 ||
+        !W->PersistentLevel || !W->PersistentLevel->IsUsingExternalActors()) return false;
     UWorldPartition* Partition=W->GetWorldPartition();
     return Partition && Partition->IsStreamingEnabled() && Partition->GetActorDescContainerInstance() &&
         IsEditorStreamingAvailable(W) && W->GetSubsystem<UWorldPartitionSubsystem>() &&
         W->GetSubsystem<ULandscapeSubsystem>();
 }
+bool ApprovedInPlaceLandscapeWorld(UWorld* W)
+{
+    return W && W->GetOutermost()->GetName()==InPlaceLandscapeWorld &&
+        ExistingWorldPartitionConfiguration(W);
+}
+
+struct FExistingWorldAuthorization
+{
+    FString Id;
+    FString SessionId;
+    FString ProjectFile;
+    FString WorldPackage;
+    TSet<FString> Actions;
+    int64 ExpiresAtUnix = 0;
+
+    bool Allows(const FString& Action) const { return Actions.Contains(Action); }
+};
+
+bool ReadExistingWorldAuthorization(const TSharedRef<FJsonObject>& Args, UWorld* World,
+    const FString& RequiredAction, FExistingWorldAuthorization& Out)
+{
+    const TSharedPtr<FJsonObject>* GrantValue = nullptr;
+    if (!Args->TryGetObjectField(TEXT("_forge_landscape_authorization"), GrantValue) || !GrantValue || !GrantValue->IsValid()) return false;
+    const TSharedRef<FJsonObject> Grant = GrantValue->ToSharedRef();
+    FString Id, SessionId, ProjectFile, WorldPackage;
+    double ExpiryValue = 0;
+    const TArray<TSharedPtr<FJsonValue>>* Actions = nullptr;
+    if (!Grant->TryGetStringField(TEXT("authorization_id"), Id) || Id.Len()!=32 ||
+        !Grant->TryGetStringField(TEXT("session_id"), SessionId) || SessionId.Len()<8 ||
+        SessionId.Len()>17 || !SessionId.StartsWith(TEXT("unreal-")) ||
+        !Grant->TryGetStringField(TEXT("project_file"), ProjectFile) || FPaths::IsRelative(ProjectFile) ||
+        !Grant->TryGetStringField(TEXT("world_path"), WorldPackage) ||
+        !FPackageName::IsValidLongPackageName(WorldPackage) || !WorldPackage.StartsWith(TEXT("/Game/")) ||
+        !Grant->TryGetNumberField(TEXT("expires_at_unix"), ExpiryValue) || !FMath::IsFinite(ExpiryValue) ||
+        !Grant->TryGetArrayField(TEXT("actions"), Actions) || !Actions || Actions->Num()==0 || Actions->Num()>10)
+        return false;
+    for (TCHAR C : Id) if (!FChar::IsHexDigit(C)) return false;
+    FString SessionDigits = SessionId.RightChop(7);
+    if (SessionDigits.IsEmpty() || SessionDigits[0] == TEXT('0')) return false;
+    for (TCHAR C : SessionDigits) if (!FChar::IsDigit(C)) return false;
+    const int64 Expiry = static_cast<int64>(ExpiryValue);
+    const int64 Now = FDateTime::UtcNow().ToUnixTimestamp();
+    if (ExpiryValue != double(Expiry) || Expiry <= Now || Expiry > Now + 86400 || !World ||
+        WorldPackage != World->GetOutermost()->GetName() ||
+        !CanonicalPath(ProjectFile).Equals(CanonicalPath(FPaths::GetProjectFilePath()), ESearchCase::IgnoreCase))
+        return false;
+
+    const TSet<FString> AllowedActions = {
+        TEXT("create_in_place"), TEXT("generate"), TEXT("apply_heightmap"), TEXT("raise"),
+        TEXT("lower"), TEXT("flatten"), TEXT("smooth"), TEXT("coastline"), TEXT("frame"), TEXT("save")
+    };
+    TSet<FString> ParsedActions;
+    for (const TSharedPtr<FJsonValue>& Value : *Actions)
+    {
+        if (!Value.IsValid() || Value->Type != EJson::String) return false;
+        const FString Action = Value->AsString();
+        if (!AllowedActions.Contains(Action) || ParsedActions.Contains(Action)) return false;
+        ParsedActions.Add(Action);
+    }
+    if (!ParsedActions.Contains(TEXT("create_in_place")) ||
+        (!RequiredAction.IsEmpty() && !ParsedActions.Contains(RequiredAction))) return false;
+    Out.Id = Id;
+    Out.SessionId = SessionId;
+    Out.ProjectFile = CanonicalPath(ProjectFile);
+    Out.WorldPackage = WorldPackage;
+    Out.Actions = MoveTemp(ParsedActions);
+    Out.ExpiresAtUnix = Expiry;
+    return true;
+}
+
 bool BackupExternalLandscapePackages(ALandscape* Landscape,const FString& BackupRoot,TArray<FString>& Manifest)
 {
     ULandscapeInfo* Info=Landscape?Landscape->GetLandscapeInfo():nullptr;
@@ -810,6 +889,220 @@ bool ExternalLandscapePackagesClean(ALandscape* Landscape)
     });
     return bClean;
 }
+
+struct FExistingWorldWriteSnapshot
+{
+    TMap<FString, FString> FileHashes;
+    TSet<FString> AllowedPackageFiles;
+};
+
+void AddLandscapePackageFiles(ALandscape* Landscape, TSet<FString>& OutFiles)
+{
+    ULandscapeInfo* Info = Landscape ? Landscape->GetLandscapeInfo() : nullptr;
+    if (!Info) return;
+    Info->ForEachLandscapeProxy([&OutFiles](ALandscapeProxy* Proxy)
+    {
+        if (Proxy)
+        {
+            if (UPackage* Package = Proxy->GetExternalPackage())
+                OutFiles.Add(CanonicalPath(FPackageName::LongPackageNameToFilename(
+                    Package->GetName(), FPackageName::GetAssetPackageExtension())));
+        }
+        return true;
+    });
+}
+
+bool IsPackagePrimaryOrSidecar(const FString& Filename, const FString& PackageFilename)
+{
+    const FString File = CanonicalPath(Filename);
+    const FString Primary = CanonicalPath(PackageFilename);
+    if (File.Equals(Primary, ESearchCase::IgnoreCase)) return true;
+    const FString Base = FPaths::ChangeExtension(Primary, TEXT(""));
+    if (!File.StartsWith(Base + TEXT("."), ESearchCase::IgnoreCase)) return false;
+    const FString Extension = FPaths::GetExtension(File, true).ToLower();
+    return Extension == TEXT(".uexp") || Extension == TEXT(".ubulk") ||
+        Extension == TEXT(".uptnl") || Extension == TEXT(".m.ubulk");
+}
+
+bool EnumerateExistingWorldPackageFiles(UWorld* World, TArray<FString>& OutFiles, FString& OutError)
+{
+    if (!World || !World->GetOutermost()) { OutError = TEXT("World package is unavailable."); return false; }
+    const FString WorldPackage = World->GetOutermost()->GetName();
+    const FString MapFilename = CanonicalPath(FPackageName::LongPackageNameToFilename(
+        WorldPackage, FPackageName::GetMapPackageExtension()));
+    if (!IFileManager::Get().FileExists(*MapFilename))
+    { OutError = TEXT("The existing World Partition map package is absent; backup cannot be verified."); return false; }
+
+    const FString MapDirectory = FPaths::GetPath(MapFilename);
+    const FString MapPattern = MapDirectory / (FPaths::GetBaseFilename(MapFilename) + TEXT(".*"));
+    TArray<FString> MapSidecars;
+    IFileManager::Get().FindFiles(MapSidecars, *MapPattern, true, false);
+    OutFiles.Add(MapFilename);
+    for (const FString& Name : MapSidecars) OutFiles.Add(CanonicalPath(MapDirectory / Name));
+
+    FString RelativeMap = WorldPackage.Mid(6);
+    RelativeMap.ReplaceInline(TEXT("/"), TEXT("\\"));
+    for (const TCHAR* Namespace : { TEXT("__ExternalActors__"), TEXT("__ExternalObjects__") })
+    {
+        const FString Root = CanonicalPath(FPaths::Combine(FPaths::ProjectContentDir(), Namespace, RelativeMap));
+        if (!IFileManager::Get().DirectoryExists(*Root)) continue;
+        TArray<FString> NamespaceFiles;
+        IFileManager::Get().FindFilesRecursive(NamespaceFiles, *Root, TEXT("*"), true, false);
+        OutFiles.Append(NamespaceFiles);
+    }
+    TSet<FString> SeenFiles;
+    TArray<FString> UniqueFiles;
+    for (const FString& Filename : OutFiles)
+    {
+        const FString Key = CanonicalPath(Filename).ToLower();
+        if (!SeenFiles.Contains(Key)) { SeenFiles.Add(Key); UniqueFiles.Add(CanonicalPath(Filename)); }
+    }
+    OutFiles = MoveTemp(UniqueFiles);
+    OutFiles.Sort();
+    if (OutFiles.Num() > 10000)
+    { OutError = TEXT("World Partition package namespace exceeds the 10,000-file backup bound."); return false; }
+    int64 TotalBytes = 0;
+    for (const FString& Filename : OutFiles)
+    {
+        if (!IsUnderDirectory(Filename, FPaths::ProjectContentDir()) || !IFileManager::Get().FileExists(*Filename))
+        { OutError = TEXT("A target package path is outside the project Content root or unreadable."); return false; }
+        TotalBytes += IFileManager::Get().FileSize(*Filename);
+        if (TotalBytes < 0 || TotalBytes > 2LL * 1024 * 1024 * 1024)
+        { OutError = TEXT("Existing World Partition package backup exceeds the 2 GiB bound."); return false; }
+    }
+    return true;
+}
+
+bool FingerprintExistingWorldPackageScope(UWorld* World, FString& OutFingerprint, FString& OutError)
+{
+    TArray<FString> Files;
+    if (!EnumerateExistingWorldPackageFiles(World, Files, OutError)) return false;
+    FString Payload;
+    for (const FString& Filename : Files)
+    {
+        const FMD5Hash Hash = FMD5Hash::HashFile(*Filename);
+        if (!Hash.IsValid()) { OutError = TEXT("An existing map or external package could not be fingerprinted."); return false; }
+        Payload += CanonicalPath(Filename).ToLower() + TEXT("|") + LexToString(Hash) + TEXT("\n");
+    }
+    OutFingerprint = FMD5::HashAnsiString(*Payload);
+    return !OutFingerprint.IsEmpty();
+}
+
+bool BackupExistingWorldWriteScope(UWorld* World, ALandscape* Landscape,
+    const FString& BackupRoot, FExistingWorldWriteSnapshot& OutSnapshot, FString& OutError)
+{
+    TArray<FString> Files;
+    if (!EnumerateExistingWorldPackageFiles(World, Files, OutError)) return false;
+    const FString MapFilename = CanonicalPath(FPackageName::LongPackageNameToFilename(
+        World->GetOutermost()->GetName(), FPackageName::GetMapPackageExtension()));
+    OutSnapshot.AllowedPackageFiles.Add(MapFilename);
+    AddLandscapePackageFiles(Landscape, OutSnapshot.AllowedPackageFiles);
+    IFileManager::Get().MakeDirectory(*BackupRoot, true);
+    for (const FString& Source : Files)
+    {
+        const FMD5Hash SourceHash = FMD5Hash::HashFile(*Source);
+        if (!SourceHash.IsValid()) { OutError = TEXT("Could not hash an existing World Partition package before save."); return false; }
+        FString Relative = Source;
+        if (!FPaths::MakePathRelativeTo(Relative, *FPaths::ProjectDir()) || Relative.StartsWith(TEXT("..")))
+        { OutError = TEXT("An existing package could not be mapped to a safe backup-relative path."); return false; }
+        const FString Destination = CanonicalPath(FPaths::Combine(BackupRoot, TEXT("before"), Relative));
+        IFileManager::Get().MakeDirectory(*FPaths::GetPath(Destination), true);
+        if (IFileManager::Get().Copy(*Destination, *Source, false) != COPY_OK ||
+            IFileManager::Get().FileSize(*Destination) != IFileManager::Get().FileSize(*Source))
+        { OutError = TEXT("An existing map or external package could not be backed up."); return false; }
+        const FMD5Hash BackupHash = FMD5Hash::HashFile(*Destination);
+        if (!BackupHash.IsValid() || BackupHash != SourceHash)
+        { OutError = TEXT("An existing package backup failed hash verification."); return false; }
+        OutSnapshot.FileHashes.Add(CanonicalPath(Source).ToLower(), LexToString(SourceHash));
+    }
+    return true;
+}
+
+bool HasOnlyExpectedDirtyLandscapePackages(UWorld* World, ALandscape* Landscape, FString& OutError)
+{
+    if (!World || !Landscape) { OutError = TEXT("The authorized world or Landscape is unavailable."); return false; }
+    TSet<FString> ExpectedDirtyPackages;
+    ExpectedDirtyPackages.Add(World->GetOutermost()->GetName());
+    ULandscapeInfo* Info = Landscape->GetLandscapeInfo();
+    if (!Info) { OutError = TEXT("Landscape info is unavailable."); return false; }
+    Info->ForEachLandscapeProxy([&ExpectedDirtyPackages](ALandscapeProxy* Proxy)
+    {
+        if (Proxy)
+            if (UPackage* Package = Proxy->GetExternalPackage()) ExpectedDirtyPackages.Add(Package->GetName());
+        return true;
+    });
+    int32 Inspected = 0;
+    for (TObjectIterator<UPackage> It; It; ++It)
+    {
+        if (++Inspected > 200000) { OutError = TEXT("Loaded package ownership scan exceeded its bound."); return false; }
+        UPackage* Package = *It;
+        if (Package && Package->IsDirty() && !ExpectedDirtyPackages.Contains(Package->GetName()))
+        {
+            OutError = TEXT("An unrelated loaded package is dirty; save was refused to preserve it.");
+            return false;
+        }
+    }
+    return true;
+}
+
+bool ValidateExistingWorldWriteScope(UWorld* World, const FExistingWorldWriteSnapshot& Before,
+    FString& OutError)
+{
+    TArray<FString> AfterFiles;
+    if (!EnumerateExistingWorldPackageFiles(World, AfterFiles, OutError)) return false;
+    TSet<FString> Seen;
+    for (const FString& Filename : AfterFiles)
+    {
+        const FString Key = CanonicalPath(Filename);
+        Seen.Add(Key.ToLower());
+        const FString* OldHash = Before.FileHashes.Find(Key.ToLower());
+        bool bAllowed = false;
+        for (const FString& PackageFilename : Before.AllowedPackageFiles)
+            if (IsPackagePrimaryOrSidecar(Filename, PackageFilename)) { bAllowed = true; break; }
+        if (!OldHash && !bAllowed)
+        { OutError = TEXT("Save created a package outside the authorized map and Landscape package set."); return false; }
+        const FMD5Hash CurrentHash = FMD5Hash::HashFile(*Filename);
+        if (!CurrentHash.IsValid()) { OutError = TEXT("A saved package could not be hashed for write-scope verification."); return false; }
+        if (OldHash && *OldHash != LexToString(CurrentHash) && !bAllowed)
+        { OutError = TEXT("Save modified an existing package outside the authorized map and Landscape package set."); return false; }
+    }
+    for (const auto& Entry : Before.FileHashes)
+        if (!Seen.Contains(Entry.Key.ToLower()))
+        { OutError = TEXT("Save removed an existing map or external package; the verified backup was retained."); return false; }
+    return true;
+}
+
+bool SaveExistingWorldLandscapePackages(UWorld* World, ALandscape* Landscape, FString& OutError)
+{
+    if (!World || !Landscape || !World->GetOutermost()) { OutError = TEXT("World or Landscape package is unavailable."); return false; }
+    FSavePackageArgs SaveArgs;
+    SaveArgs.TopLevelFlags = RF_Public | RF_Standalone;
+    const FString MapFilename = FPackageName::LongPackageNameToFilename(
+        World->GetOutermost()->GetName(), FPackageName::GetMapPackageExtension());
+    if (!UPackage::SavePackage(World->GetOutermost(), World, *MapFilename, SaveArgs))
+    { OutError = TEXT("The exact target map package could not be saved."); return false; }
+    World->GetOutermost()->SetDirtyFlag(false);
+
+    ULandscapeInfo* Info = Landscape->GetLandscapeInfo();
+    if (!Info) { OutError = TEXT("Landscape info became unavailable during save."); return false; }
+    TSet<FString> SavedPackages;
+    bool bSaveSucceeded = true;
+    Info->ForEachLandscapeProxy([&](ALandscapeProxy* Proxy)
+    {
+        if (!Proxy) return true;
+        UPackage* Package = Proxy->GetExternalPackage();
+        if (!Package || SavedPackages.Contains(Package->GetName())) return true;
+        SavedPackages.Add(Package->GetName());
+        const FString Filename = FPackageName::LongPackageNameToFilename(
+            Package->GetName(), FPackageName::GetAssetPackageExtension());
+        if (!UPackage::SavePackage(Package, Proxy, *Filename, SaveArgs))
+        { bSaveSucceeded = false; return false; }
+        Package->SetDirtyFlag(false);
+        return true;
+    });
+    if (!bSaveSucceeded) { OutError = TEXT("A Landscape-owned external actor package could not be saved."); return false; }
+    return true;
+}
 bool SafeCreateSourceWorld(UWorld* W)
 {
     if(!W) return false;
@@ -831,6 +1124,12 @@ void Frame(ALandscape* L, const FIntRect& B)
     }
     GEditor->RedrawLevelEditingViewports();
 }
+#include "ForgeLandscapeAdoption.inl"
+#if WITH_DEV_AUTOMATION_TESTS
+#include "ForgeLandscapeAdoptionTests.inl"
+#include "ForgeLandscapeEditSessionTests.inl"
+#endif
+
 TSharedRef<FJsonObject> Inspect(ALandscape* L, UWorld* W)
 {
     auto D = MakeShared<FJsonObject>();
@@ -888,6 +1187,8 @@ TSharedRef<FJsonObject> Inspect(ALandscape* L, UWorld* W)
         if (!Layer.EditLayer) continue;
         auto O = MakeShared<FJsonObject>(); O->SetStringField(TEXT("name"), Layer.EditLayer->GetName().ToString());
         O->SetStringField(TEXT("guid"), Layer.EditLayer->GetGuid().ToString());
+        O->SetBoolField(TEXT("locked"),Layer.EditLayer->IsLocked());
+        O->SetBoolField(TEXT("visible"),Layer.EditLayer->IsVisible());
         FIntRect B; TArray<uint16> H;
         O->SetBoolField(TEXT("height_read_supported"),false);
         if (Read(L, Layer.EditLayer->GetGuid(), B, H))
@@ -905,6 +1206,10 @@ TSharedRef<FJsonObject> Inspect(ALandscape* L, UWorld* W)
     D->SetBoolField(TEXT("mutation_supported"), TestMap(W->GetOutermost()->GetName()) &&
         (W->GetWorldPartition()!=nullptr || (!W->PersistentLevel->IsUsingExternalActors() && !L->GetExternalPackage())) &&
         ComponentCount<=MaxComponents && DescriptorProxyCount==ActiveWorldProxyCount+NotInActiveWorldProxyCount);
+    D->SetBoolField(TEXT("adoption_workflow_supported"),true);
+    D->SetStringField(TEXT("adoption_origin"),TEXT("adopted_existing_landscape"));
+    D->SetBoolField(TEXT("adoption_confirmation_required"),true);
+    D->SetStringField(TEXT("adoption_preflight_command"),TEXT("landscape_adoption_preflight"));
     return D;
 }
 
@@ -975,6 +1280,9 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
     if (!IsInGameThread()) return Fail(TEXT("wrong_thread"), TEXT("Landscape requires the editor game thread."));
     if (bWorldTransitionInProgress) return Fail(TEXT("world_transition_in_progress"), TEXT("A ForgeMCP map transition is already in progress; retry after the current editor tick."));
     UWorld* W = GEditor ? GEditor->GetEditorWorldContext().World() : nullptr;
+    // Permission reduction/status remains available during PIE; no terrain writes here.
+    if (Command==TEXT("landscape_edit_session_status") || Command==TEXT("landscape_edit_session_revoke"))
+        return HandleEditingSessionControl(Command,Args,W,Data,Code,Message);
     if (!W || GEditor->PlayWorld || GEditor->bIsSimulatingInEditor) return Fail(TEXT("editor_not_idle"), TEXT("Stop PIE/simulation before Landscape operations."));
     if (Command == TEXT("landscape_job_status") || Command == TEXT("landscape_job_cancel"))
     {
@@ -983,6 +1291,18 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
         {
             FString Confirm; Args->TryGetStringField(TEXT("confirmation"), Confirm);
             if (Confirm != Id) return Fail(TEXT("confirmation_required"), TEXT("Confirmation must equal job_id."));
+            if (J && J->Plan.bHasExistingWorldAuthorization)
+            {
+                auto Request = J->Plan.Request.ToSharedRef();
+                const FString Action = Request->GetStringField(TEXT("action"));
+                FExistingWorldAuthorization CancelGrant;
+                if (!ReadExistingWorldAuthorization(Args, J->Plan.World.Get(), Action, CancelGrant) ||
+                    CancelGrant.Id != J->Plan.ExistingWorldAuthorizationId ||
+                    CancelGrant.SessionId != J->Plan.ExistingWorldAuthorizationSessionId ||
+                    CancelGrant.WorldPackage != J->Plan.ExistingWorldAuthorizationPackage ||
+                    CancelGrant.ExpiresAtUnix != J->Plan.ExistingWorldAuthorizationExpiresAtUnix)
+                    return Fail(TEXT("existing_world_authorization_stale"),TEXT("Cancelling this Landscape job requires its current exact-world authorization."));
+            }
             if(FLoader* Loader=Loaders.Find(Id))
             {
                 UWorld* LoaderWorld=Loader->World.Get();
@@ -1035,6 +1355,10 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
         Data->SetBoolField(TEXT("saved"),false);
         return true;
     }
+    if (Command==TEXT("landscape_adoption_preflight") || Command==TEXT("landscape_adoption_request"))
+        return HandleAdoptionRequest(Command,Args,W,Data,Code,Message);
+    if (Command==TEXT("landscape_edit_session_preflight") || Command==TEXT("landscape_edit_session_request"))
+        return HandleAdoptionRequest(Command,Args,W,Data,Code,Message);
     if (Command == TEXT("landscape_info"))
     {
         FString Path; Args->TryGetStringField(TEXT("actor_path"),Path);
@@ -1053,13 +1377,42 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
         Data->SetStringField(TEXT("world"), W->GetPathName());
         return true;
     }
+    if (Command==TEXT("landscape_read_region"))
+    {
+        const TSharedPtr<FJsonObject>* Request=nullptr; FString Path,LayerText; FGuid LayerGuid; FIntRect Region;
+        if (!Args->TryGetObjectField(TEXT("request"),Request) || !Request || !Request->IsValid() ||
+            !(*Request)->TryGetStringField(TEXT("actor_path"),Path) || !(*Request)->TryGetStringField(TEXT("layer_guid"),LayerText) ||
+            !FGuid::ParseExact(LayerText,EGuidFormats::Digits,LayerGuid) || !ParseRegion(Request->ToSharedRef(),Region) ||
+            int64(Region.Width())*Region.Height()>MaxHeightmapChunkSamples)
+            return Fail(TEXT("invalid_height_read_region"),TEXT("Exact actor/layer and at most 32,768 samples required."));
+        ALandscape* L=Resolve(W,Path); bool Found=false;
+        if(L) for(const FLandscapeLayer& Layer:L->GetLayersConst()) if(Layer.EditLayer && Layer.EditLayer->GetGuid()==LayerGuid) Found=true;
+        FIntRect B; TArray<uint16> H;
+        if(!Found || !ReadRegion(L,LayerGuid,Region,B,H) || B!=Region)
+            return Fail(TEXT("region_unavailable"),TEXT("Exact native edit layer and entire loaded region required."));
+        TArray<TSharedPtr<FJsonValue>> Samples,Bounds;
+        for(uint16 Value:H) Samples.Add(MakeShared<FJsonValueNumber>((int32(Value)-32768)*L->GetActorScale3D().Z/128.0));
+        for(int32 Value:{B.Min.X,B.Min.Y,B.Max.X-1,B.Max.Y-1}) Bounds.Add(MakeShared<FJsonValueNumber>(Value));
+        Data->SetArrayField(TEXT("samples_cm"),Samples); Data->SetArrayField(TEXT("region"),Bounds);
+        Data->SetStringField(TEXT("landscape_guid"),L->GetLandscapeGuid().ToString(EGuidFormats::Digits));
+        Data->SetStringField(TEXT("layer_guid"),LayerGuid.ToString(EGuidFormats::Digits));
+        Data->SetStringField(TEXT("height_md5"),Hash(H)); Data->SetBoolField(TEXT("read_only"),true);
+        Data->SetStringField(TEXT("height_source"),TEXT("edit_layer_not_composed_or_collision")); return true;
+    }
     for (const auto& Entry : Jobs) if (Entry.Value.State == TEXT("running")) return Fail(TEXT("landscape_busy"),TEXT("Wait for or cancel the active terrain job."));
     const bool bPartitionedTestWorld=W->GetWorldPartition()!=nullptr && TestMap(W->GetOutermost()->GetName());
     const bool bSafeIsolatedSource=SafeCreateSourceWorld(W);
     const bool bApprovedInPlaceLandscapeWorld=ApprovedInPlaceLandscapeWorld(W);
-    if(W->GetStreamingLevels().Num() || ((W->GetWorldPartition() && !bPartitionedTestWorld) && !bSafeIsolatedSource && !bApprovedInPlaceLandscapeWorld) ||
+    FExistingWorldAuthorization CurrentGrant;
+    const bool bCurrentWorldGrant = ReadExistingWorldAuthorization(Args, W, TEXT(""), CurrentGrant);
+    // Admission to preview/apply is still followed by exact grant/action/region validation.
+    bool bAdoptionWorld=false;
+    for (const auto& Entry:AdoptionGrants)
+        if (FindAdoption(Entry.Key,W,Entry.Value.Actor.Get(),*Entry.Value.Actions.CreateConstIterator(),nullptr,Command==TEXT("landscape_apply"))) bAdoptionWorld=true;
+    if(W->GetStreamingLevels().Num() || ((W->GetWorldPartition() && !bPartitionedTestWorld) &&
+        !bSafeIsolatedSource && !bApprovedInPlaceLandscapeWorld && !bCurrentWorldGrant && !bAdoptionWorld) ||
         (!W->GetWorldPartition() && W->PersistentLevel->IsUsingExternalActors() && !bSafeIsolatedSource))
-        return Fail(TEXT("unsupported_world"),TEXT("Streaming sublevels and non-test World Partition maps are read-only; Landscape writes require an isolated test map."));
+        return Fail(TEXT("unsupported_world"),TEXT("Streaming sublevels and World Partition Landscape writes require an exact host-authorized existing-world grant or an approved disposable map."));
     if (Command == TEXT("landscape_preview"))
     {
         const double PreviewStarted=FPlatformTime::Seconds();
@@ -1067,9 +1420,21 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
         if (!Args->TryGetObjectField(TEXT("request"),Obj)) return Fail(TEXT("invalid_request"),TEXT("Expected a typed Landscape request."));
         auto R=(*Obj).ToSharedRef(); FString Action;
         if (!R->TryGetStringField(TEXT("action"),Action)) return Fail(TEXT("invalid_action"),TEXT("Missing action."));
-        const TSet<FString> Actions={TEXT("create"),TEXT("create_in_place"),TEXT("raise"),TEXT("lower"),TEXT("flatten"),TEXT("smooth"),TEXT("generate"),TEXT("apply_heightmap"),TEXT("coastline"),TEXT("frame"),TEXT("save"),TEXT("reload"),TEXT("load_region"),TEXT("unload_region")};
+        const TSet<FString> Actions={TEXT("create"),TEXT("create_in_place"),TEXT("setup_layer"),TEXT("raise"),TEXT("lower"),TEXT("flatten"),TEXT("smooth"),TEXT("generate"),TEXT("apply_heightmap"),TEXT("coastline"),TEXT("frame"),TEXT("save"),TEXT("reload"),TEXT("load_region"),TEXT("unload_region")};
         if (!Actions.Contains(Action)) return Fail(TEXT("invalid_action"),TEXT("Unsupported Landscape action."));
         FPlan P; P.World=W; P.Request=R; P.Expires=FPlatformTime::Seconds()+300;
+        FExistingWorldAuthorization PreviewGrant;
+        const bool bPreviewGrant = ReadExistingWorldAuthorization(Args, W, Action, PreviewGrant);
+        if (bPreviewGrant)
+        {
+            P.bHasExistingWorldAuthorization = true;
+            P.ExistingWorldAuthorizationId = PreviewGrant.Id;
+            P.ExistingWorldAuthorizationSessionId = PreviewGrant.SessionId;
+            P.ExistingWorldAuthorizationProjectFile = PreviewGrant.ProjectFile;
+            P.ExistingWorldAuthorizationPackage = PreviewGrant.WorldPackage;
+            P.ExistingWorldAuthorizationActions = PreviewGrant.Actions;
+            P.ExistingWorldAuthorizationExpiresAtUnix = PreviewGrant.ExpiresAtUnix;
+        }
         if (Action == TEXT("create") || Action == TEXT("create_in_place"))
         {
             const bool bInPlace=Action==TEXT("create_in_place");
@@ -1077,14 +1442,62 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
             if(bInPlace)
             {
                 bool bWorldPartition=false; R->TryGetBoolField(TEXT("world_partition"),bWorldPartition);
-                if(!bWorldPartition || !Path.IsEmpty() || !ApprovedInPlaceLandscapeWorld(W))
-                    return Fail(TEXT("in_place_world_not_approved"),TEXT("create_in_place requires the exact saved Phase6C Empty Open World map with World Partition streaming and editor-region loading already enabled."));
+                if(!bPreviewGrant || !PreviewGrant.Allows(Action) || !bWorldPartition ||
+                    Path != W->GetOutermost()->GetName() || !ExistingWorldPartitionConfiguration(W))
+                    return Fail(TEXT("existing_world_authorization_required"),TEXT("create_in_place requires a host-issued exact session/project/world grant, matching map_path, and initialized World Partition Editor support."));
                 if(!HasNoLandscapeActorsOrProxies(W)) return Fail(TEXT("landscape_exists"),TEXT("The approved in-place test world already contains a loaded or unloaded Landscape actor or streaming proxy."));
                 for(const auto& Entry:Loaders) if(Entry.Value.World.Get()==W) return Fail(TEXT("landscape_loader_active"),TEXT("Release active Landscape region loaders before creating in this World Partition map."));
+                TSharedRef<FJsonObject> DirtyPolicy = MakeShared<FJsonObject>();
+                const bool bDirtyInventoryComplete = ForgeDirtyPackages::InspectLandscapeApplyPreflight(W, false, DirtyPolicy);
+                double BlockingDirtyCountValue = 0.0;
+                DirtyPolicy->TryGetNumberField(TEXT("blocking_dirty_loaded_packages"), BlockingDirtyCountValue);
+                const int32 BlockingDirtyCount = static_cast<int32>(BlockingDirtyCountValue);
+                const bool bDirtySafe = !W->GetOutermost()->IsDirty() &&
+                    !ForgeDirtyPackages::IsLandscapeApplyPreflightBlocking(bDirtyInventoryComplete, BlockingDirtyCount);
+                FString ScopeFingerprintError;
+                const bool bWriteScopeFingerprintReady = FingerprintExistingWorldPackageScope(
+                    W, P.ExistingWorldPackageFingerprint, ScopeFingerprintError);
+                P.bApplyAllowed = bDirtySafe && bWriteScopeFingerprintReady &&
+                    !W->GetOutermost()->IsDirty() && ExistingWorldPartitionConfiguration(W);
+                P.ApplyBlockReason = !bDirtySafe ?
+                    TEXT("Existing world or loaded dirty-package state is unsafe or incomplete; no unrelated dirty package may be saved.") :
+                    (!bWriteScopeFingerprintReady ? ScopeFingerprintError : TEXT(""));
+                Data->SetObjectField(TEXT("dirty_package_preflight"), DirtyPolicy);
+                Data->SetBoolField(TEXT("existing_package_scope_fingerprinted"), bWriteScopeFingerprintReady);
+                if (bWriteScopeFingerprintReady)
+                    Data->SetStringField(TEXT("existing_package_scope_fingerprint"), P.ExistingWorldPackageFingerprint);
+                Data->SetStringField(TEXT("authorization_id"), PreviewGrant.Id);
+                Data->SetStringField(TEXT("authorized_session_id"), PreviewGrant.SessionId);
+                Data->SetStringField(TEXT("authorized_project_file"), PreviewGrant.ProjectFile);
+                Data->SetStringField(TEXT("authorized_world_package"), PreviewGrant.WorldPackage);
+                Data->SetArrayField(TEXT("authorized_operations"), [&PreviewGrant]()
+                {
+                    TArray<TSharedPtr<FJsonValue>> Values;
+                    TArray<FString> Sorted = PreviewGrant.Actions.Array(); Sorted.Sort();
+                    for (const FString& Value : Sorted) Values.Add(MakeShared<FJsonValueString>(Value));
+                    return Values;
+                }());
+                Data->SetBoolField(TEXT("apply_allowed"), P.bApplyAllowed);
+                Data->SetStringField(TEXT("apply_block_reason"), P.ApplyBlockReason);
                 Data->SetStringField(TEXT("existing_world"),W->GetPathName());
                 Data->SetBoolField(TEXT("existing_world_partition_enabled"),true);
                 Data->SetBoolField(TEXT("existing_world_partition_subsystem_available"),true);
                 Data->SetBoolField(TEXT("existing_landscape_subsystem_available"),true);
+                const FString TargetFilename = CanonicalPath(FPackageName::LongPackageNameToFilename(Path, FPackageName::GetMapPackageExtension()));
+                P.TargetMapPackage = Path;
+                P.TargetMapFilename = TargetFilename;
+                P.TargetExternalActorsRoot = CanonicalPath(FPaths::Combine(FPaths::ProjectContentDir(), TEXT("__ExternalActors__"), Path.Mid(6)));
+                P.TargetExternalObjectsRoot = CanonicalPath(FPaths::Combine(FPaths::ProjectContentDir(), TEXT("__ExternalObjects__"), Path.Mid(6)));
+                TSharedRef<FJsonObject> Scope = MakeShared<FJsonObject>();
+                Scope->SetStringField(TEXT("target_map_package"), Path);
+                Scope->SetStringField(TEXT("target_map_filename"), TargetFilename);
+                Scope->SetStringField(TEXT("external_actor_namespace"), TEXT("/Game/__ExternalActors__/")+Path.Mid(6)+TEXT("/**"));
+                Scope->SetStringField(TEXT("external_object_namespace"), TEXT("/Game/__ExternalObjects__/")+Path.Mid(6)+TEXT("/**"));
+                Scope->SetBoolField(TEXT("existing_map_is_backed_up_before_save"), true);
+                Scope->SetBoolField(TEXT("existing_external_package_namespaces_are_backed_up_before_save"), true);
+                Scope->SetBoolField(TEXT("unrelated_dirty_packages_must_be_clean"), true);
+                Scope->SetStringField(TEXT("save_scope"), TEXT("Exact world package plus external packages owned by the new Landscape; unexpected package writes fail post-save validation and backups are retained."));
+                Data->SetObjectField(TEXT("write_scope"), Scope);
             }
             else
             {
@@ -1170,8 +1583,32 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
         else
         {
             const bool bApprovedExistingWorldPartitionOperation=(Action==TEXT("load_region") || Action==TEXT("unload_region")) && ApprovedInPlaceLandscapeWorld(W);
-            if (!TestMap(W->GetOutermost()->GetName()) && !bApprovedExistingWorldPartitionOperation)
-                return Fail(TEXT("protected_world"),TEXT("Terrain mutation is limited to disposable Landscape test maps; the approved Phase6C Open World map permits only its bounded load_region and unload_region operations."));
+            FString AdoptionId,ActorPath; R->TryGetStringField(TEXT("adoption_id"),AdoptionId); R->TryGetStringField(TEXT("actor_path"),ActorPath);
+            FString EditSessionId; R->TryGetStringField(TEXT("edit_session_id"),EditSessionId);
+            if (!EditSessionId.IsEmpty() && !AdoptionId.IsEmpty()) return Fail(TEXT("invalid_authorization"),TEXT("Choose one authorization kind."));
+            if (!EditSessionId.IsEmpty()) AdoptionId=EditSessionId.ToUpper();
+            ALandscape* AdoptionActor=Resolve(W,ActorPath); FIntRect AdoptionRegion;
+            FAdoptedLandscapeGrant* Adoption=ParseRegion(R,AdoptionRegion)?FindAdoption(AdoptionId,W,AdoptionActor,Action,&AdoptionRegion):nullptr;
+            if (!AdoptionId.IsEmpty() && !Adoption) return Fail(TEXT("adoption_scope_rejected"),TEXT("Adoption grant is absent, expired, revoked, consumed, or mismatched."));
+            if (Adoption && Adoption->bEditSession!=!EditSessionId.IsEmpty()) return Fail(TEXT("authorization_kind_mismatch"),TEXT("Use edit_session_id only for editing sessions and adoption_id only for one-operation grants."));
+            if (Adoption)
+            {
+                FString Error;
+                if (!AdoptionReady(W,AdoptionActor,AdoptionRegion,Error) ||
+                    (Adoption->bEditSession ? !SessionWorldSafe(*Adoption) : !AdoptionClean(W,AdoptionActor))) return Fail(TEXT("adoption_not_ready"),Error.IsEmpty()?TEXT("Unexpected changes or invalid recovery state; preserve unsaved work."):*Error);
+                P.AdoptionId=AdoptionId;
+                P.bHasExistingWorldAuthorization=false;
+            }
+            const bool bAuthorizedExistingWorldOperation = !Adoption && bPreviewGrant && PreviewGrant.Allows(Action) &&
+                ExistingWorldPartitionConfiguration(W) && !TestMap(W->GetOutermost()->GetName());
+            if (!TestMap(W->GetOutermost()->GetName()) && !bApprovedExistingWorldPartitionOperation && !bAuthorizedExistingWorldOperation && !Adoption)
+                return Fail(TEXT("protected_world"),TEXT("Existing-world Landscape operations require a matching host-issued per-session grant; otherwise only disposable test maps are writable."));
+            if (bAuthorizedExistingWorldOperation)
+            {
+                FString ScopeFingerprintError;
+                if (!FingerprintExistingWorldPackageScope(W, P.ExistingWorldPackageFingerprint, ScopeFingerprintError))
+                    return Fail(TEXT("existing_world_scope_unavailable"), *ScopeFingerprintError);
+            }
             const bool bPartitionOperation=Action==TEXT("load_region") || Action==TEXT("unload_region");
             if(bPartitionOperation && !W->GetWorldPartition()) return Fail(TEXT("world_partition_required"),TEXT("Region loading requires an isolated World Partition test map."));
             if(bPartitionOperation && !IsEditorStreamingAvailable(W))
@@ -1190,11 +1627,35 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
             else
             {
                 P.Actor=L;
+                if (bAuthorizedExistingWorldOperation)
+                {
+                    const FGuid* AuthorizedGuid = AuthorizedExistingWorldLandscapes.Find(PreviewGrant.Id);
+                    if (!AuthorizedGuid || !L || L->GetLandscapeGuid() != *AuthorizedGuid)
+                        return Fail(TEXT("landscape_outside_authorized_scope"),TEXT("The requested actor is not the Landscape created under this exact existing-world authorization."));
+                    P.bHasExistingWorldAuthorization = true;
+                    P.ExistingWorldAuthorizationId = PreviewGrant.Id;
+                    P.ExistingWorldAuthorizationSessionId = PreviewGrant.SessionId;
+                    P.ExistingWorldAuthorizationProjectFile = PreviewGrant.ProjectFile;
+                    P.ExistingWorldAuthorizationPackage = PreviewGrant.WorldPackage;
+                    P.ExistingWorldAuthorizationActions = PreviewGrant.Actions;
+                    P.ExistingWorldAuthorizationExpiresAtUnix = PreviewGrant.ExpiresAtUnix;
+                }
                 int32 LoadedComponentCount=0;
                 if(L && L->GetLandscapeInfo()) L->GetLandscapeInfo()->ForAllLandscapeComponents([&LoadedComponentCount](ULandscapeComponent*) { ++LoadedComponentCount; });
-                if (!L || (!W->GetWorldPartition() && L->GetExternalPackage()) || !L->HasLayersContent() || L->GetLayersConst().Num()!=1 || LoadedComponentCount>MaxComponents || L->GetLevel()!=W->PersistentLevel ||
+                if (!L || (!W->GetWorldPartition() && L->GetExternalPackage()) || !L->HasLayersContent() || (!Adoption && L->GetLayersConst().Num()!=1) || LoadedComponentCount>MaxComponents || L->GetLevel()!=W->PersistentLevel ||
                     !L->GetActorRotation().IsNearlyZero() || L->GetActorScale3D().Z <= 0) return Fail(TEXT("unsupported_landscape"),TEXT("Requires an isolated Landscape with one ForgeTerrain Edit Layer, positive scale and zero rotation."));
                 const FLandscapeLayer* Layer=L->GetLayerConst(FName(TEXT("ForgeTerrain")));
+                if (Action==TEXT("setup_layer"))
+                {
+                    if (!Adoption || Layer) return Fail(TEXT("unsupported_layer"),TEXT("Adopted layer setup only adds an absent ForgeTerrain layer."));
+                    if (Previews.Num()>=32) return Fail(TEXT("preview_limit"),TEXT("Too many outstanding terrain previews."));
+                    P.Transform=L->GetActorTransform(); P.Bounds=AdoptionRegion; P.EditBounds=AdoptionRegion;
+                    P.Fingerprint=Fingerprint(W,L,P.Bounds,P.Before);
+                    const FString SetupId=FGuid::NewGuid().ToString(EGuidFormats::Digits);
+                    Previews.Add(SetupId,MoveTemp(P)); Data->SetStringField(TEXT("preview_id"),SetupId);
+                    Data->SetBoolField(TEXT("apply_allowed"),true); Data->SetBoolField(TEXT("preview_read_only"),true);
+                    Data->SetStringField(TEXT("effect"),TEXT("Add dedicated ForgeTerrain; preserve every existing layer. No save.")); return true;
+                }
                 if (!Layer || !Layer->EditLayer || Layer->EditLayer->IsLocked() || !Layer->EditLayer->IsVisible()) return Fail(TEXT("unsupported_layer"),TEXT("ForgeTerrain must exist, be unlocked and visible."));
                 P.Transform=L->GetActorTransform(); P.Layer=Layer->EditLayer->GetGuid();
                 if(bPartitionOperation)
@@ -1280,6 +1741,11 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
                 }
             }
         }
+        if (!P.AdoptionId.IsEmpty() && !FindAdoption(P.AdoptionId,W,P.Actor.Get(),Action,&P.Bounds))
+            return Fail(TEXT("adoption_region_rejected"),TEXT("The read/write normal halo must also fit the approved region."));
+        if (auto* G=AdoptionGrants.Find(P.AdoptionId); G && G->bEditSession)
+            if (P.Layer!=G->EditLayerGuid || !SessionExpectedFullAfter(P.Actor.Get(),P.Layer,P.Bounds,P.After,P.SessionExpectedAfter))
+                return Fail(TEXT("edit_session_read_failed"),TEXT("Cannot bind the session layer and expected full-height result."));
         P.Fingerprint=Fingerprint(W,P.Actor.Get(),P.Bounds,P.Before);
         for(auto It=Previews.CreateIterator();It;++It) if(It.Value().Expires<FPlatformTime::Seconds()) It.RemoveCurrent();
         int64 ReservedPreviewBytes=0;
@@ -1312,22 +1778,137 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
     if(Id.IsEmpty() || Confirm!=Id) return Fail(TEXT("confirmation_required"),TEXT("Confirmation must equal preview_id."));
     FPlan P; if(!Previews.RemoveAndCopyValue(Id,P)) return Fail(TEXT("preview_not_found"),TEXT("Preview is unknown or already consumed."));
     auto R=P.Request.ToSharedRef(); FString Action=R->GetStringField(TEXT("action"));
+    FExistingWorldAuthorization ApplyGrant;
+    const bool bHasApplyGrant = ReadExistingWorldAuthorization(Args, W,
+        P.bHasExistingWorldAuthorization ? Action : TEXT(""), ApplyGrant);
+    if (P.bHasExistingWorldAuthorization)
+    {
+        bool bActionsMatch = P.ExistingWorldAuthorizationActions.Num() == ApplyGrant.Actions.Num();
+        for (const FString& AuthorizedAction : P.ExistingWorldAuthorizationActions)
+            bActionsMatch &= ApplyGrant.Actions.Contains(AuthorizedAction);
+        if (!bHasApplyGrant || !bActionsMatch ||
+            P.ExistingWorldAuthorizationId != ApplyGrant.Id ||
+            P.ExistingWorldAuthorizationSessionId != ApplyGrant.SessionId ||
+            !P.ExistingWorldAuthorizationProjectFile.Equals(ApplyGrant.ProjectFile, ESearchCase::IgnoreCase) ||
+            P.ExistingWorldAuthorizationPackage != ApplyGrant.WorldPackage ||
+            P.ExistingWorldAuthorizationExpiresAtUnix != ApplyGrant.ExpiresAtUnix ||
+            ApplyGrant.ExpiresAtUnix <= FDateTime::UtcNow().ToUnixTimestamp())
+            return Fail(TEXT("existing_world_authorization_stale"),TEXT("The exact session/world authorization changed or expired after preview; preview again with current authorization."));
+    }
+    if (!P.ExistingWorldPackageFingerprint.IsEmpty())
+    {
+        FString CurrentScopeFingerprint, ScopeFingerprintError;
+        if (!FingerprintExistingWorldPackageScope(W, CurrentScopeFingerprint, ScopeFingerprintError) ||
+            CurrentScopeFingerprint != P.ExistingWorldPackageFingerprint)
+            return Fail(TEXT("stale_preview"),TEXT("The existing map or external package write scope changed after preview; no operation was applied."));
+    }
     const bool bPartitionOperation=Action==TEXT("load_region") || Action==TEXT("unload_region");
     if(bPartitionOperation && !TestMap(W->GetOutermost()->GetName()) && !ApprovedInPlaceLandscapeWorld(W))
         return Fail(TEXT("protected_world"),TEXT("The approved Phase6C World Partition operation can only apply in its exact isolated test map."));
     FIntRect B; TArray<uint16> Current;
-    if(!bPartitionOperation && Action!=TEXT("frame") && P.Actor.IsValid() &&
+    FAdoptedLandscapeGrant* ApplyAdoption=nullptr;
+    if (!P.AdoptionId.IsEmpty())
+    {
+        ApplyAdoption=FindAdoption(P.AdoptionId,W,P.Actor.Get(),Action,&P.Bounds);
+        FString Error;
+        if (!ApplyAdoption || !AdoptionReady(W,P.Actor.Get(),P.Bounds,Error) ||
+            (ApplyAdoption->bEditSession ? !SessionWorldSafe(*ApplyAdoption) : !AdoptionClean(W,P.Actor.Get())) || !AdoptionBackupFilesPresent(*ApplyAdoption) ||
+            !AdoptionCheckpointScopeMatches(*ApplyAdoption,W) || !AdoptionBackupsValid(*ApplyAdoption))
+            return Fail(TEXT("adoption_apply_rejected"),TEXT("Exact live approval, clean packages, loaded region and verified checkpoint must still match before Apply."));
+    }
+    if(!bPartitionOperation && Action!=TEXT("frame") && Action!=TEXT("setup_layer") && P.Actor.IsValid() &&
         !ReadRegion(P.Actor.Get(),P.Layer,P.Bounds,B,Current)) return Fail(TEXT("read_failed"),TEXT("The preview region is no longer readable; a World Partition cell may have unloaded."));
     if(P.Expires<FPlatformTime::Seconds() || P.World.Get()!=W || Fingerprint(W,P.Actor.Get(),P.Bounds,Current)!=P.Fingerprint) return Fail(TEXT("stale_preview"),TEXT("World, transform, layer or preview-region heights changed; preview again."));
+    if (Action==TEXT("setup_layer"))
+    {
+        ALandscape* Target=P.Actor.Get();
+        if (!ApplyAdoption || !Target || Target->GetLayerConst(FName(TEXT("ForgeTerrain"))))
+            return Fail(TEXT("adoption_layer_setup_rejected"),TEXT("Layer setup requires adoption and an absent dedicated layer."));
+        TMap<FGuid,FString> OriginalHeights,OriginalMetadata;
+        for (const FLandscapeLayer& Existing:Target->GetLayersConst())
+        {
+            FIntRect Extent; TArray<uint16> Values;
+            if (!Existing.EditLayer || !Read(Target,Existing.EditLayer->GetGuid(),Extent,Values))
+                return Fail(TEXT("adoption_layer_read_failed"),TEXT("All original layer heights must be readable before setup."));
+            const FGuid Guid=Existing.EditLayer->GetGuid();
+            OriginalHeights.Add(Guid,Hash(Values));
+            OriginalMetadata.Add(Guid,Existing.EditLayer->GetName().ToString()+
+                FString::FromInt(Existing.EditLayer->IsLocked())+FString::FromInt(Existing.EditLayer->IsVisible()));
+        }
+        ApplyAdoption->bUsed=true;
+        FScopedTransaction Transaction(NSLOCTEXT("Forge","AdoptedLayerSetup","Add adopted Landscape ForgeTerrain layer"));
+        Target->Modify();
+        const int32 Index=Target->CreateLayer(FName(TEXT("ForgeTerrain")));
+        const FLandscapeLayer* Created=Target->GetLayerConst(FName(TEXT("ForgeTerrain")));
+        if (Index==INDEX_NONE || !Created || !Created->EditLayer)
+        {
+            if (Index!=INDEX_NONE) Target->DeleteLayer(Index);
+            Transaction.Cancel();
+            return Fail(TEXT("adoption_layer_setup_failed"),TEXT("Layer setup failed. No original layer was removed; retain checkpoint for recovery."));
+        }
+        Created->EditLayer->SetVisible(true,true); Created->EditLayer->SetLocked(false,true);
+        Target->RequestLayersContentUpdate(ELandscapeLayerUpdateMode::Update_All);
+        Target->GetLandscapeInfo()->ForceLayersFullUpdate();
+        bool bPreserved=Target->GetLayersConst().Num()==OriginalHeights.Num()+1;
+        int32 MatchedOriginalLayers=0;
+        for (const FLandscapeLayer& Existing:Target->GetLayersConst())
+        {
+            if (!Existing.EditLayer) { bPreserved=false; continue; }
+            const FGuid Guid=Existing.EditLayer->GetGuid();
+            if (!OriginalHeights.Contains(Guid)) continue;
+            ++MatchedOriginalLayers;
+            FIntRect Extent; TArray<uint16> Values;
+            const FString Metadata=Existing.EditLayer->GetName().ToString()+
+                FString::FromInt(Existing.EditLayer->IsLocked())+FString::FromInt(Existing.EditLayer->IsVisible());
+            bPreserved &= Metadata==OriginalMetadata[Guid] && Read(Target,Guid,Extent,Values) && Hash(Values)==OriginalHeights[Guid];
+        }
+        FIntRect NewExtent; TArray<uint16> NewValues;
+        bPreserved &= MatchedOriginalLayers==OriginalHeights.Num();
+        bool bNeutral=Created->EditLayer->IsVisible() && !Created->EditLayer->IsLocked() &&
+            Read(Target,Created->EditLayer->GetGuid(),NewExtent,NewValues);
+        for (uint16 Value:NewValues) bNeutral &= Value==32768;
+        Data->SetStringField(TEXT("backup_root"),ApplyAdoption->BackupRoot);
+        Data->SetBoolField(TEXT("original_layer_heights_unchanged"),bPreserved);
+        Data->SetBoolField(TEXT("new_layer_neutral_verified"),bNeutral);
+        if (!bPreserved || !bNeutral)
+        {
+            const bool Removed=Target->DeleteLayer(Index);
+            Transaction.Cancel(); Data->SetBoolField(TEXT("new_layer_removed"),Removed);
+            return Fail(TEXT("adoption_layer_validation_failed"),TEXT("Layer setup readback failed; the new layer removal was attempted. Do not save; recover from the retained checkpoint if needed."));
+        }
+        Data->SetStringField(TEXT("state"),TEXT("completed_unsaved"));
+        Data->SetStringField(TEXT("layer_guid"),Created->EditLayer->GetGuid().ToString(EGuidFormats::Digits));
+        Data->SetStringField(TEXT("backup_root"),ApplyAdoption->BackupRoot); Data->SetBoolField(TEXT("saved"),false);
+        return true;
+    }
     if(Action==TEXT("create") || Action==TEXT("create_in_place"))
     {
         const bool bInPlace=Action==TEXT("create_in_place");
+        if (!P.bApplyAllowed)
+            return Fail(TEXT("landscape_safety_gate_blocked"), *P.ApplyBlockReason);
         if (bInPlace)
-            return Fail(TEXT("in_place_creation_disabled"), TEXT("In-place Landscape creation is disabled by the disposable-project write-scope policy."));
+        {
+            FString RequestedPath; R->TryGetStringField(TEXT("map_path"), RequestedPath);
+            if (!P.bHasExistingWorldAuthorization || !bHasApplyGrant || !ApplyGrant.Allows(Action) ||
+                RequestedPath != W->GetOutermost()->GetName() ||
+                P.ExistingWorldAuthorizationPackage != RequestedPath ||
+                !ExistingWorldPartitionConfiguration(W) || !HasNoLandscapeActorsOrProxies(W))
+                return Fail(TEXT("existing_world_authorization_stale"),TEXT("The exact authorized World Partition target changed or is no longer eligible for creation."));
+            TSharedRef<FJsonObject> DirtyPolicy = MakeShared<FJsonObject>();
+            const bool bDirtyInventoryComplete = ForgeDirtyPackages::InspectLandscapeApplyPreflight(W, false, DirtyPolicy);
+            double BlockingDirtyCountValue = 0.0;
+            DirtyPolicy->TryGetNumberField(TEXT("blocking_dirty_loaded_packages"), BlockingDirtyCountValue);
+            if (W->GetOutermost()->IsDirty() || ForgeDirtyPackages::IsLandscapeApplyPreflightBlocking(
+                    bDirtyInventoryComplete, static_cast<int32>(BlockingDirtyCountValue)))
+            {
+                Data->SetObjectField(TEXT("dirty_package_preflight"), DirtyPolicy);
+                return Fail(TEXT("dirty_packages_block_apply"),TEXT("The existing world became dirty or its package inventory is incomplete; no unrelated package will be saved."));
+            }
+            for(const auto& Entry:Loaders) if(Entry.Value.World.Get()==W)
+                return Fail(TEXT("landscape_loader_active"),TEXT("Release active Landscape region loaders before creating in this World Partition map."));
+        }
         if(!bInPlace)
         {
-            if (!P.bApplyAllowed)
-                return Fail(TEXT("landscape_safety_gate_blocked"), *P.ApplyBlockReason);
             FString DisposableBlockReason;
             if (!IsAuthorizedDisposableProject(DisposableBlockReason))
                 return Fail(TEXT("disposable_project_required"), *DisposableBlockReason);
@@ -1362,8 +1943,10 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
         bool bWorldPartition=false; R->TryGetBoolField(TEXT("world_partition"),bWorldPartition);
         if(bInPlace)
         {
-            if(!bWorldPartition || !ApprovedInPlaceLandscapeWorld(W) || !HasNoLandscapeActorsOrProxies(W))
-                return Fail(TEXT("in_place_world_changed"),TEXT("The approved World Partition map changed or is no longer eligible for in-place Landscape creation."));
+            if(!P.bHasExistingWorldAuthorization || !ApplyGrant.Allows(Action) || !bWorldPartition ||
+                !P.ExistingWorldAuthorizationPackage.Equals(W->GetOutermost()->GetName(), ESearchCase::CaseSensitive) ||
+                !ExistingWorldPartitionConfiguration(W) || !HasNoLandscapeActorsOrProxies(W))
+                return Fail(TEXT("in_place_world_changed"),TEXT("The exact authorized World Partition map changed or is no longer eligible for in-place Landscape creation."));
             for(const auto& Entry:Loaders) if(Entry.Value.World.Get()==W) return Fail(TEXT("landscape_loader_active"),TEXT("Release active Landscape region loaders before creating in this World Partition map."));
             Path=W->GetOutermost()->GetName();
             UWorldPartition* ExistingPartition=W->GetWorldPartition();
@@ -1467,13 +2050,24 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
             LandscapeSubsystem->ChangeGridSize(L->GetLandscapeInfo(),Grid);
             if(L->GetLandscapeInfo()) L->GetLandscapeInfo()->ForceLayersFullUpdate();
         }
-        bool Saved=FEditorFileUtils::SaveLevel(W->PersistentLevel,Filename);
         FIntRect CreatedBounds; TArray<uint16> CreatedHeights; bool HeightReadback=Read(L,L->GetLayersConst()[0].EditLayer->GetGuid(),CreatedBounds,CreatedHeights);
-        Data->SetStringField(TEXT("state"),Saved&&HeightReadback?TEXT("completed"):TEXT("partial")); Data->SetBoolField(TEXT("saved"),Saved);
+        if (bInPlace && !HeightReadback)
+        {
+            W->DestroyActor(L);
+            return Fail(TEXT("creation_readback_failed"),TEXT("The new Landscape failed exact native height readback; it was removed from the in-memory world and no package was saved."));
+        }
+        bool Saved = false;
+        if (!bInPlace) Saved = FEditorFileUtils::SaveLevel(W->PersistentLevel,Filename);
+        if (bInPlace && HeightReadback)
+            AuthorizedExistingWorldLandscapes.Add(P.ExistingWorldAuthorizationId, L->GetLandscapeGuid());
+        Data->SetStringField(TEXT("state"),bInPlace ? TEXT("created_unsaved") : (Saved&&HeightReadback?TEXT("completed"):TEXT("partial")));
+        Data->SetBoolField(TEXT("saved"),Saved);
         Data->SetBoolField(TEXT("height_readback_validated"),HeightReadback);
         Data->SetBoolField(TEXT("world_partition_created"),W->GetWorldPartition()!=nullptr);
         Data->SetBoolField(TEXT("world_partition_streaming_enabled"),W->GetWorldPartition()&&W->GetWorldPartition()->IsStreamingEnabled());
         Data->SetBoolField(TEXT("created_in_existing_world"),bInPlace);
+        Data->SetStringField(TEXT("landscape_authorization_id"), bInPlace ? P.ExistingWorldAuthorizationId : FString());
+        Data->SetBoolField(TEXT("explicit_save_required"),bInPlace);
         Data->SetBoolField(TEXT("engine_basic_landscape_material_applied"),bUseEngineBasicMaterial);
         TArray<TSharedPtr<FJsonValue>> GeneratedPackageObservations;
         AppendGeneratedPackageObservations(Path, GeneratedPackageObservations);
@@ -1545,6 +2139,68 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
         if(Action==TEXT("save"))
         {
             if(!L->IsUpToDate()) return Fail(TEXT("terrain_pending"),TEXT("Wait for native layer recomposition before save."));
+            if (P.bHasExistingWorldAuthorization)
+            {
+                const FGuid* AuthorizedGuid = AuthorizedExistingWorldLandscapes.Find(P.ExistingWorldAuthorizationId);
+                if (!bHasApplyGrant || !ApplyGrant.Allows(Action) || !AuthorizedGuid ||
+                    *AuthorizedGuid != L->GetLandscapeGuid() ||
+                    P.ExistingWorldAuthorizationPackage != W->GetOutermost()->GetName() ||
+                    !ExistingWorldPartitionConfiguration(W))
+                    return Fail(TEXT("existing_world_authorization_stale"),TEXT("Save requires the current exact-world grant and the Landscape created under that grant."));
+
+                // Recompose before auditing package dirtiness; only the target map
+                // and this Landscape's external actor packages may be written.
+                L->ForceUpdateLayersContent();
+                FString DirtyScopeError;
+                if (!HasOnlyExpectedDirtyLandscapePackages(W, L, DirtyScopeError))
+                    return Fail(TEXT("dirty_package_scope_rejected"), *DirtyScopeError);
+
+                const FString BackupRoot = FPaths::ProjectSavedDir()/TEXT("ForgeLandscape")/Id;
+                FExistingWorldWriteSnapshot Snapshot;
+                FString BackupError;
+                if (!BackupExistingWorldWriteScope(W, L, BackupRoot, Snapshot, BackupError))
+                {
+                    Data->SetStringField(TEXT("backup_root"), BackupRoot);
+                    return Fail(TEXT("existing_world_backup_failed"), *BackupError);
+                }
+                Data->SetStringField(TEXT("backup_root"), BackupRoot);
+                Data->SetStringField(TEXT("backup_scope"), TEXT("Existing target map and all files in its World Partition external actor/object namespaces; each source copy was hash-verified."));
+                Data->SetNumberField(TEXT("backup_file_count"), Snapshot.FileHashes.Num());
+                TArray<TSharedPtr<FJsonValue>> BackupManifest;
+                for (const auto& Entry : Snapshot.FileHashes)
+                    BackupManifest.Add(MakeShared<FJsonValueString>(Entry.Key+TEXT("|")+Entry.Value));
+                Data->SetArrayField(TEXT("backup_manifest"), BackupManifest);
+
+                FString SaveError;
+                if (!SaveExistingWorldLandscapePackages(W, L, SaveError))
+                {
+                    Data->SetBoolField(TEXT("saved"), false);
+                    Data->SetStringField(TEXT("state"), TEXT("partial"));
+                    return Fail(TEXT("existing_world_package_save_failed"), *SaveError);
+                }
+                FString WriteScopeError;
+                if (!ValidateExistingWorldWriteScope(W, Snapshot, WriteScopeError))
+                {
+                    Data->SetBoolField(TEXT("saved"), true);
+                    Data->SetBoolField(TEXT("write_scope_verified"), false);
+                    Data->SetStringField(TEXT("state"), TEXT("partial"));
+                    return Fail(TEXT("existing_world_write_scope_failed"), *WriteScopeError);
+                }
+                FIntRect SavedBounds;
+                TArray<uint16> SavedHeights;
+                const bool bHeightReadback = ReadRegion(L, P.Layer, P.Bounds, SavedBounds, SavedHeights) &&
+                    SavedBounds == P.Bounds && SavedHeights == Current;
+                const bool bSaved = bHeightReadback && !W->GetOutermost()->IsDirty() && ExternalLandscapePackagesClean(L);
+                Data->SetBoolField(TEXT("saved"), true);
+                Data->SetBoolField(TEXT("write_scope_verified"), true);
+                Data->SetBoolField(TEXT("height_readback_validated"), bHeightReadback);
+                Data->SetBoolField(TEXT("persistence_validated"), bHeightReadback);
+                Data->SetStringField(TEXT("state"), bSaved ? TEXT("completed") : TEXT("partial"));
+                Data->SetStringField(TEXT("height_md5"), Hash(SavedHeights));
+                if (!bSaved)
+                    return Fail(TEXT("saved_landscape_validation_failed"),TEXT("The exact package save completed but Landscape height readback or package-clean verification failed; backups were retained."));
+                return true;
+            }
             FString BackupRoot=FPaths::ProjectSavedDir()/TEXT("ForgeLandscape")/Id;
             FString Backup=BackupRoot/TEXT("before.umap"); IFileManager::Get().MakeDirectory(*BackupRoot,true);
             if(IFileManager::Get().Copy(*Backup,*Filename,false)!=COPY_OK) return Fail(TEXT("backup_failed"),TEXT("Map backup failed; save refused."));
@@ -1606,7 +2262,45 @@ bool FForgeLandscape::Handle(const FString& Command, const TSharedRef<FJsonObjec
     Meta->SetStringField(TEXT("transform"),L->GetTransform().ToString());
     FString Metadata; auto Writer=TJsonWriterFactory<>::Create(&Metadata); FJsonSerializer::Serialize(Meta,Writer);
     if(!FFileHelper::SaveStringToFile(Metadata,*(J.Backup+TEXT(".json")))) return Fail(TEXT("backup_failed"),TEXT("Backup metadata failed; no edit started."));
+    if (ApplyAdoption && ApplyAdoption->bEditSession)
+    {
+        if (!BackupEditingSessionOperation(*ApplyAdoption,L,Id,FPaths::GetPath(J.Backup),R,J.SessionRecoveryManifest))
+        { ApplyAdoption->bRevoked=true; return Fail(TEXT("edit_session_backup_failed"),TEXT("Per-operation recovery failed; no edit started and session revoked. Evidence retained.")); }
+    }
+    if (ApplyAdoption && !ApplyAdoption->bEditSession) ApplyAdoption->bUsed=true;
     const FString BackupPath=J.Backup; Jobs.Add(Id,MoveTemp(J)); Data->SetStringField(TEXT("job_id"),Id); Data->SetStringField(TEXT("state"),TEXT("running")); Data->SetStringField(TEXT("backup"),BackupPath); return true;
+}
+
+void FForgeLandscape::FinishEditSessionJob(FJob& J)
+{
+    if (J.bSessionResultLogged || J.State==TEXT("running")) return;
+    auto* G=AdoptionGrants.Find(J.Plan.AdoptionId);
+    if (!G || !G->bEditSession) return;
+    if (J.State==TEXT("completed"))
+    {
+        FString Target; TMap<FGuid,FString> Protected;
+        if (!SessionLayerHashes(J.Plan.Actor.Get(),G->EditLayerGuid,Target,Protected) ||
+            Target!=J.Plan.SessionExpectedAfter || !Protected.OrderIndependentCompareEqual(G->ProtectedLayerHashes))
+        { J.State=TEXT("validation_failed_partial"); J.Error=TEXT("Full target or protected Original layer validation failed; evidence retained."); }
+        else
+        {
+            G->ExpectedTargetHash=Target;
+            ALandscape* L=J.Plan.Actor.Get();
+            if (L->GetExternalPackage()) G->OwnedDirtyPackages.Add(L->GetExternalPackage()->GetName());
+            L->GetLandscapeInfo()->ForEachLandscapeProxy([&](ALandscapeProxy* Proxy)
+            { if (Proxy && Proxy->GetExternalPackage()) G->OwnedDirtyPackages.Add(Proxy->GetExternalPackage()->GetName()); return true; });
+            if (!L->GetWorld()->GetWorldPartition()) G->OwnedDirtyPackages.Add(L->GetWorld()->GetOutermost()->GetName());
+        }
+    }
+    if (J.State!=TEXT("completed")) G->bRevoked=true;
+    auto Result=MakeShared<FJsonObject>(); Result->SetStringField(TEXT("state"),J.State);
+    Result->SetStringField(TEXT("error"),J.Error); Result->SetStringField(TEXT("operation_id"),J.Id);
+    Result->SetStringField(TEXT("edit_session_id"),G->Id); Result->SetStringField(TEXT("full_target_height_md5"),G->ExpectedTargetHash);
+    Result->SetNumberField(TEXT("rows_applied"),J.NextRow); Result->SetBoolField(TEXT("saved"),false);
+    Result->SetBoolField(TEXT("protected_layers_verified"),J.State==TEXT("completed"));
+    if (!SaveSessionJson(Result,FPaths::GetPath(J.Backup)/TEXT("edit_session_result.json")))
+    { G->bRevoked=true; J.State=TEXT("verification_log_failed_partial"); J.Error=TEXT("Operation result logging failed; preserve recovery checkpoint."); }
+    G->ActiveOperation.Empty(); J.bSessionResultLogged=true;
 }
 
 void FForgeLandscape::Tick()
@@ -1658,11 +2352,39 @@ void FForgeLandscape::Tick()
     }
     for(auto& Entry:Jobs)
     {
-        FJob& J=Entry.Value; if(J.State!=TEXT("running") || FPlatformTime::Seconds()<J.NextTime) continue;
+        FJob& J=Entry.Value;
+        if (J.State!=TEXT("running")) { FinishEditSessionJob(J); continue; }
+        if(FPlatformTime::Seconds()<J.NextTime) continue;
         ALandscape* L=J.Plan.Actor.Get(); UWorld* W=GEditor?GEditor->GetEditorWorldContext().World():nullptr;
         FIntRect B; TArray<uint16> Current;
         const FLandscapeLayer* CurrentLayer=L?L->GetLayerConst(FName(TEXT("ForgeTerrain"))):nullptr;
-        if(!GEditor || GEditor->PlayWorld || GEditor->bIsSimulatingInEditor || W!=J.Plan.World.Get() || !TestMap(W->GetOutermost()->GetName()) || !L ||
+        auto Request=J.Plan.Request.ToSharedRef();
+        const FString Action=Request->GetStringField(TEXT("action"));
+        bool bAuthorizedWorld = false;
+        if (J.Plan.bHasExistingWorldAuthorization && W && L)
+        {
+            const FGuid* AuthorizedGuid = AuthorizedExistingWorldLandscapes.Find(J.Plan.ExistingWorldAuthorizationId);
+            bAuthorizedWorld = AuthorizedGuid && *AuthorizedGuid == L->GetLandscapeGuid() &&
+                J.Plan.ExistingWorldAuthorizationActions.Contains(Action) &&
+                J.Plan.ExistingWorldAuthorizationExpiresAtUnix > FDateTime::UtcNow().ToUnixTimestamp() &&
+                W->GetOutermost()->GetName() == J.Plan.ExistingWorldAuthorizationPackage &&
+                CanonicalPath(FPaths::GetProjectFilePath()).Equals(
+                    J.Plan.ExistingWorldAuthorizationProjectFile, ESearchCase::IgnoreCase) &&
+                ExistingWorldPartitionConfiguration(W);
+        }
+        bool bAdoptedWorld=false;
+        if (!J.Plan.AdoptionId.IsEmpty())
+        {
+            const FAdoptedLandscapeGrant* Grant=FindAdoption(J.Plan.AdoptionId,W,L,Action,&J.Plan.Bounds,true);
+            FString Error;
+            bAdoptedWorld=Grant && AdoptionReady(W,L,J.Plan.Bounds,Error,true) && AdoptionBackupFilesPresent(*Grant);
+            if (Grant && Grant->bEditSession)
+                bAdoptedWorld &= Grant->ActiveOperation==J.Id && SessionProtectedLayersMatch(*Grant) &&
+                    EditingSessionRecoveryValid(FPaths::GetPath(J.Backup),J.SessionRecoveryManifest);
+        }
+        const bool bAllowedWorld = W && (J.Plan.AdoptionId.IsEmpty() ?
+            (TestMap(W->GetOutermost()->GetName()) || bAuthorizedWorld) : bAdoptedWorld);
+        if(!GEditor || GEditor->PlayWorld || GEditor->bIsSimulatingInEditor || !W || W!=J.Plan.World.Get() || !bAllowedWorld || !L ||
             !CurrentLayer || !CurrentLayer->EditLayer || CurrentLayer->EditLayer->GetGuid()!=J.Plan.Layer || CurrentLayer->EditLayer->IsLocked() ||
             !CurrentLayer->EditLayer->IsVisible() || !L->GetActorTransform().Equals(J.Plan.Transform) || L->GetLandscapeInfo()==nullptr)
         { J.State=TEXT("interrupted_partial"); J.Error=TEXT("World/PIE/landscape changed between stages; no further writes."); J.Plan.Before.Empty(); J.Plan.After.Empty(); continue; }
@@ -1716,11 +2438,18 @@ void FForgeLandscape::Tick()
         }
         J.MaxStageMs=FMath::Max(J.MaxStageMs,(FPlatformTime::Seconds()-Started)*1000);
         J.NextTime=FPlatformTime::Seconds()+R->GetNumberField(TEXT("stage_interval_seconds"));
+        FinishEditSessionJob(J);
     }
 }
 
 void FForgeLandscape::Reset()
 {
+    for(auto& Entry:Jobs)
+    {
+        if(Entry.Value.State==TEXT("running")) { Entry.Value.State=TEXT("interrupted_partial"); Entry.Value.Error=TEXT("World/session ended; recovery retained."); }
+        FinishEditSessionJob(Entry.Value);
+    }
+    AdoptionGrants.Empty();
     for(auto& Entry:Loaders)
     {
         UWorld* W=Entry.Value.World.Get(); UWorldPartition* Partition=W?W->GetWorldPartition():nullptr;
@@ -1731,7 +2460,7 @@ void FForgeLandscape::Reset()
             Partition->ReleaseEditorLoaderAdapter(Adapter);
         }
     }
-    Loaders.Empty(); Previews.Empty(); Jobs.Empty();
+    Loaders.Empty(); Previews.Empty(); Jobs.Empty(); AuthorizedExistingWorldLandscapes.Empty();
     bWorldTransitionInProgress=false;
 }
 
@@ -1800,5 +2529,6 @@ bool FForgeLandscape::PrepareForWorldTransition(UWorld* OutgoingWorld,FString& O
     }
     Previews.Empty();
     Loaders.Empty();
+    AuthorizedExistingWorldLandscapes.Empty();
     return true;
 }

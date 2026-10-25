@@ -1,5 +1,7 @@
 # ForgeMCP
 
+[ForgeMCP Encyclopedia](ForgeMCP_Encyclopedia/00_Master_Index/ForgeMCP_Encyclopedia.md) · [Latest Development Updates](ForgeMCP_Encyclopedia/00_Master_Index/Latest_Development_Updates.md)
+
 The **UE 5.6.1 Win64 engine-wide alpha** can be installed once for the engine and
 enabled in individual projects while feature development continues separately.
 See [alpha installation, updates and rollback](Documentation/UE56_Alpha.md).

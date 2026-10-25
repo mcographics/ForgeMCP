@@ -1,0 +1,496 @@
+{
+  "date": "2026-10-24",
+  "scope": "Top-level evidence receipts only; payloads remain local. Hashes verify current local bytes, not historical acceptance.",
+  "checkpoints": [
+    {
+      "checkpoint": "FirstRiverbed_20261023T192135Z",
+      "evidence_files": [
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/FirstRiverbed_20261023T192135Z/manifest.json",
+          "bytes": 16244,
+          "sha256": "89f6b52d9af9a6731409d75a22f73063b7c94f28433deb0c48635971042cdce7"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/FirstRiverbed_20261023T192135Z/report_before_sculpt.md",
+          "bytes": 4592,
+          "sha256": "c6178f63ac7585327f68dcf0293cc9e815e96ee2793c1f7a292bdf575c622401"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/FirstRiverbed_20261023T192135Z/riverbed_plan.json",
+          "bytes": 4689,
+          "sha256": "229a997137a66d8ef2835a5605adefe67d6c07d77797ec77ae4feda59b280cf4"
+        }
+      ]
+    },
+    {
+      "checkpoint": "ForgeMCP_0.2.17_Activation_20261023T210005Z",
+      "evidence_files": [
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/ForgeMCP_0.2.17_Activation_20261023T210005Z/manifest.json",
+          "bytes": 157668,
+          "sha256": "3f42b6a4243a0ef197417ab4ee7d13fa01cc68621ec7bf4779875fd305e29aa0"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/ForgeMCP_0.2.17_Activation_20261023T210005Z/manifest.sha256",
+          "bytes": 80,
+          "sha256": "6833c722db027e9378c305e4ccd8938b95ccdf3b6d235a2154ea47b0d1b8dc3e"
+        }
+      ]
+    },
+    {
+      "checkpoint": "LakeBasinHills_PreChange_20261024T065905Z",
+      "evidence_files": [
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/LakeBasinHills_PreChange_20261024T065905Z/manifest.json",
+          "bytes": 7330,
+          "sha256": "b6cf43a66ff94b152960824f65538ba530e569896eb503f5cd6cd582383bef8e"
+        }
+      ]
+    },
+    {
+      "checkpoint": "Landscape_Stage1_20261023T065347Z_94ff8892",
+      "evidence_files": [
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage1_20261023T065347Z_94ff8892/final_verification.json",
+          "bytes": 9497,
+          "sha256": "dea1954257dbbb960347963bba8487fa9b62184ee605e0fdbd531bc4b8debcf1"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage1_20261023T065347Z_94ff8892/manifest.json",
+          "bytes": 23755,
+          "sha256": "d9de66d61745427b313c5ee7eb5a1f2238d8c76ca2dc5aa0cd277929bbac3388"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage1_20261023T065347Z_94ff8892/stage1_native_evidence.json",
+          "bytes": 182147,
+          "sha256": "fc16824f7a21b4698e0b05d55a4bbec3ac80896590f478cd0052396260d91c3c"
+        }
+      ]
+    },
+    {
+      "checkpoint": "Landscape_Stage2_Evidence_20261023T0712",
+      "evidence_files": [
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2_Evidence_20261023T0712/native_evidence.json",
+          "bytes": 240651,
+          "sha256": "1dc082ce31318e04ef6d07bba15c0c34c7d8e895a6d5d4a7f614c51a3ec8cd5d"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2_Evidence_20261023T0712/previous_stage2_report.md",
+          "bytes": 12443,
+          "sha256": "c18f03cd16fd8778b94441d749bc6ecb37626050832682bff859e97d7a95f535"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2_Evidence_20261023T0712/source_hash_audit.json",
+          "bytes": 11547,
+          "sha256": "da84fa43904b028e9b30f9b6ee0a058e9437432ff59a6a3cd2aa8f86546f1e67"
+        }
+      ]
+    },
+    {
+      "checkpoint": "Landscape_Stage2B_Evidence_20261023",
+      "evidence_files": [
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2B_Evidence_20261023/evidence.json",
+          "bytes": 306263,
+          "sha256": "292afdcba77c83a759d6c581ea6b8f434b048c5fea0230ae956948aa35840a51"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2B_Evidence_20261023/stage2_report_before_stage2b.md",
+          "bytes": 24192,
+          "sha256": "b08734959d43b7f213671bb2fe93eadd5ec1d1c540fa4c4d8e0c775ca2ee4402"
+        }
+      ]
+    },
+    {
+      "checkpoint": "Landscape_Stage2C_Evidence_20261023T0739",
+      "evidence_files": [
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2C_Evidence_20261023T0739/post_manual_save_file_audit.json",
+          "bytes": 9303,
+          "sha256": "af1378982c9e919d815d6e83150d1e2381e0f058f9c36ceb659667e92a0eff6c"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2C_Evidence_20261023T0739/post_manual_save_native_evidence.json",
+          "bytes": 99777,
+          "sha256": "13089c6e2c8b14069f47e448efc328c9708706123e9be51851ec0709b981a068"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2C_Evidence_20261023T0739/pre_save_evidence.json",
+          "bytes": 169193,
+          "sha256": "0d32abbee530b8f8b051964004c7e72f480c52a79bfb917d62593f6d1af828dd"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2C_Evidence_20261023T0739/production_content_before_manual_save.json",
+          "bytes": 442464,
+          "sha256": "be8606da650712812cc08352ac054f5d0c2e9d0af896d28ce62f9efcd2d7f9f2"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2C_Evidence_20261023T0739/stage2c_report_after_manual_save.md",
+          "bytes": 18052,
+          "sha256": "4159b7345a7474248135b241321167858f4066f4390ac8264397571fce7a3f07"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2C_Evidence_20261023T0739/stage2c_report_before_manual_save.md",
+          "bytes": 20977,
+          "sha256": "b6b96d0ad4287c421e044cde4859b502d338d64743110341b117d637ecde7405"
+        }
+      ]
+    },
+    {
+      "checkpoint": "Landscape_Stage2E_20261023",
+      "evidence_files": [
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2E_20261023/final_post_save_hash_verification.json",
+          "bytes": 7385,
+          "sha256": "d5b00f18f8e693c1332423a88acf176f606753e4a9efade939aa77a85c9866b9"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2E_20261023/isolated_error.json",
+          "bytes": 131,
+          "sha256": "b055de1e549114a95e1e2889e5a8c919830559e5fb0779dc7b719423a1bf49bf"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2E_20261023/isolated_rendered_error.json",
+          "bytes": 136,
+          "sha256": "296e5a6c47380cd3ad711e5bb44b4dc66a428e937f6ef76f1d0926be2f125d11"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2E_20261023/launch.json",
+          "bytes": 1025,
+          "sha256": "f7dcd244f75d39a5dc5331f04fbc0a435efec179b06528c37e8cacdc01d1cea5"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2E_20261023/launch_rendered.json",
+          "bytes": 1100,
+          "sha256": "35fffb31304986e1aaf24d60c0415aa4daf269b6985e133f7f08bc74556df889"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2E_20261023/production_after.json",
+          "bytes": 94958,
+          "sha256": "107979bd999fd670717853f0deb76a49eaae4863e71276d46faf6d0c2c796c40"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2E_20261023/production_before.json",
+          "bytes": 90150,
+          "sha256": "5428606f7fe230e3a84d5c62bbafacd436f35e59db73f78a97952c957ec60ad0"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2E_20261023/production_integrity_audit.json",
+          "bytes": 221,
+          "sha256": "efc4950eaf5516b0b6c90a12dccda6f7144f343524d7a2759d00c3be1f6c460c"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2E_20261023/project_copy_manifest.json",
+          "bytes": 376283,
+          "sha256": "cc0657bda2c21e7939d3f47d358f8a190087172927c4e41011840dbb15c2e61c"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Landscape_Stage2E_20261023/storage_estimate.json",
+          "bytes": 322,
+          "sha256": "e449551be9fbaba5455504a3e5f37efc608464abd442c70eea99cf4d42fc3d7f"
+        }
+      ]
+    },
+    {
+      "checkpoint": "LandscapeReset_PreChange_20261024T_Delta",
+      "evidence_files": [
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/LandscapeReset_PreChange_20261024T_Delta/manifest.json",
+          "bytes": 7008,
+          "sha256": "41ad3a15a126a4b2a3abe95ec796fa215388fc317504b20703c6d2403395baf4"
+        }
+      ]
+    },
+    {
+      "checkpoint": "Stage2E_Alpha_20261023T232404Z",
+      "evidence_files": [
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/approved_single_attempt_marker.json",
+          "bytes": 237,
+          "sha256": "4327f962258583d364d6768701c91a16e0f35566fc09d1955de973dc58a80ddf"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/clone_manifest.json",
+          "bytes": 376711,
+          "sha256": "3b70cd29f84b9d8a0581f1dd35d992de6c9d7f43db6912d09873f2159ceef316"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/expected_reload_baseline.json",
+          "bytes": 127811,
+          "sha256": "fc7d64c459599d8667e47513d41d8622ceffb3d39538cd83fcf062242a8a5bb3"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/historical_checkpoint_manifest_verification.json",
+          "bytes": 1357,
+          "sha256": "62cc194ae0d49f016a117397d969c1279a7c296b003f332be01d8e28d5009437"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/launch_approved.json",
+          "bytes": 815,
+          "sha256": "8a9899233c3ac76de1a115bfa0dfbdaa6f508120d2b1c8e1024cfffc2b61137e"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/launch_plan.json",
+          "bytes": 2533,
+          "sha256": "725650a64bccd91eac691dae421f993ca82c63738f987be9dd8636b9fdb47a43"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/milestones.json",
+          "bytes": 23252,
+          "sha256": "144e3fc7fb0dcac73403d6c1cecd12e98f9e52e656764a637d47458d918ecaaa"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/post_test_disk_verification.json",
+          "bytes": 248,
+          "sha256": "88eddd29e9ce8865e3f431f49f0e2ec714117e92257018a5d61c168618ca7939"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/post_test_processes.json",
+          "bytes": 327,
+          "sha256": "cc2066b2750ff2fcdacea3bf232f85111adccc671016a54b54a395ffa95bbce1"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/post_test_production_native.json",
+          "bytes": 96279,
+          "sha256": "2943ab300f31032b728b552f09c0b321715abb5b67f40ac292d8644169d8691b"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/prelaunch_controller_correction.json",
+          "bytes": 325,
+          "sha256": "bf1cabe6c4563c97b34661c71d874398e46b5646199d8aa44d06e2eb7049c720"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/prelaunch_disk_verification.json",
+          "bytes": 351,
+          "sha256": "3366890c2262ac7600a7f49576fcaae554be917ac7d07c7fc9d7d61b94c14a97"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/prelaunch_disk_verification_corrected.json",
+          "bytes": 351,
+          "sha256": "3abd4dff8bf768f656321b86a38aad919b747bd04e14640dcac89b17f0b5d0d5"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/prelaunch_production_native.json",
+          "bytes": 93047,
+          "sha256": "a53408c65652ce7a1f0ede6034d54b620e104d7b8a48a0d0b8a1d7abc2d66d6d"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/preparation_result.json",
+          "bytes": 2729,
+          "sha256": "1e588ce0d8ffd84ee58d81b12255252c8272d6481a876262929128bcf85f97c9"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/private_registration_acl.json",
+          "bytes": 402,
+          "sha256": "0d56cad978eda16b9fc75214fcecc7e16384819c54a3057e68e68170628e6386"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/source_manifest.json",
+          "bytes": 376711,
+          "sha256": "6e05f0fde1dc4eabe61e0072086aa19b407949809006563cf232b9424a7062f0"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/termination.json",
+          "bytes": 264,
+          "sha256": "532649592734e6887c930e5f5a09d21613000bca3a0a85da39443749dabe1753"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261023T232404Z/test_result.json",
+          "bytes": 503,
+          "sha256": "84d2f6c7acc4b2b01a784ba8a592e7802706b7f27ea612e616dbfe8001fc3eb7"
+        }
+      ]
+    },
+    {
+      "checkpoint": "Stage2E_Alpha_20261024T001332Z",
+      "evidence_files": [
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/approved_plan_original_bytes.json",
+          "bytes": 9074,
+          "sha256": "a7b72ec6dcead47e5533dff2243cf4aefffc72e4004a0fa3dcffd661ed000635"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/approved_single_attempt_marker.json",
+          "bytes": 270,
+          "sha256": "66237683edd7cf31e27708d3ba9e4ff1d9329aea3bf9f262975e5f7abce362fb"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/clone_manifest.json",
+          "bytes": 376711,
+          "sha256": "046237058693c9aaabe22f9126ff4c13cd4fde42672a18cd0a1243896ef92cbd"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/expected_reload_baseline.json",
+          "bytes": 133388,
+          "sha256": "dd2311ea6e466ae268aec9db57aefe7c8f565b394fc13d8128f49138125c958f"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/final_readonly_manifest_audit.json",
+          "bytes": 477,
+          "sha256": "111338fb158e69daaf2dc7340d2cb7725f82b19a3fb90143fde99b3428daa9a0"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/launch_approved.json",
+          "bytes": 813,
+          "sha256": "bcb1176a496863a3fc98cc0839ae2141be49c4590be48e039760edb7e29e6edf"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/milestones.json",
+          "bytes": 118071,
+          "sha256": "87f021221dbfc9991c8bd323360d58da3462bc151f46de13268b580347883a6c"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/owner_approval_binding.json",
+          "bytes": 621,
+          "sha256": "1fb6ac451cd9b47df339f35cd8b5fdde7a698f355ee7a641ed202aa75f587b6a"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/plan_validation.json",
+          "bytes": 815,
+          "sha256": "26bd9a695b372bbcf7d7fc422ed51f898f2c76a6ee132ab6fe6221c8e32f5438"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/prelaunch_disk_verification_revised.json",
+          "bytes": 351,
+          "sha256": "e421263ef9f68d8389ac67328b58bfe7fd51d59dfabe0b7ddf01dd2db2b1ee6b"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/prelaunch_production_native.json",
+          "bytes": 93047,
+          "sha256": "70c284421204807c0c6666cd985e21b277ab0944db91633f21dea0001200678a"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/preparation_result.json",
+          "bytes": 2787,
+          "sha256": "83d4664615bad14ac9d21fe6231e5dd37f799f34099a4268a2c588fe5f163537"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/private_registration_acl.json",
+          "bytes": 402,
+          "sha256": "781577755964d0ad0e19e4ce1118c03ac4ca0ed2e6b5976ae5acfb16a7b80cc7"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/production_readonly_verification.json",
+          "bytes": 1535,
+          "sha256": "34cf9e93117ce885fdd606d7e41504766398414267877190e6810e5947dc35c9"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/revised_launch_plan.json",
+          "bytes": 9106,
+          "sha256": "6d26e2c42835a520219735906e7a7ec304b344a8520e2b1b726d0d7b1737684f"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/source_manifest.json",
+          "bytes": 376711,
+          "sha256": "6e05f0fde1dc4eabe61e0072086aa19b407949809006563cf232b9424a7062f0"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/termination.json",
+          "bytes": 745,
+          "sha256": "a4366a9a1305321a57fafcb4436e4f323ff92655ed85221aa22a22a081921e09"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2E_Alpha_20261024T001332Z/test_result.json",
+          "bytes": 205,
+          "sha256": "1ba824b3d6d82df8b9f8f5cdf027fcfc1f3f1c9f4346734cdf150a3379210e4b"
+        }
+      ]
+    },
+    {
+      "checkpoint": "Stage2ER_01",
+      "evidence_files": [
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/approved_single_attempt_marker.json",
+          "bytes": 588,
+          "sha256": "51a5e28272f40cdadfbc55660c8b30c08a0f3e74b14aa242637291615adf7d10"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/clone_before_config_manifest.json",
+          "bytes": 376283,
+          "sha256": "832947387f666f078c6e8f3c93ebd8f7a6195fa232fe5552488b52377fd42df7"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/clone_final_manifest.json",
+          "bytes": 376283,
+          "sha256": "dd4f4eb371a431fd4a57cb801dde5275c0acbc0c55de9dd05982338899249d86"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/current_state_baseline.json",
+          "bytes": 394874,
+          "sha256": "5a74a52a65ea22f65a57d0636fe863b64c45a30e7580ca48546d410201f02a17"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/final_resume_disk_verification.json",
+          "bytes": 213,
+          "sha256": "da29f852d35f5f1a2e8b0d1faa5950c4ba7bf0e25b615be1ed82a9187a96b66c"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/final_resume_native_evidence.json",
+          "bytes": 91868,
+          "sha256": "7e8b27bb4c0d940c03fc141b753aed1f5a5dd3d26b40d54ab067ba9fc77f75f3"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/historical_blocked_preflight.md",
+          "bytes": 8497,
+          "sha256": "a270bada9a62b531d9063bd75c5089ad99b9a21c338b2b871cee6fff351d6cd6"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/launch_approved.json",
+          "bytes": 1326,
+          "sha256": "d6c6fcbee95e8aa0720738d907ac8a250908e7728b11c9dcaa17d7c56bb9774e"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/milestones.json",
+          "bytes": 168627,
+          "sha256": "4bd261684de1309d2feb2f59fbb9a727b9a35dfaede833379e460a70255600d5"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/native_preflight_evidence.json",
+          "bytes": 92370,
+          "sha256": "47b269de478eb2232a98a049612c25e05ae1a7802130025a6068d736b4414ae4"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/post_test_disk_verification.json",
+          "bytes": 303,
+          "sha256": "62fe9d83559113743585924b375b74072f6dad1da5fffa9585bd069218340a89"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/post_test_production_native.json",
+          "bytes": 91868,
+          "sha256": "320babbe1691e2964c940f02e893f7b6e1775d4c7ae51faeac304f0f5879a977"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/preflight_before_final_resume.md",
+          "bytes": 10835,
+          "sha256": "65d643743187f9406b29af1dabbb2e9e87da42a363942b3fa9381e3d82e81cc2"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/preparation_result.json",
+          "bytes": 692,
+          "sha256": "f9002164cb36f43d8549e4189ec66813c630ecf9e5e182227aeb8569f97c15e6"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/static_safety_review.json",
+          "bytes": 4025,
+          "sha256": "0ff97522730d447d9f429a5e07bc79c29c58263079a36fe63e1df9c0c334e649"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/static_safety_review_resume.json",
+          "bytes": 4025,
+          "sha256": "0ff97522730d447d9f429a5e07bc79c29c58263079a36fe63e1df9c0c334e649"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/termination.json",
+          "bytes": 228,
+          "sha256": "dd87ee71a7be28b2f1f4fb098f0aede934e33bcb795a1821b21c9e77b03fbdc2"
+        },
+        {
+          "path": "ForgeMCP_Recovery_Checkpoints/Stage2ER_01/test_result.json",
+          "bytes": 115,
+          "sha256": "91ca32b2ab67cd33e1f0d6db2d04ac98fe7d2a491105e84f4d44b4619f9091ea"
+        }
+      ]
+    }
+  ]
+}

@@ -22,6 +22,10 @@ TOOLS = {
     "blender_scene_info",
 }
 ADDITIONAL = {
+    "unreal_read_landscape_height_region",
+    "unreal_landscape_edit_session_preflight", "unreal_request_landscape_edit_session",
+    "unreal_landscape_edit_session_status", "unreal_revoke_landscape_edit_session",
+    "unreal_landscape_adoption_preflight", "unreal_request_landscape_adoption",
     "unreal_inspect_landscape", "unreal_preview_landscape", "unreal_apply_landscape",
     "unreal_landscape_job_status", "unreal_cancel_landscape_job",
     "unreal_query_collision",
@@ -156,6 +160,7 @@ async def test_real_stdio_discovery_and_disconnected_tools(tmp_path):
             )
             for tool in tools:
                 assert tool.annotations.readOnlyHint == (tool.name not in {
+                    "unreal_revoke_landscape_edit_session",
                     "blender_apply_creative", "blender_cancel_render_job",
                     "unreal_apply_landscape", "unreal_cancel_landscape_job",
                     "forge_apply_send_to_blender", "unreal_apply_material", "unreal_apply_material_edits",

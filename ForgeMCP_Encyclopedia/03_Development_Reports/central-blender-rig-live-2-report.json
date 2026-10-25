@@ -1,0 +1,401 @@
+{
+  "structure": {
+    "name": "ForgeRigProbe",
+    "data": "ForgeRigProbeData",
+    "bone_count": 2,
+    "bones": [
+      {
+        "name": "Root",
+        "parent": null,
+        "connected": false,
+        "deform": true,
+        "length": 1.0,
+        "head_local": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "tail_local": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "pose": {
+          "location": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_euler": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_quaternion": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_mode": "QUATERNION",
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "name": "Child",
+        "parent": "Root",
+        "connected": true,
+        "deform": true,
+        "length": 1.0,
+        "head_local": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "tail_local": [
+          0.0,
+          0.0,
+          2.0
+        ],
+        "pose": {
+          "location": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_euler": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_quaternion": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_mode": "QUATERNION",
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      }
+    ],
+    "bones_truncated": false,
+    "related_meshes": [
+      {
+        "name": "ForgeWeightedMesh",
+        "vertices": 3,
+        "vertex_groups": [
+          "Root",
+          "Child"
+        ],
+        "vertex_groups_truncated": false
+      }
+    ],
+    "related_meshes_truncated": false,
+    "weights_included": false
+  },
+  "weights": {
+    "name": "ForgeRigProbe",
+    "data": "ForgeRigProbeData",
+    "bone_count": 2,
+    "bones": [
+      {
+        "name": "Root",
+        "parent": null,
+        "connected": false,
+        "deform": true,
+        "length": 1.0,
+        "head_local": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "tail_local": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "pose": {
+          "location": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_euler": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_quaternion": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_mode": "QUATERNION",
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "name": "Child",
+        "parent": "Root",
+        "connected": true,
+        "deform": true,
+        "length": 1.0,
+        "head_local": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "tail_local": [
+          0.0,
+          0.0,
+          2.0
+        ],
+        "pose": {
+          "location": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_euler": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_quaternion": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_mode": "QUATERNION",
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      }
+    ],
+    "bones_truncated": false,
+    "related_meshes": [
+      {
+        "name": "ForgeWeightedMesh",
+        "vertices": 3,
+        "vertex_groups": [
+          "Root",
+          "Child"
+        ],
+        "vertex_groups_truncated": false,
+        "skin_weights": {
+          "Root": {
+            "weighted_vertices": 2,
+            "weight_sum": 1.5,
+            "maximum_weight": 0.75
+          },
+          "Child": {
+            "weighted_vertices": 2,
+            "weight_sum": 0.5,
+            "maximum_weight": 0.25
+          }
+        },
+        "weight_assignments_scanned": 4,
+        "vertices_scanned": 3
+      }
+    ],
+    "related_meshes_truncated": false,
+    "weights_included": true
+  },
+  "invalid_mesh_query_rejected": true,
+  "created_rig": {
+    "name": "ForgeMCPGeneratedRig",
+    "data": "ForgeMCPGeneratedRig_Armature",
+    "bone_count": 3,
+    "bones": [
+      {
+        "name": "Root",
+        "parent": null,
+        "connected": false,
+        "deform": true,
+        "length": 1.0,
+        "head_local": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "tail_local": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "pose": {
+          "location": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_euler": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_quaternion": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_mode": "QUATERNION",
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "name": "Spine",
+        "parent": "Root",
+        "connected": true,
+        "deform": true,
+        "length": 1.0,
+        "head_local": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "tail_local": [
+          0.0,
+          0.0,
+          2.0
+        ],
+        "pose": {
+          "location": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_euler": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_quaternion": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_mode": "QUATERNION",
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      {
+        "name": "Hand",
+        "parent": "Spine",
+        "connected": false,
+        "deform": true,
+        "length": 1.0,
+        "head_local": [
+          0.0,
+          0.0,
+          2.0
+        ],
+        "tail_local": [
+          1.0,
+          0.0,
+          2.0
+        ],
+        "pose": {
+          "location": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_euler": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_quaternion": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_mode": "QUATERNION",
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      }
+    ],
+    "bones_truncated": false,
+    "related_meshes": [],
+    "related_meshes_truncated": false,
+    "weights_included": false
+  },
+  "rig_apply": {
+    "state": "completed",
+    "operations": [
+      {
+        "op": "create_armature",
+        "name": "ForgeMCPGeneratedRig",
+        "state": "completed"
+      }
+    ],
+    "objects": [
+      {
+        "name": "ForgeMCPGeneratedRig",
+        "type": "ARMATURE",
+        "location": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_euler": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_mode": "XYZ",
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "collections": [
+          "Scene Collection"
+        ],
+        "materials": [],
+        "modifiers": [],
+        "mesh": null,
+        "action": null
+      }
+    ],
+    "saved": false,
+    "materials": [],
+    "preserved_datablocks": []
+  },
+  "preview_was_read_only": true,
+  "session_id": "blender-33476"
+}

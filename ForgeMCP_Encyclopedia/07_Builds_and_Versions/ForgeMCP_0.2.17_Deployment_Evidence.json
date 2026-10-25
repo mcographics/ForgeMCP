@@ -1,0 +1,68 @@
+{
+  "deployment_utc": "2026-10-23T21:07:03.9922430Z",
+  "project": "G:\\ForgeMCP\\ForgeMCPDev.uproject",
+  "checkpoint_manifest_sha256": "3f42b6a4243a0ef197417ab4ee7d13fa01cc68621ec7bf4779875fd305e29aa0",
+  "installed_files": [
+    {
+      "file": "UnrealEditor-MajesticForge.dll",
+      "source": "G:\\ForgeMCP_Recovery_Checkpoints\\ForgeMCP_0.2.17_Activation_20261023T210005Z\\release_candidate\\Plugins\\Forge\\Binaries\\Win64\\UnrealEditor-MajesticForge.dll",
+      "destination": "G:\\ForgeMCP\\Plugins\\Forge\\Binaries\\Win64\\UnrealEditor-MajesticForge.dll",
+      "old_sha256": "429fcd78b1d8057acc180900092d3ac1c91a0439a72426009c297311c3e9f4df",
+      "new_sha256": "bec700265079898a48c98cb4e09942dc973d6fe2080aa238cc53080ac9fe98bb",
+      "bytes": 2900992,
+      "verification": "PASS"
+    },
+    {
+      "file": "UnrealEditor-MajesticForge.pdb",
+      "source": "G:\\ForgeMCP_Recovery_Checkpoints\\ForgeMCP_0.2.17_Activation_20261023T210005Z\\release_candidate\\Plugins\\Forge\\Binaries\\Win64\\UnrealEditor-MajesticForge.pdb",
+      "destination": "G:\\ForgeMCP\\Plugins\\Forge\\Binaries\\Win64\\UnrealEditor-MajesticForge.pdb",
+      "old_sha256": "c4c38b21e7b905016476838720f37d0a7600034402f43de00b8d92a27808fc2e",
+      "new_sha256": "4e5da685c683b9a72c7eebe4fce42ca018c622c3abbe1e61defcee262a7967ed",
+      "bytes": 90624000,
+      "verification": "PASS"
+    },
+    {
+      "file": "UnrealEditor-MajesticForgeRuntime.dll",
+      "source": "G:\\ForgeMCP_Recovery_Checkpoints\\ForgeMCP_0.2.17_Activation_20261023T210005Z\\release_candidate\\Plugins\\Forge\\Binaries\\Win64\\UnrealEditor-MajesticForgeRuntime.dll",
+      "destination": "G:\\ForgeMCP\\Plugins\\Forge\\Binaries\\Win64\\UnrealEditor-MajesticForgeRuntime.dll",
+      "old_sha256": "98c3a35d4b955691dab7bf84687823f7228bc762f7889bf08b146848d24d313b",
+      "new_sha256": "ae910bc9e0f711eb06fa38607b1171e487ae8934265ee8e970f45282eb04c74d",
+      "bytes": 114688,
+      "verification": "PASS"
+    },
+    {
+      "file": "UnrealEditor-MajesticForgeRuntime.pdb",
+      "source": "G:\\ForgeMCP_Recovery_Checkpoints\\ForgeMCP_0.2.17_Activation_20261023T210005Z\\release_candidate\\Plugins\\Forge\\Binaries\\Win64\\UnrealEditor-MajesticForgeRuntime.pdb",
+      "destination": "G:\\ForgeMCP\\Plugins\\Forge\\Binaries\\Win64\\UnrealEditor-MajesticForgeRuntime.pdb",
+      "old_sha256": "ff2452a4c60eff0be65ba764f90eb552daab84aa2e24387f39c3d3a7e6157f4e",
+      "new_sha256": "f99d8ac22504f6630ca996a940d8a2661ae3e59665f7ea27e8953d97f168cb15",
+      "bytes": 60395520,
+      "verification": "PASS"
+    },
+    {
+      "file": "UnrealEditor.modules",
+      "source": "G:\\ForgeMCP_Recovery_Checkpoints\\ForgeMCP_0.2.17_Activation_20261023T210005Z\\release_candidate\\Plugins\\Forge\\Binaries\\Win64\\UnrealEditor.modules",
+      "destination": "G:\\ForgeMCP\\Plugins\\Forge\\Binaries\\Win64\\UnrealEditor.modules",
+      "old_sha256": "e16a1ae507bb506e7e98f0e9871eea4b1f69683d8000ffaf482987f0a7136781",
+      "new_sha256": "e16a1ae507bb506e7e98f0e9871eea4b1f69683d8000ffaf482987f0a7136781",
+      "bytes": 172,
+      "verification": "PASS"
+    }
+  ],
+  "unmodified_project_files": [
+    {
+      "path": "G:\\ForgeMCP\\ForgeMCPDev.uproject\\..\\Plugins\\Forge\\MajesticForge.uplugin",
+      "expected": "193f0171b728c90885dddd73df78ac9bb0ea55f3686e7d90bde21eeece6d8655"
+    },
+    {
+      "path": "G:\\ForgeMCP\\Plugins\\Forge\\Config\\FilterPlugin.ini",
+      "expected": "b6db73f5a4caba504e75e77c424684d1b76fa1d1cf8ac828d5720f145dc49590"
+    },
+    {
+      "path": "G:\\ForgeMCP\\ForgeMCPDev.uproject",
+      "expected": "7f31c36cb98a75afbab8cdcd92c417f7977ad4578a0ad10b7666307e006bcc93"
+    }
+  ],
+  "modules_build_id": "43139311",
+  "launch_performed": false
+}

@@ -17,6 +17,9 @@ async def _authenticate_registered_sessions(connections: ConnectionManager) -> N
     """Send a bounded authenticated health probe to every registered local bridge."""
     while True:
         if connections.isolated_config is not None:
+            if connections.isolated_identity_busy:
+                await asyncio.sleep(HEALTH_INTERVAL_SECONDS)
+                continue
             # The ID comes from the isolated host's explicit allowlist. No registry
             # discovery fallback is used by this background probe.
             result = await connections.dispatch(
@@ -45,7 +48,27 @@ async def _authenticate_registered_sessions(connections: ConnectionManager) -> N
 @asynccontextmanager
 async def connection_monitor_lifespan(_server) -> AsyncIterator[dict]:
     """Keep engine-started bridges freshly authenticated for the MCP host lifetime."""
-    connections = ConnectionManager.configured()
+    if _server is None:
+        connections = ConnectionManager.configured()
+    else:
+        # The tool handlers and lifespan must supervise the same worker.
+        from server.main import connections
+    worker = getattr(connections.process_identity_probe, "worker", None)
+    if connections.isolated_config is not None and worker is not None:
+        try:
+            await asyncio.to_thread(worker.start)
+        except Exception as exc:
+            raise RuntimeError("Dedicated isolated listener worker failed to start.") from exc
+    try:
+        async with _isolated_monitor_body(connections):
+            yield {}
+    finally:
+        if worker is not None:
+            await asyncio.to_thread(worker.close)
+
+
+@asynccontextmanager
+async def _isolated_monitor_body(connections: ConnectionManager) -> AsyncIterator[dict]:
     if connections.isolated_config is not None:
         session_id = connections.isolated_config.allowed_session_id
         result = await connections.dispatch("unreal", "health", session_id)

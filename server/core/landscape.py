@@ -11,10 +11,12 @@ MAX_HEIGHTMAP_CHUNK_SAMPLES = 32_768
 class LandscapeRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
 
-    action: Literal["create", "create_in_place", "raise", "lower", "flatten", "smooth", "generate",
+    action: Literal["create", "create_in_place", "setup_layer", "raise", "lower", "flatten", "smooth", "generate",
                     "apply_heightmap", "coastline", "frame", "save", "reload",
                     "load_region", "unload_region"]
     actor_path: str = Field(default="", max_length=512)
+    adoption_id: str = Field(default="", max_length=32, pattern=r"^(?:[a-f0-9]{32})?$")
+    edit_session_id: str = Field(default="", max_length=32, pattern=r"^(?:[A-Fa-f0-9]{32})?$")
     map_path: str = Field(default="", max_length=160)
     partition_loader_id: str = Field(default="", max_length=64)
     components_x: int = Field(default=1, ge=1, le=256)
@@ -44,11 +46,17 @@ class LandscapeRequest(BaseModel):
 
     @model_validator(mode="after")
     def validate_operation(self):
+        if self.edit_session_id:
+            if self.adoption_id:
+                raise ValueError("Choose edit_session_id or adoption_id, never both")
+            if self.action not in {"raise", "lower", "flatten", "smooth", "generate",
+                                   "apply_heightmap", "coastline"}:
+                raise ValueError("Editing sessions authorize sculpting only; no setup/save/reload")
         x1, y1, x2, y2 = self.region
         if x2 < x1 or y2 < y1:
             raise ValueError("Region must have ordered inclusive bounds")
         region_samples = (x2 - x1 + 1) * (y2 - y1 + 1)
-        if self.action not in {"create", "create_in_place", "load_region", "unload_region", "frame", "save", "reload"} \
+        if self.action not in {"create", "create_in_place", "setup_layer", "load_region", "unload_region", "frame", "save", "reload"} \
                 and region_samples > MAX_EDIT_REGION_SAMPLES:
             raise ValueError("A terrain edit chunk is limited to 1,048,576 region samples")
         if self.action in {"create", "create_in_place"}:
@@ -57,8 +65,13 @@ class LandscapeRequest(BaseModel):
                 if not re.fullmatch(r"/Game/ForgeMCPTests/Landscape/[A-Za-z][A-Za-z0-9_]{0,63}",
                                     self.map_path):
                     raise ValueError("Creation requires a fresh disposable Landscape test map")
-            elif self.map_path or not self.world_partition:
-                raise ValueError("create_in_place requires the approved existing World Partition test world and no map_path")
+            elif (
+                not re.fullmatch(r"/Game/(?:[A-Za-z0-9_]+/)*[A-Za-z0-9_]+", self.map_path)
+                or not self.world_partition
+            ):
+                raise ValueError(
+                    "create_in_place requires World Partition and the exact existing /Game world package path"
+                )
             if self.actor_path:
                 raise ValueError("Landscape creation does not accept actor_path")
             component_count = self.components_x * self.components_y
@@ -71,6 +84,8 @@ class LandscapeRequest(BaseModel):
                 raise ValueError("Landscape creation exceeds the validated 4,194,304-vertex resource budget")
         elif not self.actor_path:
             raise ValueError("An inspected actor_path is required")
+        elif self.map_path:
+            raise ValueError("map_path is only accepted for create or create_in_place")
         elif self.model_fields_set & {
             "components_x", "components_y", "quads_per_section", "sections_per_component",
             "world_partition", "partition_grid_size_components", "use_engine_basic_landscape_material",

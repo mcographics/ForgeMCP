@@ -1,0 +1,81 @@
+{
+  "type": "ExceptionGroup",
+  "errno": null,
+  "winerror": null,
+  "frames": [
+    {
+      "file": "diagnose_panel_worker.py",
+      "line": 19,
+      "function": "diagnose"
+    },
+    {
+      "file": "contextlib.py",
+      "line": 231,
+      "function": "__aexit__"
+    },
+    {
+      "file": "__init__.py",
+      "line": 182,
+      "function": "stdio_client"
+    },
+    {
+      "file": "_asyncio.py",
+      "line": 847,
+      "function": "__aexit__"
+    }
+  ],
+  "children": [
+    {
+      "type": "ExceptionGroup",
+      "errno": null,
+      "winerror": null,
+      "frames": [
+        {
+          "file": "__init__.py",
+          "line": 189,
+          "function": "stdio_client"
+        },
+        {
+          "file": "diagnose_panel_worker.py",
+          "line": 20,
+          "function": "diagnose"
+        },
+        {
+          "file": "ui_transfer.py",
+          "line": 114,
+          "function": "main"
+        },
+        {
+          "file": "_asyncio.py",
+          "line": 847,
+          "function": "__aexit__"
+        }
+      ],
+      "children": [
+        {
+          "type": "ValidationError",
+          "errno": null,
+          "winerror": null,
+          "frames": [
+            {
+              "file": "ui_transfer.py",
+              "line": 121,
+              "function": "main"
+            },
+            {
+              "file": "ui_transfer.py",
+              "line": 79,
+              "function": "transfer"
+            },
+            {
+              "file": "main.py",
+              "line": 790,
+              "function": "model_validate"
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -429,7 +429,7 @@ class FMajesticForgeModule : public IModuleInterface
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("actor_property_info")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("actor_property_edit_preview")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("actor_property_edit_apply")));
-            for (const TCHAR* TerrainCommand : { TEXT("landscape_info"), TEXT("landscape_preview"), TEXT("landscape_apply"), TEXT("landscape_job_status"), TEXT("landscape_job_cancel") }) Capabilities.Add(MakeShared<FJsonValueString>(TerrainCommand));
+            for (const TCHAR* TerrainCommand : { TEXT("landscape_info"), TEXT("landscape_read_region"), TEXT("landscape_preview"), TEXT("landscape_apply"), TEXT("landscape_job_status"), TEXT("landscape_job_cancel"), TEXT("landscape_adoption_preflight"), TEXT("landscape_adoption_request"), TEXT("landscape_edit_session_preflight"), TEXT("landscape_edit_session_request"), TEXT("landscape_edit_session_status"), TEXT("landscape_edit_session_revoke") }) Capabilities.Add(MakeShared<FJsonValueString>(TerrainCommand));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("collision_query")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("inspect_dirty_packages")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("actor_preview")));
@@ -784,7 +784,7 @@ class FMajesticForgeModule : public IModuleInterface
             auto Args = ValidatedArgs ? ValidatedArgs->ToSharedRef() : MakeShared<FJsonObject>();
             if (!LevelAutomation.Handle(Command, Args, Data, Code, Message, &LandscapeAutomation)) return Fail(Code, Message);
         }
-        else if (Command == TEXT("landscape_info") || Command == TEXT("landscape_preview") || Command == TEXT("landscape_apply") || Command == TEXT("landscape_job_status") || Command == TEXT("landscape_job_cancel"))
+        else if (Command == TEXT("landscape_info") || Command == TEXT("landscape_read_region") || Command == TEXT("landscape_preview") || Command == TEXT("landscape_apply") || Command == TEXT("landscape_job_status") || Command == TEXT("landscape_job_cancel") || Command == TEXT("landscape_adoption_preflight") || Command == TEXT("landscape_adoption_request") || Command == TEXT("landscape_edit_session_preflight") || Command == TEXT("landscape_edit_session_request") || Command == TEXT("landscape_edit_session_status") || Command == TEXT("landscape_edit_session_revoke"))
         {
             FString Code, Message;
             auto Args = ValidatedArgs ? ValidatedArgs->ToSharedRef() : MakeShared<FJsonObject>();

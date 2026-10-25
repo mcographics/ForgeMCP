@@ -1,0 +1,159 @@
+{
+  "checked_at": "2026-10-23T16:57:51.281Z",
+  "response": {
+    "ok": true,
+    "session_id": "unreal-22604",
+    "data": {
+      "inventory_scope": "Loaded UPackage objects in the current Editor process only.",
+      "inventory_id": "871D430E41905280C3311B931255779B",
+      "snapshot_lifetime_seconds": 60,
+      "current_level_package": "/Game/Levels/L_City_World_Master",
+      "proposed_target_map_path": "",
+      "packages_inspected": 1244,
+      "inventory_complete": true,
+      "snapshot_limit_reached": false,
+      "dirty_loaded_packages_observed": 2,
+      "total_dirty_loaded_packages": 2,
+      "offset": 0,
+      "limit": 50,
+      "returned_count": 2,
+      "has_more_observed_results": false,
+      "next_offset": null,
+      "packages": [
+        {
+          "package_name": "/Script/SlateCore",
+          "package_path": "/Script/SlateCore",
+          "is_dirty": true,
+          "is_transient_package": false,
+          "package_flags": 16,
+          "package_newly_created": false,
+          "package_contains_map": false,
+          "package_contains_map_data": false,
+          "package_compiled_in": true,
+          "classification": "engine_script",
+          "package_category": "engine_script",
+          "package_domain": "engine_script",
+          "script_package_candidate": true,
+          "classification_basis": "script_package_compiled_in_loaded_engine_module",
+          "classification_complete": true,
+          "ownership_scan_complete": true,
+          "associated_object_count_scanned": 116,
+          "associated_actor_count": 0,
+          "external_actor_count": 0,
+          "contains_external_actor": false,
+          "engine_script_provenance_verified": true,
+          "unresolved_engine_script_package": false,
+          "unresolved_project_content_package": false,
+          "target_map_path": "",
+          "target_map_path_namespace_match": false,
+          "target_map_association_basis": "not_determined_from_package_path",
+          "project_membership_determined": true,
+          "belongs_to_test_project": true,
+          "is_current_level_package": false,
+          "associated_with_current_level_determined": true,
+          "associated_with_current_level": false,
+          "associated_actor_determined": false,
+          "associated_actor_path": null,
+          "associated_objects": [
+            {
+              "object_name": "SlateWidgetStyleAsset",
+              "object_path": "/Script/SlateCore.SlateWidgetStyleAsset",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "FontBulkData",
+              "object_path": "/Script/SlateCore.FontBulkData",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "FontFaceInterface",
+              "object_path": "/Script/SlateCore.FontFaceInterface",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "FontProviderInterface",
+              "object_path": "/Script/SlateCore.FontProviderInterface",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            }
+          ],
+          "associated_objects_truncated": true,
+          "associated_objects_sample_truncated": true,
+          "external_actor_namespace_candidate": false
+        },
+        {
+          "package_name": "/Script/UnrealEd",
+          "package_path": "/Script/UnrealEd",
+          "is_dirty": true,
+          "is_transient_package": false,
+          "package_flags": 80,
+          "package_newly_created": false,
+          "package_contains_map": false,
+          "package_contains_map_data": false,
+          "package_compiled_in": true,
+          "classification": "engine_script",
+          "package_category": "engine_script",
+          "package_domain": "engine_script",
+          "script_package_candidate": true,
+          "classification_basis": "script_package_compiled_in_loaded_engine_module",
+          "classification_complete": true,
+          "ownership_scan_complete": true,
+          "associated_object_count_scanned": 1233,
+          "associated_actor_count": 4,
+          "external_actor_count": 0,
+          "contains_external_actor": false,
+          "engine_script_provenance_verified": true,
+          "unresolved_engine_script_package": false,
+          "unresolved_project_content_package": false,
+          "target_map_path": "",
+          "target_map_path_namespace_match": false,
+          "target_map_association_basis": "not_determined_from_package_path",
+          "project_membership_determined": true,
+          "belongs_to_test_project": true,
+          "is_current_level_package": false,
+          "associated_with_current_level_determined": true,
+          "associated_with_current_level": false,
+          "associated_actor_determined": false,
+          "associated_actor_path": null,
+          "associated_objects": [
+            {
+              "object_name": "EditorInteractiveToolsContext",
+              "object_path": "/Script/UnrealEd.EditorInteractiveToolsContext",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "ModeManagerInteractiveToolsContext",
+              "object_path": "/Script/UnrealEd.ModeManagerInteractiveToolsContext",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "EditorWorldExtension",
+              "object_path": "/Script/UnrealEd.EditorWorldExtension",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "ActorFactory",
+              "object_path": "/Script/UnrealEd.ActorFactory",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            }
+          ],
+          "associated_objects_truncated": true,
+          "associated_objects_sample_truncated": true,
+          "external_actor_namespace_candidate": false
+        }
+      ],
+      "inspection_errors": [],
+      "unloaded_package_note": "Packages absent from the loaded UObject inventory were not inspected and are not classified as clean.",
+      "page_consistency_note": "All pages with this inventory_id use copied records from one game-thread scan; request remaining pages within snapshot_lifetime_seconds.",
+      "read_only": true,
+      "snapshot_id": "871D430E41905280C3311B931255779B"
+    }
+  }
+}

@@ -1,0 +1,5404 @@
+{
+  "timestamp": "2026-10-23T19:32:56.919Z",
+  "apply": {
+    "ok": true,
+    "session_id": "unreal-22604",
+    "data": {
+      "job_id": "F546B9324DE219547614F1BEBC7644A6",
+      "state": "running",
+      "backup": "G:/ForgeMCP/Saved/ForgeLandscape/F546B9324DE219547614F1BEBC7644A6/before.r16"
+    }
+  },
+  "job": {
+    "ok": true,
+    "session_id": "unreal-22604",
+    "data": {
+      "job_id": "F546B9324DE219547614F1BEBC7644A6",
+      "state": "completed",
+      "error": "",
+      "backup": "G:/ForgeMCP/Saved/ForgeLandscape/F546B9324DE219547614F1BEBC7644A6/before.r16",
+      "rows_applied": 7,
+      "total_rows": 7,
+      "progress": 1,
+      "max_stage_ms": 178.33890009205788,
+      "height_readback_validated": true,
+      "collision_height_validated": false,
+      "collision_validation_deferred_until_save_reload": true,
+      "collision_height_source": "deferred_until_save_reload",
+      "validated_after_height_md5": "08d6ac338669dfa1918c1644ce374ef8",
+      "saved": false
+    }
+  },
+  "after_sculpt_landscape": {
+    "ok": true,
+    "session_id": "unreal-22604",
+    "data": {
+      "total_count": 1,
+      "truncated": false,
+      "landscapes": [
+        {
+          "actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.Landscape_UAID_701CE7E46087BA0D03_2100287295",
+          "guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+          "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+          "active_world_path": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+          "actor_world_path": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+          "actor_in_active_world": true,
+          "vertices_x": 2041,
+          "vertices_y": 2041,
+          "component_count": 64,
+          "registered_component_count": 64,
+          "collision_component_count": 64,
+          "registered_collision_component_count": 64,
+          "landscape_proxy_count": 17,
+          "streaming_proxy_count": 16,
+          "landscape_proxy_descriptor_count": 16,
+          "loaded_landscape_proxy_count": 16,
+          "unloaded_landscape_proxy_count": 0,
+          "descriptor_loaded_landscape_proxy_count": 16,
+          "descriptor_unloaded_landscape_proxy_count": 0,
+          "active_world_landscape_proxy_count": 16,
+          "not_in_active_world_landscape_proxy_count": 0,
+          "spatial_landscape_proxy_count": 16,
+          "non_spatial_landscape_proxy_count": 0,
+          "registered_editor_loader_adapter_count": 1,
+          "world_partition_streaming_enabled_in_editor": true,
+          "world_partition_editor_loading_enabled": true,
+          "registered_editor_loader_adapters": [
+            {
+              "loaded": true,
+              "user_created": true,
+              "label": "Last Loaded Region",
+              "bounds_min": [
+                -4834320711680,
+                -4557586300928,
+                -4398046511104
+              ],
+              "bounds_max": [
+                4631125032960,
+                4706469937152,
+                4398046511104
+              ]
+            }
+          ],
+          "registered_editor_loader_adapters_truncated": false,
+          "world_partition_streaming_sources": [],
+          "world_partition_streaming_sources_truncated": false,
+          "landscape_proxy_descriptors": [
+            {
+              "actor_guid": "30C74BA0472C94A33D72AF88E7D514E1",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_0_0",
+              "actor_label": "LandscapeStreamingProxy_2_0_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/1/BL/KH23FPCOUY21XYNKZ3FLE3",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_0_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_0_0",
+              "active_world_actor_guid": "30C74BA0472C94A33D72AF88E7D514E1",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/1/BL/KH23FPCOUY21XYNKZ3FLE3",
+              "editor_bounds_min": [
+                0,
+                -102000,
+                -100
+              ],
+              "editor_bounds_max": [
+                51000,
+                -51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "1C342A9C451B5C8669A499A708CB2CE3",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_2_0",
+              "actor_label": "LandscapeStreamingProxy_1_2_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/1/X8/EKR3GIKPE95UHYYYPAKDWJ",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_2_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_2_0",
+              "active_world_actor_guid": "1C342A9C451B5C8669A499A708CB2CE3",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/1/X8/EKR3GIKPE95UHYYYPAKDWJ",
+              "editor_bounds_min": [
+                -51000,
+                0,
+                -100
+              ],
+              "editor_bounds_max": [
+                0,
+                51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "6C0C624A4FF93280A15289910AAC53DB",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_3_0",
+              "actor_label": "LandscapeStreamingProxy_1_3_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/21/FZ0HZ4K6JVBR8GPCMEBET6",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_3_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_3_0",
+              "active_world_actor_guid": "6C0C624A4FF93280A15289910AAC53DB",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/21/FZ0HZ4K6JVBR8GPCMEBET6",
+              "editor_bounds_min": [
+                -51000,
+                51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                0,
+                102000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    102400,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    102400,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "53E89E82407D195BF7FA7F926F2BD2D0",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_3_0",
+              "actor_label": "LandscapeStreamingProxy_3_3_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/FW/NV3A49S9QWJLRZE7WI4HMM",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_3_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_3_0",
+              "active_world_actor_guid": "53E89E82407D195BF7FA7F926F2BD2D0",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/FW/NV3A49S9QWJLRZE7WI4HMM",
+              "editor_bounds_min": [
+                51000,
+                51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                102000,
+                102000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    102400,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    102400,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "142E6D0A44983985A1FBAEA7FD193A78",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_1_0",
+              "actor_label": "LandscapeStreamingProxy_1_1_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/HU/Y8TEYME9MZA2A35BESDWR5",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_1_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_1_0",
+              "active_world_actor_guid": "142E6D0A44983985A1FBAEA7FD193A78",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/HU/Y8TEYME9MZA2A35BESDWR5",
+              "editor_bounds_min": [
+                -51000,
+                -51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                0,
+                0,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "6599B90A4703F030285CDF92E25F1DA6",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_0_0",
+              "actor_label": "LandscapeStreamingProxy_3_0_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/3/XU/BASWU5RY3VLZL2D2OQDMGF",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_0_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_0_0",
+              "active_world_actor_guid": "6599B90A4703F030285CDF92E25F1DA6",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/3/XU/BASWU5RY3VLZL2D2OQDMGF",
+              "editor_bounds_min": [
+                51000,
+                -102000,
+                -100
+              ],
+              "editor_bounds_max": [
+                102000,
+                -51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    0,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "0F272E434FE661FEF67C97B621C90CFC",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_0_0",
+              "actor_label": "LandscapeStreamingProxy_0_0_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/0C/LCBNMQ13VCDM21M6PIQ3UI",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_0_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_0_0",
+              "active_world_actor_guid": "0F272E434FE661FEF67C97B621C90CFC",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/0C/LCBNMQ13VCDM21M6PIQ3UI",
+              "editor_bounds_min": [
+                -102000,
+                -102000,
+                -100
+              ],
+              "editor_bounds_max": [
+                -51000,
+                -51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "BE06F0F94B199766D541DDB5D7C7B176",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_2_0",
+              "actor_label": "LandscapeStreamingProxy_3_2_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/7U/MOEZ1NFXWRBZY5OR1L0SHU",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_2_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_2_0",
+              "active_world_actor_guid": "BE06F0F94B199766D541DDB5D7C7B176",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/7U/MOEZ1NFXWRBZY5OR1L0SHU",
+              "editor_bounds_min": [
+                51000,
+                0,
+                -100
+              ],
+              "editor_bounds_max": [
+                102000,
+                51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "75E65BF94F8D54AD247D7DBB9B918D79",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_3_0",
+              "actor_label": "LandscapeStreamingProxy_0_3_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/JC/6DJTG5IP7XHZ2LQLRV19GF",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_3_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_3_0",
+              "active_world_actor_guid": "75E65BF94F8D54AD247D7DBB9B918D79",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/JC/6DJTG5IP7XHZ2LQLRV19GF",
+              "editor_bounds_min": [
+                -102000,
+                51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                -51000,
+                102000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    102400,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    102400,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "4C4DACCD4D735F3C541512BAAC36DCAE",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_2_0",
+              "actor_label": "LandscapeStreamingProxy_2_2_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/K5/KSDE1ZCJBZNOS07IF93SI2",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_2_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_2_0",
+              "active_world_actor_guid": "4C4DACCD4D735F3C541512BAAC36DCAE",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/K5/KSDE1ZCJBZNOS07IF93SI2",
+              "editor_bounds_min": [
+                0,
+                0,
+                -100
+              ],
+              "editor_bounds_max": [
+                51000,
+                51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "45C1E1EB44782B3A1969B0930EEC1CAF",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_3_0",
+              "actor_label": "LandscapeStreamingProxy_2_3_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/OP/0WSRWB0C3RJ4GXMQITJQTN",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_3_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_3_0",
+              "active_world_actor_guid": "45C1E1EB44782B3A1969B0930EEC1CAF",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/OP/0WSRWB0C3RJ4GXMQITJQTN",
+              "editor_bounds_min": [
+                0,
+                51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                51000,
+                102000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    102400,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "37AE9A904396FA44EC10F98612BA0A42",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_2_0",
+              "actor_label": "LandscapeStreamingProxy_0_2_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/8/D4/6BQXU1WLECGHE78Q5VHPEU",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_2_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_2_0",
+              "active_world_actor_guid": "37AE9A904396FA44EC10F98612BA0A42",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/8/D4/6BQXU1WLECGHE78Q5VHPEU",
+              "editor_bounds_min": [
+                -102000,
+                0,
+                -100
+              ],
+              "editor_bounds_max": [
+                -51000,
+                51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "833541124B6DD64EE914778FE1C8A8FD",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_0_0",
+              "actor_label": "LandscapeStreamingProxy_1_0_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/9/UZ/96ULHPD3KIG1PGR2F32CHQ",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_0_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_0_0",
+              "active_world_actor_guid": "833541124B6DD64EE914778FE1C8A8FD",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/9/UZ/96ULHPD3KIG1PGR2F32CHQ",
+              "editor_bounds_min": [
+                -51000,
+                -102000,
+                -100
+              ],
+              "editor_bounds_max": [
+                0,
+                -51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "EF7643074FA8A6B8BF50E78A8E1EA103",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_1_0",
+              "actor_label": "LandscapeStreamingProxy_0_1_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/A/BL/DJINWNSGSZTJN5K6P1P8RO",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_1_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_1_0",
+              "active_world_actor_guid": "EF7643074FA8A6B8BF50E78A8E1EA103",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/A/BL/DJINWNSGSZTJN5K6P1P8RO",
+              "editor_bounds_min": [
+                -102000,
+                -51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                -51000,
+                0,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "B336A4D6467E90FFA279B88ED3F229D2",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_1_0",
+              "actor_label": "LandscapeStreamingProxy_3_1_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/C/58/36UIEEB8GTP0SGJ2SO61J8",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_1_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_1_0",
+              "active_world_actor_guid": "B336A4D6467E90FFA279B88ED3F229D2",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/C/58/36UIEEB8GTP0SGJ2SO61J8",
+              "editor_bounds_min": [
+                51000,
+                -51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                102000,
+                0,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "716C6FA5455D39E4E655919F6D308F36",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_1_0",
+              "actor_label": "LandscapeStreamingProxy_2_1_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/E/TO/6QDSBS3BHBP7VVJ6YGFP0U",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_1_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_1_0",
+              "active_world_actor_guid": "716C6FA5455D39E4E655919F6D308F36",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/E/TO/6QDSBS3BHBP7VVJ6YGFP0U",
+              "editor_bounds_min": [
+                0,
+                -51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                51000,
+                0,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            }
+          ],
+          "landscape_proxy_descriptor_diagnostics_count": 16,
+          "landscape_proxy_descriptor_diagnostics_truncated": false,
+          "landscape_editor_hash_available": true,
+          "external_proxy_package_count": 17,
+          "edit_layers": true,
+          "world_partition": true,
+          "world_partition_streaming": true,
+          "dirty": false,
+          "layers_up_to_date": true,
+          "layers": [
+            {
+              "name": "Layer",
+              "guid": "198824024FF8A77A01535B86021D9B34",
+              "locked": false,
+              "visible": true,
+              "height_read_supported": true,
+              "height_sha_md5": "9f43572fbc2c06ef497da015879cdb23",
+              "min_local_cm": 0,
+              "max_local_cm": 0,
+              "vertices_x": 2041,
+              "vertices_y": 2041
+            },
+            {
+              "name": "ForgeTerrain",
+              "guid": "2E6FC5F94C4EF704F700299B5D08C23B",
+              "locked": false,
+              "visible": true,
+              "height_read_supported": true,
+              "height_sha_md5": "dd428766880ec01a848b4381fba82838",
+              "min_local_cm": -100,
+              "max_local_cm": 0,
+              "vertices_x": 2041,
+              "vertices_y": 2041
+            }
+          ],
+          "mutation_supported": false,
+          "adoption_workflow_supported": true,
+          "adoption_origin": "adopted_existing_landscape",
+          "adoption_confirmation_required": true,
+          "adoption_preflight_command": "landscape_adoption_preflight"
+        }
+      ],
+      "world_partition": true,
+      "streaming_level_count": 0,
+      "persistent_level_uses_external_actors": true,
+      "empty_untitled_world": false,
+      "safe_create_source": false,
+      "world": "/Game/Levels/L_City_World_Master.L_City_World_Master"
+    }
+  },
+  "after_sculpt_dirty": {
+    "ok": true,
+    "session_id": "unreal-22604",
+    "data": {
+      "inventory_scope": "Loaded UPackage objects in the current Editor process only.",
+      "inventory_id": "D4462F77426E1019A7AF56A11D853B55",
+      "snapshot_lifetime_seconds": 60,
+      "current_level_package": "/Game/Levels/L_City_World_Master",
+      "proposed_target_map_path": "",
+      "packages_inspected": 1244,
+      "inventory_complete": true,
+      "snapshot_limit_reached": false,
+      "dirty_loaded_packages_observed": 4,
+      "total_dirty_loaded_packages": 4,
+      "offset": 0,
+      "limit": 50,
+      "returned_count": 4,
+      "has_more_observed_results": false,
+      "next_offset": null,
+      "packages": [
+        {
+          "package_name": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/K5/KSDE1ZCJBZNOS07IF93SI2",
+          "package_path": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/K5/KSDE1ZCJBZNOS07IF93SI2",
+          "is_dirty": true,
+          "is_transient_package": false,
+          "package_flags": 16448,
+          "package_newly_created": false,
+          "package_contains_map": false,
+          "package_contains_map_data": true,
+          "package_compiled_in": false,
+          "classification": "external_actor",
+          "package_category": "external_actor",
+          "package_domain": "project_content",
+          "script_package_candidate": false,
+          "classification_basis": "resolved_package_file_under_project_root; actor_reports_external_package_ownership",
+          "classification_complete": true,
+          "ownership_scan_complete": true,
+          "associated_object_count_scanned": 1,
+          "associated_actor_count": 1,
+          "external_actor_count": 1,
+          "contains_external_actor": true,
+          "engine_script_provenance_verified": false,
+          "unresolved_engine_script_package": false,
+          "unresolved_project_content_package": false,
+          "target_map_path": "",
+          "target_map_path_namespace_match": false,
+          "target_map_association_basis": "not_determined_from_package_path",
+          "project_membership_determined": true,
+          "belongs_to_test_project": true,
+          "is_current_level_package": false,
+          "associated_with_current_level_determined": true,
+          "associated_with_current_level": true,
+          "associated_actor_determined": true,
+          "associated_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_2_0",
+          "associated_objects": [
+            {
+              "object_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_2_0",
+              "object_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_2_0",
+              "class_path": "/Script/Landscape.LandscapeStreamingProxy",
+              "is_actor": true,
+              "actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_2_0"
+            }
+          ],
+          "associated_objects_truncated": false,
+          "associated_objects_sample_truncated": false,
+          "external_actor_namespace_candidate": true
+        },
+        {
+          "package_name": "/Game/__ExternalActors__/Levels/L_City_World_Master/9/84/999V7M34APSAN5HR9UR7RT",
+          "package_path": "/Game/__ExternalActors__/Levels/L_City_World_Master/9/84/999V7M34APSAN5HR9UR7RT",
+          "is_dirty": true,
+          "is_transient_package": false,
+          "package_flags": 16448,
+          "package_newly_created": false,
+          "package_contains_map": false,
+          "package_contains_map_data": true,
+          "package_compiled_in": false,
+          "classification": "external_actor",
+          "package_category": "external_actor",
+          "package_domain": "project_content",
+          "script_package_candidate": false,
+          "classification_basis": "resolved_package_file_under_project_root; actor_reports_external_package_ownership",
+          "classification_complete": true,
+          "ownership_scan_complete": true,
+          "associated_object_count_scanned": 1,
+          "associated_actor_count": 1,
+          "external_actor_count": 1,
+          "contains_external_actor": true,
+          "engine_script_provenance_verified": false,
+          "unresolved_engine_script_package": false,
+          "unresolved_project_content_package": false,
+          "target_map_path": "",
+          "target_map_path_namespace_match": false,
+          "target_map_association_basis": "not_determined_from_package_path",
+          "project_membership_determined": true,
+          "belongs_to_test_project": true,
+          "is_current_level_package": false,
+          "associated_with_current_level_determined": true,
+          "associated_with_current_level": true,
+          "associated_actor_determined": true,
+          "associated_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.Landscape_UAID_701CE7E46087BA0D03_2100287295",
+          "associated_objects": [
+            {
+              "object_name": "Landscape_UAID_701CE7E46087BA0D03_2100287295",
+              "object_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.Landscape_UAID_701CE7E46087BA0D03_2100287295",
+              "class_path": "/Script/Landscape.Landscape",
+              "is_actor": true,
+              "actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.Landscape_UAID_701CE7E46087BA0D03_2100287295"
+            }
+          ],
+          "associated_objects_truncated": false,
+          "associated_objects_sample_truncated": false,
+          "external_actor_namespace_candidate": true
+        },
+        {
+          "package_name": "/Script/SlateCore",
+          "package_path": "/Script/SlateCore",
+          "is_dirty": true,
+          "is_transient_package": false,
+          "package_flags": 16,
+          "package_newly_created": false,
+          "package_contains_map": false,
+          "package_contains_map_data": false,
+          "package_compiled_in": true,
+          "classification": "engine_script",
+          "package_category": "engine_script",
+          "package_domain": "engine_script",
+          "script_package_candidate": true,
+          "classification_basis": "script_package_compiled_in_loaded_engine_module",
+          "classification_complete": true,
+          "ownership_scan_complete": true,
+          "associated_object_count_scanned": 116,
+          "associated_actor_count": 0,
+          "external_actor_count": 0,
+          "contains_external_actor": false,
+          "engine_script_provenance_verified": true,
+          "unresolved_engine_script_package": false,
+          "unresolved_project_content_package": false,
+          "target_map_path": "",
+          "target_map_path_namespace_match": false,
+          "target_map_association_basis": "not_determined_from_package_path",
+          "project_membership_determined": true,
+          "belongs_to_test_project": true,
+          "is_current_level_package": false,
+          "associated_with_current_level_determined": true,
+          "associated_with_current_level": false,
+          "associated_actor_determined": false,
+          "associated_actor_path": null,
+          "associated_objects": [
+            {
+              "object_name": "SlateWidgetStyleAsset",
+              "object_path": "/Script/SlateCore.SlateWidgetStyleAsset",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "FontBulkData",
+              "object_path": "/Script/SlateCore.FontBulkData",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "FontFaceInterface",
+              "object_path": "/Script/SlateCore.FontFaceInterface",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "FontProviderInterface",
+              "object_path": "/Script/SlateCore.FontProviderInterface",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            }
+          ],
+          "associated_objects_truncated": true,
+          "associated_objects_sample_truncated": true,
+          "external_actor_namespace_candidate": false
+        },
+        {
+          "package_name": "/Script/UnrealEd",
+          "package_path": "/Script/UnrealEd",
+          "is_dirty": true,
+          "is_transient_package": false,
+          "package_flags": 80,
+          "package_newly_created": false,
+          "package_contains_map": false,
+          "package_contains_map_data": false,
+          "package_compiled_in": true,
+          "classification": "engine_script",
+          "package_category": "engine_script",
+          "package_domain": "engine_script",
+          "script_package_candidate": true,
+          "classification_basis": "script_package_compiled_in_loaded_engine_module",
+          "classification_complete": true,
+          "ownership_scan_complete": true,
+          "associated_object_count_scanned": 1233,
+          "associated_actor_count": 4,
+          "external_actor_count": 0,
+          "contains_external_actor": false,
+          "engine_script_provenance_verified": true,
+          "unresolved_engine_script_package": false,
+          "unresolved_project_content_package": false,
+          "target_map_path": "",
+          "target_map_path_namespace_match": false,
+          "target_map_association_basis": "not_determined_from_package_path",
+          "project_membership_determined": true,
+          "belongs_to_test_project": true,
+          "is_current_level_package": false,
+          "associated_with_current_level_determined": true,
+          "associated_with_current_level": false,
+          "associated_actor_determined": false,
+          "associated_actor_path": null,
+          "associated_objects": [
+            {
+              "object_name": "EditorInteractiveToolsContext",
+              "object_path": "/Script/UnrealEd.EditorInteractiveToolsContext",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "ModeManagerInteractiveToolsContext",
+              "object_path": "/Script/UnrealEd.ModeManagerInteractiveToolsContext",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "EditorWorldExtension",
+              "object_path": "/Script/UnrealEd.EditorWorldExtension",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "ActorFactory",
+              "object_path": "/Script/UnrealEd.ActorFactory",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            }
+          ],
+          "associated_objects_truncated": true,
+          "associated_objects_sample_truncated": true,
+          "external_actor_namespace_candidate": false
+        }
+      ],
+      "inspection_errors": [],
+      "unloaded_package_note": "Packages absent from the loaded UObject inventory were not inspected and are not classified as clean.",
+      "page_consistency_note": "All pages with this inventory_id use copied records from one game-thread scan; request remaining pages within snapshot_lifetime_seconds.",
+      "read_only": true,
+      "snapshot_id": "D4462F77426E1019A7AF56A11D853B55"
+    }
+  },
+  "save_preview": {
+    "ok": true,
+    "data": {
+      "preview_id": "b09431d647c07c740bc89daead734492",
+      "world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+      "level_package": "/Game/Levels/L_City_World_Master",
+      "packages": [
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/1/BL/KH23FPCOUY21XYNKZ3FLE3",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "68EE56C60F50811E1FB3BB345B7B970FF8E16A62",
+          "before_bytes": 606600
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/1/UL/OCMPORF7XIE1QQQWMA573K",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "2D65028DF069647E507CBCFB21F0BFAC1EC4E878",
+          "before_bytes": 2511
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/1/X8/EKR3GIKPE95UHYYYPAKDWJ",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "BB02C16C0BBBE54C904B3D97B526B00123811618",
+          "before_bytes": 606716
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/21/FZ0HZ4K6JVBR8GPCMEBET6",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "038E4D183D984278566856929F14B15FA9166C0A",
+          "before_bytes": 606716
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/FW/NV3A49S9QWJLRZE7WI4HMM",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "530ED727F8E1BD29D87D598F3A9731FEF1BD7628",
+          "before_bytes": 606716
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/HU/Y8TEYME9MZA2A35BESDWR5",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "F39C70BFCF6D04B7C6BBD120D0C8D372AB5DB8D0",
+          "before_bytes": 606716
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/3/XU/BASWU5RY3VLZL2D2OQDMGF",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "E8756F7FB8B1BAF473D78C8FF5887AB738733F0F",
+          "before_bytes": 606600
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/0C/LCBNMQ13VCDM21M6PIQ3UI",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "442EB58D5316BBAF23A90E26E5B7B49585CD7CD4",
+          "before_bytes": 606396
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/7U/MOEZ1NFXWRBZY5OR1L0SHU",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "DADDEC7213633D51770560F61286727A602BE462",
+          "before_bytes": 606716
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/JC/6DJTG5IP7XHZ2LQLRV19GF",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "69376CAFACB1FE4A8157840247F686A3CD26FB18",
+          "before_bytes": 606600
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/K5/KSDE1ZCJBZNOS07IF93SI2",
+          "will_save": true,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "B5E7393783AF4D851D6764F25C2E4F1E7E133924",
+          "before_bytes": 606643
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/OP/0WSRWB0C3RJ4GXMQITJQTN",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "672AB0BB93722066AA0AC09453DD0AF9418C30B7",
+          "before_bytes": 606716
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/8/4Y/DB0D58DF5MS1BQIUSLWMMX",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "2888100AD3B3C95CA8EBD0B9DB53CF2DFCDFB489",
+          "before_bytes": 2382
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/8/D4/6BQXU1WLECGHE78Q5VHPEU",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "CFEAD8D229DF799BE10CA28511869411D30D536E",
+          "before_bytes": 606600
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/9/84/999V7M34APSAN5HR9UR7RT",
+          "will_save": true,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "50D0C3E1A50D12EB7C730CDD835382B4DC85E4D0",
+          "before_bytes": 5063
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/9/UX/QWIT4Q5JJ8585ENBY5400I",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "860FFD2DA5F2A9406D005DB68B8AD8BDE5B94C3A",
+          "before_bytes": 38758
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/9/UZ/96ULHPD3KIG1PGR2F32CHQ",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "97745835E186101C225AFF1117D0F56D2BC562A8",
+          "before_bytes": 606600
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/A/BL/DJINWNSGSZTJN5K6P1P8RO",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "B341FB662BDBDBCE167A6D60DD9AF662A6E98661",
+          "before_bytes": 606600
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/C/58/36UIEEB8GTP0SGJ2SO61J8",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "EA24DA3DAC7FBF35E45B7D5C54FC94B1FA2E1CF4",
+          "before_bytes": 606716
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/C/AE/BK2M8Y8Y4ILGBJFC22SJCA",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "E31ACD3ABD19FA4BA642B498EE02F64626252EB4",
+          "before_bytes": 67101
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/E/TO/6QDSBS3BHBP7VVJ6YGFP0U",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "00CCBFAEBD39B9AB1C12D9E70B50F82FA66422EE",
+          "before_bytes": 606716
+        },
+        {
+          "package": "/Game/__ExternalActors__/Levels/L_City_World_Master/F/26/359XHJOPQAURYFVANTMBAM",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "51AEB990B7B53179278BB68A0337A5AD23B67229",
+          "before_bytes": 4172
+        },
+        {
+          "package": "/Game/Levels/L_City_World_Master",
+          "will_save": false,
+          "will_delete": false,
+          "file_existed_before": true,
+          "before_sha1": "896514DAC4186429E92966AFA9A1E7A310C64B1A",
+          "before_bytes": 12995
+        }
+      ],
+      "package_count": 23,
+      "world_partition_supported": true,
+      "overwrite_existing_level_packages": true,
+      "binary_backups_created_on_apply": true,
+      "expires_in_seconds": 300,
+      "operation_id": "b09431d647c07c740bc89daead734492",
+      "durable_receipt_on_apply": true,
+      "scope": "active persistent level and its loaded external-object packages"
+    }
+  },
+  "user_save_confirmation": "Saved Current Level",
+  "after_save_landscape": {
+    "ok": true,
+    "session_id": "unreal-22604",
+    "data": {
+      "total_count": 1,
+      "truncated": false,
+      "landscapes": [
+        {
+          "actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.Landscape_UAID_701CE7E46087BA0D03_2100287295",
+          "guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+          "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+          "active_world_path": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+          "actor_world_path": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+          "actor_in_active_world": true,
+          "vertices_x": 2041,
+          "vertices_y": 2041,
+          "component_count": 64,
+          "registered_component_count": 64,
+          "collision_component_count": 64,
+          "registered_collision_component_count": 64,
+          "landscape_proxy_count": 17,
+          "streaming_proxy_count": 16,
+          "landscape_proxy_descriptor_count": 16,
+          "loaded_landscape_proxy_count": 16,
+          "unloaded_landscape_proxy_count": 0,
+          "descriptor_loaded_landscape_proxy_count": 16,
+          "descriptor_unloaded_landscape_proxy_count": 0,
+          "active_world_landscape_proxy_count": 16,
+          "not_in_active_world_landscape_proxy_count": 0,
+          "spatial_landscape_proxy_count": 16,
+          "non_spatial_landscape_proxy_count": 0,
+          "registered_editor_loader_adapter_count": 1,
+          "world_partition_streaming_enabled_in_editor": true,
+          "world_partition_editor_loading_enabled": true,
+          "registered_editor_loader_adapters": [
+            {
+              "loaded": true,
+              "user_created": true,
+              "label": "Last Loaded Region",
+              "bounds_min": [
+                -4834320711680,
+                -4557586300928,
+                -4398046511104
+              ],
+              "bounds_max": [
+                4631125032960,
+                4706469937152,
+                4398046511104
+              ]
+            }
+          ],
+          "registered_editor_loader_adapters_truncated": false,
+          "world_partition_streaming_sources": [],
+          "world_partition_streaming_sources_truncated": false,
+          "landscape_proxy_descriptors": [
+            {
+              "actor_guid": "30C74BA0472C94A33D72AF88E7D514E1",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_0_0",
+              "actor_label": "LandscapeStreamingProxy_2_0_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/1/BL/KH23FPCOUY21XYNKZ3FLE3",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_0_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_0_0",
+              "active_world_actor_guid": "30C74BA0472C94A33D72AF88E7D514E1",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/1/BL/KH23FPCOUY21XYNKZ3FLE3",
+              "editor_bounds_min": [
+                0,
+                -102000,
+                -100
+              ],
+              "editor_bounds_max": [
+                51000,
+                -51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "1C342A9C451B5C8669A499A708CB2CE3",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_2_0",
+              "actor_label": "LandscapeStreamingProxy_1_2_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/1/X8/EKR3GIKPE95UHYYYPAKDWJ",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_2_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_2_0",
+              "active_world_actor_guid": "1C342A9C451B5C8669A499A708CB2CE3",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/1/X8/EKR3GIKPE95UHYYYPAKDWJ",
+              "editor_bounds_min": [
+                -51000,
+                0,
+                -100
+              ],
+              "editor_bounds_max": [
+                0,
+                51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "6C0C624A4FF93280A15289910AAC53DB",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_3_0",
+              "actor_label": "LandscapeStreamingProxy_1_3_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/21/FZ0HZ4K6JVBR8GPCMEBET6",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_3_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_3_0",
+              "active_world_actor_guid": "6C0C624A4FF93280A15289910AAC53DB",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/21/FZ0HZ4K6JVBR8GPCMEBET6",
+              "editor_bounds_min": [
+                -51000,
+                51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                0,
+                102000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    102400,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    102400,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "53E89E82407D195BF7FA7F926F2BD2D0",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_3_0",
+              "actor_label": "LandscapeStreamingProxy_3_3_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/FW/NV3A49S9QWJLRZE7WI4HMM",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_3_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_3_0",
+              "active_world_actor_guid": "53E89E82407D195BF7FA7F926F2BD2D0",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/FW/NV3A49S9QWJLRZE7WI4HMM",
+              "editor_bounds_min": [
+                51000,
+                51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                102000,
+                102000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    102400,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    102400,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "142E6D0A44983985A1FBAEA7FD193A78",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_1_0",
+              "actor_label": "LandscapeStreamingProxy_1_1_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/HU/Y8TEYME9MZA2A35BESDWR5",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_1_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_1_0",
+              "active_world_actor_guid": "142E6D0A44983985A1FBAEA7FD193A78",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/2/HU/Y8TEYME9MZA2A35BESDWR5",
+              "editor_bounds_min": [
+                -51000,
+                -51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                0,
+                0,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "6599B90A4703F030285CDF92E25F1DA6",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_0_0",
+              "actor_label": "LandscapeStreamingProxy_3_0_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/3/XU/BASWU5RY3VLZL2D2OQDMGF",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_0_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_0_0",
+              "active_world_actor_guid": "6599B90A4703F030285CDF92E25F1DA6",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/3/XU/BASWU5RY3VLZL2D2OQDMGF",
+              "editor_bounds_min": [
+                51000,
+                -102000,
+                -100
+              ],
+              "editor_bounds_max": [
+                102000,
+                -51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    0,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "0F272E434FE661FEF67C97B621C90CFC",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_0_0",
+              "actor_label": "LandscapeStreamingProxy_0_0_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/0C/LCBNMQ13VCDM21M6PIQ3UI",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_0_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_0_0",
+              "active_world_actor_guid": "0F272E434FE661FEF67C97B621C90CFC",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/0C/LCBNMQ13VCDM21M6PIQ3UI",
+              "editor_bounds_min": [
+                -102000,
+                -102000,
+                -100
+              ],
+              "editor_bounds_max": [
+                -51000,
+                -51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "BE06F0F94B199766D541DDB5D7C7B176",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_2_0",
+              "actor_label": "LandscapeStreamingProxy_3_2_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/7U/MOEZ1NFXWRBZY5OR1L0SHU",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_2_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_2_0",
+              "active_world_actor_guid": "BE06F0F94B199766D541DDB5D7C7B176",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/7U/MOEZ1NFXWRBZY5OR1L0SHU",
+              "editor_bounds_min": [
+                51000,
+                0,
+                -100
+              ],
+              "editor_bounds_max": [
+                102000,
+                51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "75E65BF94F8D54AD247D7DBB9B918D79",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_3_0",
+              "actor_label": "LandscapeStreamingProxy_0_3_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/JC/6DJTG5IP7XHZ2LQLRV19GF",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_3_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_3_0",
+              "active_world_actor_guid": "75E65BF94F8D54AD247D7DBB9B918D79",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/JC/6DJTG5IP7XHZ2LQLRV19GF",
+              "editor_bounds_min": [
+                -102000,
+                51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                -51000,
+                102000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    102400,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    102400,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "4C4DACCD4D735F3C541512BAAC36DCAE",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_2_0",
+              "actor_label": "LandscapeStreamingProxy_2_2_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/K5/KSDE1ZCJBZNOS07IF93SI2",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_2_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_2_0",
+              "active_world_actor_guid": "4C4DACCD4D735F3C541512BAAC36DCAE",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/K5/KSDE1ZCJBZNOS07IF93SI2",
+              "editor_bounds_min": [
+                0,
+                0,
+                -100
+              ],
+              "editor_bounds_max": [
+                51000,
+                51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "45C1E1EB44782B3A1969B0930EEC1CAF",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_3_0",
+              "actor_label": "LandscapeStreamingProxy_2_3_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/OP/0WSRWB0C3RJ4GXMQITJQTN",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_3_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_3_0",
+              "active_world_actor_guid": "45C1E1EB44782B3A1969B0930EEC1CAF",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/5/OP/0WSRWB0C3RJ4GXMQITJQTN",
+              "editor_bounds_min": [
+                0,
+                51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                51000,
+                102000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    102400,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    102400,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "37AE9A904396FA44EC10F98612BA0A42",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_2_0",
+              "actor_label": "LandscapeStreamingProxy_0_2_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/8/D4/6BQXU1WLECGHE78Q5VHPEU",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_2_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_2_0",
+              "active_world_actor_guid": "37AE9A904396FA44EC10F98612BA0A42",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/8/D4/6BQXU1WLECGHE78Q5VHPEU",
+              "editor_bounds_min": [
+                -102000,
+                0,
+                -100
+              ],
+              "editor_bounds_max": [
+                -51000,
+                51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "833541124B6DD64EE914778FE1C8A8FD",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_0_0",
+              "actor_label": "LandscapeStreamingProxy_1_0_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/9/UZ/96ULHPD3KIG1PGR2F32CHQ",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_0_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_1_0_0",
+              "active_world_actor_guid": "833541124B6DD64EE914778FE1C8A8FD",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/9/UZ/96ULHPD3KIG1PGR2F32CHQ",
+              "editor_bounds_min": [
+                -51000,
+                -102000,
+                -100
+              ],
+              "editor_bounds_max": [
+                0,
+                -51000,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -2,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -102400,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    -51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -2,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -102400,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    -51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "EF7643074FA8A6B8BF50E78A8E1EA103",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_1_0",
+              "actor_label": "LandscapeStreamingProxy_0_1_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/A/BL/DJINWNSGSZTJN5K6P1P8RO",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_1_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_0_1_0",
+              "active_world_actor_guid": "EF7643074FA8A6B8BF50E78A8E1EA103",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/A/BL/DJINWNSGSZTJN5K6P1P8RO",
+              "editor_bounds_min": [
+                -102000,
+                -51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                -51000,
+                0,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -102400,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -2,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -102400,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    -51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": -1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    -51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    0,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "B336A4D6467E90FFA279B88ED3F229D2",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_1_0",
+              "actor_label": "LandscapeStreamingProxy_3_1_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/C/58/36UIEEB8GTP0SGJ2SO61J8",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_1_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_3_1_0",
+              "active_world_actor_guid": "B336A4D6467E90FFA279B88ED3F229D2",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/C/58/36UIEEB8GTP0SGJ2SO61J8",
+              "editor_bounds_min": [
+                51000,
+                -51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                102000,
+                0,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    51200,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    102400,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 1,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    51200,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    102400,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            },
+            {
+              "actor_guid": "716C6FA5455D39E4E655919F6D308F36",
+              "actor_name": "LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_1_0",
+              "actor_label": "LandscapeStreamingProxy_2_1_0",
+              "actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/E/TO/6QDSBS3BHBP7VVJ6YGFP0U",
+              "actor_soft_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_1_0",
+              "runtime_grid": "None",
+              "spatially_loaded": true,
+              "spatially_loaded_raw": true,
+              "descriptor_loaded": true,
+              "loaded": true,
+              "loaded_semantics": "legacy alias for descriptor_loaded; does not prove actor ownership by the active UWorld",
+              "active_world_actor_resolved": true,
+              "actor_in_active_world": true,
+              "actor_guid_matches_descriptor": true,
+              "active_world_actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.LandscapeStreamingProxy_B7E96FCS9V6MS9RT9VEJH9KT9_510_2_1_0",
+              "active_world_actor_guid": "716C6FA5455D39E4E655919F6D308F36",
+              "active_world_actor_world": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+              "landscape_guid_available": true,
+              "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "root_landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+              "landscape_guid_matches_root": true,
+              "landscape_guid_relationship": "matches_root_landscape",
+              "landscape_component_count": 4,
+              "registered_landscape_component_count": 4,
+              "collision_component_count": 4,
+              "registered_collision_component_count": 4,
+              "external_actor_package_resolved": true,
+              "external_actor_package": "/Game/__ExternalActors__/Levels/L_City_World_Master/E/TO/6QDSBS3BHBP7VVJ6YGFP0U",
+              "editor_bounds_min": [
+                0,
+                -51000,
+                -100
+              ],
+              "editor_bounds_max": [
+                51000,
+                0,
+                100
+              ],
+              "cell_association_kind": "editor_spatial_hash_intersections",
+              "editor_hash_level": 2,
+              "editor_hash_cells": [
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": -1,
+                  "bounds_min": [
+                    0,
+                    0,
+                    -51200
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    0
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": -1,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    -51200,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    0,
+                    51200
+                  ]
+                },
+                {
+                  "level": 2,
+                  "x": 0,
+                  "y": 0,
+                  "z": 0,
+                  "bounds_min": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "bounds_max": [
+                    51200,
+                    51200,
+                    51200
+                  ]
+                }
+              ]
+            }
+          ],
+          "landscape_proxy_descriptor_diagnostics_count": 16,
+          "landscape_proxy_descriptor_diagnostics_truncated": false,
+          "landscape_editor_hash_available": true,
+          "external_proxy_package_count": 17,
+          "edit_layers": true,
+          "world_partition": true,
+          "world_partition_streaming": true,
+          "dirty": false,
+          "layers_up_to_date": true,
+          "layers": [
+            {
+              "name": "Layer",
+              "guid": "198824024FF8A77A01535B86021D9B34",
+              "locked": false,
+              "visible": true,
+              "height_read_supported": true,
+              "height_sha_md5": "9f43572fbc2c06ef497da015879cdb23",
+              "min_local_cm": 0,
+              "max_local_cm": 0,
+              "vertices_x": 2041,
+              "vertices_y": 2041
+            },
+            {
+              "name": "ForgeTerrain",
+              "guid": "2E6FC5F94C4EF704F700299B5D08C23B",
+              "locked": false,
+              "visible": true,
+              "height_read_supported": true,
+              "height_sha_md5": "dd428766880ec01a848b4381fba82838",
+              "min_local_cm": -100,
+              "max_local_cm": 0,
+              "vertices_x": 2041,
+              "vertices_y": 2041
+            }
+          ],
+          "mutation_supported": false,
+          "adoption_workflow_supported": true,
+          "adoption_origin": "adopted_existing_landscape",
+          "adoption_confirmation_required": true,
+          "adoption_preflight_command": "landscape_adoption_preflight"
+        }
+      ],
+      "world_partition": true,
+      "streaming_level_count": 0,
+      "persistent_level_uses_external_actors": true,
+      "empty_untitled_world": false,
+      "safe_create_source": false,
+      "world": "/Game/Levels/L_City_World_Master.L_City_World_Master"
+    }
+  },
+  "after_save_dirty": {
+    "ok": true,
+    "session_id": "unreal-22604",
+    "data": {
+      "inventory_scope": "Loaded UPackage objects in the current Editor process only.",
+      "inventory_id": "702A76A04952339F69992C8450F8DA72",
+      "snapshot_lifetime_seconds": 60,
+      "current_level_package": "/Game/Levels/L_City_World_Master",
+      "proposed_target_map_path": "",
+      "packages_inspected": 1244,
+      "inventory_complete": true,
+      "snapshot_limit_reached": false,
+      "dirty_loaded_packages_observed": 2,
+      "total_dirty_loaded_packages": 2,
+      "offset": 0,
+      "limit": 50,
+      "returned_count": 2,
+      "has_more_observed_results": false,
+      "next_offset": null,
+      "packages": [
+        {
+          "package_name": "/Script/SlateCore",
+          "package_path": "/Script/SlateCore",
+          "is_dirty": true,
+          "is_transient_package": false,
+          "package_flags": 16,
+          "package_newly_created": false,
+          "package_contains_map": false,
+          "package_contains_map_data": false,
+          "package_compiled_in": true,
+          "classification": "engine_script",
+          "package_category": "engine_script",
+          "package_domain": "engine_script",
+          "script_package_candidate": true,
+          "classification_basis": "script_package_compiled_in_loaded_engine_module",
+          "classification_complete": true,
+          "ownership_scan_complete": true,
+          "associated_object_count_scanned": 116,
+          "associated_actor_count": 0,
+          "external_actor_count": 0,
+          "contains_external_actor": false,
+          "engine_script_provenance_verified": true,
+          "unresolved_engine_script_package": false,
+          "unresolved_project_content_package": false,
+          "target_map_path": "",
+          "target_map_path_namespace_match": false,
+          "target_map_association_basis": "not_determined_from_package_path",
+          "project_membership_determined": true,
+          "belongs_to_test_project": true,
+          "is_current_level_package": false,
+          "associated_with_current_level_determined": true,
+          "associated_with_current_level": false,
+          "associated_actor_determined": false,
+          "associated_actor_path": null,
+          "associated_objects": [
+            {
+              "object_name": "SlateWidgetStyleAsset",
+              "object_path": "/Script/SlateCore.SlateWidgetStyleAsset",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "FontBulkData",
+              "object_path": "/Script/SlateCore.FontBulkData",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "FontFaceInterface",
+              "object_path": "/Script/SlateCore.FontFaceInterface",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "FontProviderInterface",
+              "object_path": "/Script/SlateCore.FontProviderInterface",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            }
+          ],
+          "associated_objects_truncated": true,
+          "associated_objects_sample_truncated": true,
+          "external_actor_namespace_candidate": false
+        },
+        {
+          "package_name": "/Script/UnrealEd",
+          "package_path": "/Script/UnrealEd",
+          "is_dirty": true,
+          "is_transient_package": false,
+          "package_flags": 80,
+          "package_newly_created": false,
+          "package_contains_map": false,
+          "package_contains_map_data": false,
+          "package_compiled_in": true,
+          "classification": "engine_script",
+          "package_category": "engine_script",
+          "package_domain": "engine_script",
+          "script_package_candidate": true,
+          "classification_basis": "script_package_compiled_in_loaded_engine_module",
+          "classification_complete": true,
+          "ownership_scan_complete": true,
+          "associated_object_count_scanned": 1233,
+          "associated_actor_count": 4,
+          "external_actor_count": 0,
+          "contains_external_actor": false,
+          "engine_script_provenance_verified": true,
+          "unresolved_engine_script_package": false,
+          "unresolved_project_content_package": false,
+          "target_map_path": "",
+          "target_map_path_namespace_match": false,
+          "target_map_association_basis": "not_determined_from_package_path",
+          "project_membership_determined": true,
+          "belongs_to_test_project": true,
+          "is_current_level_package": false,
+          "associated_with_current_level_determined": true,
+          "associated_with_current_level": false,
+          "associated_actor_determined": false,
+          "associated_actor_path": null,
+          "associated_objects": [
+            {
+              "object_name": "EditorInteractiveToolsContext",
+              "object_path": "/Script/UnrealEd.EditorInteractiveToolsContext",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "ModeManagerInteractiveToolsContext",
+              "object_path": "/Script/UnrealEd.ModeManagerInteractiveToolsContext",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "EditorWorldExtension",
+              "object_path": "/Script/UnrealEd.EditorWorldExtension",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "ActorFactory",
+              "object_path": "/Script/UnrealEd.ActorFactory",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            }
+          ],
+          "associated_objects_truncated": true,
+          "associated_objects_sample_truncated": true,
+          "external_actor_namespace_candidate": false
+        }
+      ],
+      "inspection_errors": [],
+      "unloaded_package_note": "Packages absent from the loaded UObject inventory were not inspected and are not classified as clean.",
+      "page_consistency_note": "All pages with this inventory_id use copied records from one game-thread scan; request remaining pages within snapshot_lifetime_seconds.",
+      "read_only": true,
+      "snapshot_id": "702A76A04952339F69992C8450F8DA72"
+    }
+  },
+  "collision_attempt": {
+    "ok": false,
+    "error": {
+      "code": "timeout",
+      "message": "Editor did not respond before the deadline."
+    }
+  }
+}

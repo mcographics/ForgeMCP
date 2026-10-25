@@ -1,0 +1,41 @@
+{
+  "checks": [
+    "all nine tools discovered over stdio MCP",
+    "authenticated Blender 0.2.33 health",
+    "fresh MCP server version 0.3.6",
+    "complete live native operator catalog",
+    "native operator parameter schema",
+    "RNA type catalog and schema",
+    "reviewed native sphere creation and readback",
+    "camera creation, activation, property edits and schema",
+    "expanded shader graph and shader socket animation over MCP",
+    "new blend copy saved through MCP",
+    "two real 4K animation frames complete and fully decode",
+    "animated emission produces different frames",
+    "interactive bridge remains responsive and unsaved scene preserved",
+    "completed render cancel is idempotent",
+    "running render cancelled over MCP, files retained"
+  ],
+  "count": 15,
+  "operator_count": 2504,
+  "tool_count": 104,
+  "render": {
+    "job_id": "cbf4c77820685003b6c2a53ac8bb517e",
+    "state": "completed",
+    "exit_code": 0,
+    "completed_frames": 2,
+    "expected_frames": 2,
+    "resolution": [
+      4096,
+      2304
+    ],
+    "invalid_frames": [],
+    "directory": "C:\\Users\\Kenne\\AppData\\Local\\MajesticForge\\sessions\\renders\\blender-14492\\cbf4c77820685003b6c2a53ac8bb517e",
+    "log": "C:\\Users\\Kenne\\AppData\\Local\\MajesticForge\\sessions\\renders\\blender-14492\\cbf4c77820685003b6c2a53ac8bb517e\\render.log",
+    "visual_verified": false,
+    "decode_verified": false
+  },
+  "work": "G:\\ForgeMCP\\Saved\\forge-installed-live-test-hjoe5vyl",
+  "source_server": "0.3.6",
+  "addon": "0.2.33"
+}

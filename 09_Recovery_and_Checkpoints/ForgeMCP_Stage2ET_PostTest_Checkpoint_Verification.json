@@ -1,0 +1,464 @@
+{
+  "timestamp": "2026-10-23T18:18:53.206130+00:00",
+  "manifest_pins": [
+    {
+      "path": "G:\\ForgeMCP_Recovery_Checkpoints\\Landscape_Stage1_20261023T065347Z_94ff8892\\manifest.json",
+      "expected": "d9de66d61745427b313c5ee7eb5a1f2238d8c76ca2dc5aa0cd277929bbac3388",
+      "actual": "d9de66d61745427b313c5ee7eb5a1f2238d8c76ca2dc5aa0cd277929bbac3388",
+      "match": true
+    },
+    {
+      "path": "G:\\ForgeMCP\\Saved\\ForgeLandscapeAdoption\\6025F70A4D50AAA3EE2CCBB7ADD0C0EF\\manifest.json",
+      "expected": "e7e95ea63026d16a2c829a5cb9e90eda5633175f35e65075f84235604969123f",
+      "actual": "e7e95ea63026d16a2c829a5cb9e90eda5633175f35e65075f84235604969123f",
+      "match": true
+    },
+    {
+      "path": "G:\\ForgeMCP_Recovery_Checkpoints\\Landscape_Stage2E_20261023\\post_adoption_checkpoint\\manifest.json",
+      "expected": "c3ec68f538425c600bc10981e0ad519d35371a3920839f2c722b1a3e1b861fc1",
+      "actual": "c3ec68f538425c600bc10981e0ad519d35371a3920839f2c722b1a3e1b861fc1",
+      "match": true
+    }
+  ],
+  "preadoption": [
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/1/BL/KH23FPCOUY21XYNKZ3FLE3.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/1/UL/OCMPORF7XIE1QQQWMA573K.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/1/X8/EKR3GIKPE95UHYYYPAKDWJ.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/2/21/FZ0HZ4K6JVBR8GPCMEBET6.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/2/FW/NV3A49S9QWJLRZE7WI4HMM.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/2/HU/Y8TEYME9MZA2A35BESDWR5.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/3/XU/BASWU5RY3VLZL2D2OQDMGF.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/5/0C/LCBNMQ13VCDM21M6PIQ3UI.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/5/7U/MOEZ1NFXWRBZY5OR1L0SHU.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/5/JC/6DJTG5IP7XHZ2LQLRV19GF.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/5/K5/KSDE1ZCJBZNOS07IF93SI2.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/5/OP/0WSRWB0C3RJ4GXMQITJQTN.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/8/4Y/DB0D58DF5MS1BQIUSLWMMX.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/8/D4/6BQXU1WLECGHE78Q5VHPEU.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/9/84/999V7M34APSAN5HR9UR7RT.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/9/UX/QWIT4Q5JJ8585ENBY5400I.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/9/UZ/96ULHPD3KIG1PGR2F32CHQ.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/A/BL/DJINWNSGSZTJN5K6P1P8RO.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/C/58/36UIEEB8GTP0SGJ2SO61J8.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/C/AE/BK2M8Y8Y4ILGBJFC22SJCA.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/E/TO/6QDSBS3BHBP7VVJ6YGFP0U.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/F/26/359XHJOPQAURYFVANTMBAM.uasset",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Content/Levels/L_City_World_Master.umap",
+      "stage1_backup_match": true,
+      "native_sha256_match": true,
+      "native_md5_match": true
+    },
+    {
+      "relative_path": "Config/DefaultEditor.ini",
+      "stage1_backup_match": true
+    },
+    {
+      "relative_path": "Config/DefaultEditorPerProjectUserSettings.ini",
+      "stage1_backup_match": true
+    },
+    {
+      "relative_path": "Config/DefaultEditorSettings.ini",
+      "stage1_backup_match": true
+    },
+    {
+      "relative_path": "Config/DefaultEngine.ini",
+      "stage1_backup_match": true
+    },
+    {
+      "relative_path": "Config/DefaultGame.ini",
+      "stage1_backup_match": true
+    },
+    {
+      "relative_path": "Config/DefaultInput.ini",
+      "stage1_backup_match": true
+    },
+    {
+      "relative_path": "Content/Levels/L_City_World_Master_HLODLayer_Instanced.uasset",
+      "stage1_backup_match": true
+    },
+    {
+      "relative_path": "Content/Levels/L_City_World_Master_HLODLayer_Merged.uasset",
+      "stage1_backup_match": true
+    },
+    {
+      "relative_path": "ForgeMCPDev.uproject",
+      "stage1_backup_match": true
+    }
+  ],
+  "postadoption": [
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/1/BL/KH23FPCOUY21XYNKZ3FLE3.uasset",
+      "expected": "d20bbabd9348f33da4cde8ea191441e056a6ab61ad87f7dc20c5cba2f8c09648",
+      "source_sha256": "d20bbabd9348f33da4cde8ea191441e056a6ab61ad87f7dc20c5cba2f8c09648",
+      "backup_sha256": "d20bbabd9348f33da4cde8ea191441e056a6ab61ad87f7dc20c5cba2f8c09648",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/1/UL/OCMPORF7XIE1QQQWMA573K.uasset",
+      "expected": "b23fc8d558ca82a5bce9e429d2eb4559eac93acd86b6923f7ec626e4941aa613",
+      "source_sha256": "b23fc8d558ca82a5bce9e429d2eb4559eac93acd86b6923f7ec626e4941aa613",
+      "backup_sha256": "b23fc8d558ca82a5bce9e429d2eb4559eac93acd86b6923f7ec626e4941aa613",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/1/X8/EKR3GIKPE95UHYYYPAKDWJ.uasset",
+      "expected": "da77c755966f750cbe01066bb91006e2733404b3b2885dd60704d723630f7e40",
+      "source_sha256": "da77c755966f750cbe01066bb91006e2733404b3b2885dd60704d723630f7e40",
+      "backup_sha256": "da77c755966f750cbe01066bb91006e2733404b3b2885dd60704d723630f7e40",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/2/21/FZ0HZ4K6JVBR8GPCMEBET6.uasset",
+      "expected": "8a2aa140b59129b18a7d2d1965e3e0bc6a33c8087721664c1925ff7c9f8b5085",
+      "source_sha256": "8a2aa140b59129b18a7d2d1965e3e0bc6a33c8087721664c1925ff7c9f8b5085",
+      "backup_sha256": "8a2aa140b59129b18a7d2d1965e3e0bc6a33c8087721664c1925ff7c9f8b5085",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/2/FW/NV3A49S9QWJLRZE7WI4HMM.uasset",
+      "expected": "c4d976aa9638a875e0401b82381428183fb6da6e03a775d4c4f968aeb4811bde",
+      "source_sha256": "c4d976aa9638a875e0401b82381428183fb6da6e03a775d4c4f968aeb4811bde",
+      "backup_sha256": "c4d976aa9638a875e0401b82381428183fb6da6e03a775d4c4f968aeb4811bde",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/2/HU/Y8TEYME9MZA2A35BESDWR5.uasset",
+      "expected": "27c4bffd7f2b591e2d7d17057f22d7c3e66367f09f335d142b763a6114a4a8e3",
+      "source_sha256": "27c4bffd7f2b591e2d7d17057f22d7c3e66367f09f335d142b763a6114a4a8e3",
+      "backup_sha256": "27c4bffd7f2b591e2d7d17057f22d7c3e66367f09f335d142b763a6114a4a8e3",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/3/XU/BASWU5RY3VLZL2D2OQDMGF.uasset",
+      "expected": "63e27e7f4dcae619b75167b7cff3b9502244bfc0e8f34e95482630ee391d9dd5",
+      "source_sha256": "63e27e7f4dcae619b75167b7cff3b9502244bfc0e8f34e95482630ee391d9dd5",
+      "backup_sha256": "63e27e7f4dcae619b75167b7cff3b9502244bfc0e8f34e95482630ee391d9dd5",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/5/0C/LCBNMQ13VCDM21M6PIQ3UI.uasset",
+      "expected": "c9d384eaf542843f58d47be61e7eaad5441def9c393b3d36ef171dcca5812aa6",
+      "source_sha256": "c9d384eaf542843f58d47be61e7eaad5441def9c393b3d36ef171dcca5812aa6",
+      "backup_sha256": "c9d384eaf542843f58d47be61e7eaad5441def9c393b3d36ef171dcca5812aa6",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/5/7U/MOEZ1NFXWRBZY5OR1L0SHU.uasset",
+      "expected": "eb5d5640126d4fc446968460e9a868eeb2b76e358e4c0af81191f583a6b6d302",
+      "source_sha256": "eb5d5640126d4fc446968460e9a868eeb2b76e358e4c0af81191f583a6b6d302",
+      "backup_sha256": "eb5d5640126d4fc446968460e9a868eeb2b76e358e4c0af81191f583a6b6d302",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/5/JC/6DJTG5IP7XHZ2LQLRV19GF.uasset",
+      "expected": "f9334c293ab70285e9a3d2388bc201badf5666e421b9d11d220a30c2cc707d74",
+      "source_sha256": "f9334c293ab70285e9a3d2388bc201badf5666e421b9d11d220a30c2cc707d74",
+      "backup_sha256": "f9334c293ab70285e9a3d2388bc201badf5666e421b9d11d220a30c2cc707d74",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/5/K5/KSDE1ZCJBZNOS07IF93SI2.uasset",
+      "expected": "3250d0d5fea2d9c8bba0c85f9450102a1043328ce176d1d26cc210287076a0ea",
+      "source_sha256": "3250d0d5fea2d9c8bba0c85f9450102a1043328ce176d1d26cc210287076a0ea",
+      "backup_sha256": "3250d0d5fea2d9c8bba0c85f9450102a1043328ce176d1d26cc210287076a0ea",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/5/OP/0WSRWB0C3RJ4GXMQITJQTN.uasset",
+      "expected": "d3db141665a4c53d681f8f680498bd9a8847f88d46696d14c80214ee87f2d667",
+      "source_sha256": "d3db141665a4c53d681f8f680498bd9a8847f88d46696d14c80214ee87f2d667",
+      "backup_sha256": "d3db141665a4c53d681f8f680498bd9a8847f88d46696d14c80214ee87f2d667",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/8/4Y/DB0D58DF5MS1BQIUSLWMMX.uasset",
+      "expected": "7602e1ffac5ba1a6322f927f102b082b4207baff2fa3a234cdeeb282a386a416",
+      "source_sha256": "7602e1ffac5ba1a6322f927f102b082b4207baff2fa3a234cdeeb282a386a416",
+      "backup_sha256": "7602e1ffac5ba1a6322f927f102b082b4207baff2fa3a234cdeeb282a386a416",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/8/D4/6BQXU1WLECGHE78Q5VHPEU.uasset",
+      "expected": "eb15fba135162b01b7c9cf8a6aade0d08ea6d386ccdb5d813a239033f5dba7da",
+      "source_sha256": "eb15fba135162b01b7c9cf8a6aade0d08ea6d386ccdb5d813a239033f5dba7da",
+      "backup_sha256": "eb15fba135162b01b7c9cf8a6aade0d08ea6d386ccdb5d813a239033f5dba7da",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/9/84/999V7M34APSAN5HR9UR7RT.uasset",
+      "expected": "9455276756f9b78c36e6c7fc732cadf4b3a486ab9d2237c81917d4677e3022df",
+      "source_sha256": "9455276756f9b78c36e6c7fc732cadf4b3a486ab9d2237c81917d4677e3022df",
+      "backup_sha256": "9455276756f9b78c36e6c7fc732cadf4b3a486ab9d2237c81917d4677e3022df",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/9/UX/QWIT4Q5JJ8585ENBY5400I.uasset",
+      "expected": "56eb7009ed2654e55259cc1e6213045f582aa9feb8f0e314801b83a9b8418844",
+      "source_sha256": "2ddcb1931436e94b06fa4b668186c3ac6bf6b50aefa2e7e1a049d76a54803591",
+      "backup_sha256": "56eb7009ed2654e55259cc1e6213045f582aa9feb8f0e314801b83a9b8418844",
+      "source_match": false,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/9/UZ/96ULHPD3KIG1PGR2F32CHQ.uasset",
+      "expected": "28f33026e840869101fbf2ed685dfe9abac79ab2d954346a07b3ce8d6ea6ec40",
+      "source_sha256": "28f33026e840869101fbf2ed685dfe9abac79ab2d954346a07b3ce8d6ea6ec40",
+      "backup_sha256": "28f33026e840869101fbf2ed685dfe9abac79ab2d954346a07b3ce8d6ea6ec40",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/A/BL/DJINWNSGSZTJN5K6P1P8RO.uasset",
+      "expected": "72f10193d9464cd42a753c89cf2025c3814546dfab2ec8bea514ed58b80a8bc8",
+      "source_sha256": "72f10193d9464cd42a753c89cf2025c3814546dfab2ec8bea514ed58b80a8bc8",
+      "backup_sha256": "72f10193d9464cd42a753c89cf2025c3814546dfab2ec8bea514ed58b80a8bc8",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/C/58/36UIEEB8GTP0SGJ2SO61J8.uasset",
+      "expected": "d8c8e5a8a37fdea12f84fdd9c376ff47ef41df78d82184aca3972c419d4113fc",
+      "source_sha256": "d8c8e5a8a37fdea12f84fdd9c376ff47ef41df78d82184aca3972c419d4113fc",
+      "backup_sha256": "d8c8e5a8a37fdea12f84fdd9c376ff47ef41df78d82184aca3972c419d4113fc",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/C/AE/BK2M8Y8Y4ILGBJFC22SJCA.uasset",
+      "expected": "ac20b0491ad334c5378cf31539eb8b0e0aa5f9ded4948895e3e11e80cbff1b73",
+      "source_sha256": "6a50ee7ebfa3dfa10d4c1095471224cfa15edd7728d2761d520d0210d1fbf77d",
+      "backup_sha256": "ac20b0491ad334c5378cf31539eb8b0e0aa5f9ded4948895e3e11e80cbff1b73",
+      "source_match": false,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/E/TO/6QDSBS3BHBP7VVJ6YGFP0U.uasset",
+      "expected": "d83fe4569343373a8e1dac33b3176d650bbcfe422e6d7fd601273569e607a8a3",
+      "source_sha256": "d83fe4569343373a8e1dac33b3176d650bbcfe422e6d7fd601273569e607a8a3",
+      "backup_sha256": "d83fe4569343373a8e1dac33b3176d650bbcfe422e6d7fd601273569e607a8a3",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/__ExternalActors__/Levels/L_City_World_Master/F/26/359XHJOPQAURYFVANTMBAM.uasset",
+      "expected": "ef10150379d4c9d0712a9c5b93e7e3cbaded6d6074af0c7fb6afffa54e853171",
+      "source_sha256": "47817d2b3c8fa498bbd861538ca489a5b1a0f401f316fcc41e27f80a8f31832f",
+      "backup_sha256": "ef10150379d4c9d0712a9c5b93e7e3cbaded6d6074af0c7fb6afffa54e853171",
+      "source_match": false,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/Levels/L_City_World_Master.umap",
+      "expected": "ad4218ccbba473aaa4e3c1a18e8df396b5cce0950a3973ad1d3193b58c94b383",
+      "source_sha256": "ad4218ccbba473aaa4e3c1a18e8df396b5cce0950a3973ad1d3193b58c94b383",
+      "backup_sha256": "ad4218ccbba473aaa4e3c1a18e8df396b5cce0950a3973ad1d3193b58c94b383",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Config/DefaultEditor.ini",
+      "expected": "d2a0a36c8fad20c9421f8c54178c9b2eabefbf463f464e3d6009686652e394ba",
+      "source_sha256": "d2a0a36c8fad20c9421f8c54178c9b2eabefbf463f464e3d6009686652e394ba",
+      "backup_sha256": "d2a0a36c8fad20c9421f8c54178c9b2eabefbf463f464e3d6009686652e394ba",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Config/DefaultEditorPerProjectUserSettings.ini",
+      "expected": "51fb4fa5d62915034c142c4037f139e231986dd50e3bc42dde7d60bdd623bbdc",
+      "source_sha256": "51fb4fa5d62915034c142c4037f139e231986dd50e3bc42dde7d60bdd623bbdc",
+      "backup_sha256": "51fb4fa5d62915034c142c4037f139e231986dd50e3bc42dde7d60bdd623bbdc",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Config/DefaultEditorSettings.ini",
+      "expected": "147fdcc2d1569dfb0d660e2dcf0d58b844a5925b575e558fb72eabe413a35547",
+      "source_sha256": "147fdcc2d1569dfb0d660e2dcf0d58b844a5925b575e558fb72eabe413a35547",
+      "backup_sha256": "147fdcc2d1569dfb0d660e2dcf0d58b844a5925b575e558fb72eabe413a35547",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Config/DefaultEngine.ini",
+      "expected": "5538e90a4d03e711367f4fad799ada656117b80b34b9f6d560b477045f155774",
+      "source_sha256": "5538e90a4d03e711367f4fad799ada656117b80b34b9f6d560b477045f155774",
+      "backup_sha256": "5538e90a4d03e711367f4fad799ada656117b80b34b9f6d560b477045f155774",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Config/DefaultGame.ini",
+      "expected": "aff4df784c8136856b2219611f0d656af68a19d24b62d6b2933d867827256fdf",
+      "source_sha256": "aff4df784c8136856b2219611f0d656af68a19d24b62d6b2933d867827256fdf",
+      "backup_sha256": "aff4df784c8136856b2219611f0d656af68a19d24b62d6b2933d867827256fdf",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Config/DefaultInput.ini",
+      "expected": "383de74c165eb3eeedc538d829938287c719c4be18999d5b4c2a31c47a6812b6",
+      "source_sha256": "383de74c165eb3eeedc538d829938287c719c4be18999d5b4c2a31c47a6812b6",
+      "backup_sha256": "383de74c165eb3eeedc538d829938287c719c4be18999d5b4c2a31c47a6812b6",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/Levels/L_City_World_Master_HLODLayer_Instanced.uasset",
+      "expected": "72620f0057cc681f3a589b93c221813aa0ae33a2fb05b762ca99527332ad7bfa",
+      "source_sha256": "72620f0057cc681f3a589b93c221813aa0ae33a2fb05b762ca99527332ad7bfa",
+      "backup_sha256": "72620f0057cc681f3a589b93c221813aa0ae33a2fb05b762ca99527332ad7bfa",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "Content/Levels/L_City_World_Master_HLODLayer_Merged.uasset",
+      "expected": "41b41231d13dda03318c4742c00c7e8037fc57633544d5f71afb63388e1a792d",
+      "source_sha256": "41b41231d13dda03318c4742c00c7e8037fc57633544d5f71afb63388e1a792d",
+      "backup_sha256": "41b41231d13dda03318c4742c00c7e8037fc57633544d5f71afb63388e1a792d",
+      "source_match": true,
+      "backup_match": true
+    },
+    {
+      "relative_path": "ForgeMCPDev.uproject",
+      "expected": "7f31c36cb98a75afbab8cdcd92c417f7977ad4578a0ad10b7666307e006bcc93",
+      "source_sha256": "7f31c36cb98a75afbab8cdcd92c417f7977ad4578a0ad10b7666307e006bcc93",
+      "backup_sha256": "7f31c36cb98a75afbab8cdcd92c417f7977ad4578a0ad10b7666307e006bcc93",
+      "source_match": true,
+      "backup_match": true
+    }
+  ],
+  "namespace": {
+    "count": 23,
+    "added": [],
+    "missing": []
+  },
+  "free_bytes": 180162932736,
+  "new_clone_exists": true
+}

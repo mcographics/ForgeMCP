@@ -1,0 +1,2329 @@
+{
+  "preview": {
+    "ok": true,
+    "session_id": "blender-26920",
+    "data": {
+      "preview_id": "415773fa03fffb981c97f8c21a53e6d2",
+      "expires_in_seconds": 600,
+      "scene": "Scene",
+      "changes": [
+        {
+          "op": "create_collection",
+          "name": "ForgeMCP_WoodenBox",
+          "vertices": [],
+          "faces": [],
+          "location": null,
+          "rotation": null,
+          "scale": null,
+          "color": null,
+          "material": "",
+          "collection": "",
+          "source": "",
+          "bone": "",
+          "node": "",
+          "socket": "",
+          "value": null,
+          "data_path": "location",
+          "frame": 1,
+          "fps": 30,
+          "frame_start": 1,
+          "frame_end": 250,
+          "shader_nodes": [],
+          "shader_links": [],
+          "bones": []
+        },
+        {
+          "op": "create_material",
+          "name": "ForgeMCP_Wood",
+          "vertices": [],
+          "faces": [],
+          "location": null,
+          "rotation": null,
+          "scale": null,
+          "color": [
+            0.42,
+            0.19,
+            0.055,
+            1.0
+          ],
+          "material": "",
+          "collection": "",
+          "source": "",
+          "bone": "",
+          "node": "",
+          "socket": "",
+          "value": null,
+          "data_path": "location",
+          "frame": 1,
+          "fps": 30,
+          "frame_start": 1,
+          "frame_end": 250,
+          "shader_nodes": [
+            {
+              "id": "Coordinates",
+              "type": "ShaderNodeTexCoord",
+              "inputs": {},
+              "outputs": {},
+              "operation": "",
+              "x": -800,
+              "y": 0
+            },
+            {
+              "id": "GrainStretch",
+              "type": "ShaderNodeVectorMath",
+              "inputs": {
+                "Vector_001": [
+                  3.0,
+                  55.0,
+                  55.0
+                ]
+              },
+              "outputs": {},
+              "operation": "MULTIPLY",
+              "x": -600,
+              "y": 0
+            },
+            {
+              "id": "WoodGrain",
+              "type": "ShaderNodeTexNoise",
+              "inputs": {
+                "Scale": 2.5,
+                "Detail": 3.0,
+                "Roughness": 0.7
+              },
+              "outputs": {},
+              "operation": "",
+              "x": -400,
+              "y": 0
+            },
+            {
+              "id": "WoodColors",
+              "type": "ShaderNodeMixRGB",
+              "inputs": {
+                "Color1": [
+                  0.075,
+                  0.025,
+                  0.008,
+                  1.0
+                ],
+                "Color2": [
+                  0.42,
+                  0.19,
+                  0.055,
+                  1.0
+                ]
+              },
+              "outputs": {},
+              "operation": "",
+              "x": -180,
+              "y": 0
+            },
+            {
+              "id": "GrainBump",
+              "type": "ShaderNodeBump",
+              "inputs": {
+                "Strength": 0.18,
+                "Distance": 0.008
+              },
+              "outputs": {},
+              "operation": "",
+              "x": -160,
+              "y": -240
+            },
+            {
+              "id": "WoodSurface",
+              "type": "ShaderNodeBsdfPrincipled",
+              "inputs": {
+                "Roughness": 0.62
+              },
+              "outputs": {},
+              "operation": "",
+              "x": 80,
+              "y": 0
+            },
+            {
+              "id": "Output",
+              "type": "ShaderNodeOutputMaterial",
+              "inputs": {},
+              "outputs": {},
+              "operation": "",
+              "x": 400,
+              "y": 0
+            }
+          ],
+          "shader_links": [
+            {
+              "from_node": "Coordinates",
+              "from_socket": "Generated",
+              "to_node": "GrainStretch",
+              "to_socket": "Vector"
+            },
+            {
+              "from_node": "GrainStretch",
+              "from_socket": "Vector",
+              "to_node": "WoodGrain",
+              "to_socket": "Vector"
+            },
+            {
+              "from_node": "WoodGrain",
+              "from_socket": "Fac",
+              "to_node": "WoodColors",
+              "to_socket": "Fac"
+            },
+            {
+              "from_node": "WoodColors",
+              "from_socket": "Color",
+              "to_node": "WoodSurface",
+              "to_socket": "Base Color"
+            },
+            {
+              "from_node": "WoodGrain",
+              "from_socket": "Fac",
+              "to_node": "GrainBump",
+              "to_socket": "Height"
+            },
+            {
+              "from_node": "GrainBump",
+              "from_socket": "Normal",
+              "to_node": "WoodSurface",
+              "to_socket": "Normal"
+            },
+            {
+              "from_node": "WoodSurface",
+              "from_socket": "BSDF",
+              "to_node": "Output",
+              "to_socket": "Surface"
+            }
+          ],
+          "bones": []
+        },
+        {
+          "op": "create_mesh",
+          "name": "Wooden_Box",
+          "vertices": [
+            [
+              -0.6,
+              -0.45,
+              0.0
+            ],
+            [
+              0.6,
+              -0.45,
+              0.0
+            ],
+            [
+              0.6,
+              0.45,
+              0.0
+            ],
+            [
+              -0.6,
+              0.45,
+              0.0
+            ],
+            [
+              -0.6,
+              -0.45,
+              0.06
+            ],
+            [
+              0.6,
+              -0.45,
+              0.06
+            ],
+            [
+              0.6,
+              0.45,
+              0.06
+            ],
+            [
+              -0.6,
+              0.45,
+              0.06
+            ],
+            [
+              -0.6,
+              -0.45,
+              0.06
+            ],
+            [
+              0.6,
+              -0.45,
+              0.06
+            ],
+            [
+              0.6,
+              -0.39,
+              0.06
+            ],
+            [
+              -0.6,
+              -0.39,
+              0.06
+            ],
+            [
+              -0.6,
+              -0.45,
+              0.65
+            ],
+            [
+              0.6,
+              -0.45,
+              0.65
+            ],
+            [
+              0.6,
+              -0.39,
+              0.65
+            ],
+            [
+              -0.6,
+              -0.39,
+              0.65
+            ],
+            [
+              -0.6,
+              0.39,
+              0.06
+            ],
+            [
+              0.6,
+              0.39,
+              0.06
+            ],
+            [
+              0.6,
+              0.45,
+              0.06
+            ],
+            [
+              -0.6,
+              0.45,
+              0.06
+            ],
+            [
+              -0.6,
+              0.39,
+              0.65
+            ],
+            [
+              0.6,
+              0.39,
+              0.65
+            ],
+            [
+              0.6,
+              0.45,
+              0.65
+            ],
+            [
+              -0.6,
+              0.45,
+              0.65
+            ],
+            [
+              -0.6,
+              -0.39,
+              0.06
+            ],
+            [
+              -0.54,
+              -0.39,
+              0.06
+            ],
+            [
+              -0.54,
+              0.39,
+              0.06
+            ],
+            [
+              -0.6,
+              0.39,
+              0.06
+            ],
+            [
+              -0.6,
+              -0.39,
+              0.65
+            ],
+            [
+              -0.54,
+              -0.39,
+              0.65
+            ],
+            [
+              -0.54,
+              0.39,
+              0.65
+            ],
+            [
+              -0.6,
+              0.39,
+              0.65
+            ],
+            [
+              0.54,
+              -0.39,
+              0.06
+            ],
+            [
+              0.6,
+              -0.39,
+              0.06
+            ],
+            [
+              0.6,
+              0.39,
+              0.06
+            ],
+            [
+              0.54,
+              0.39,
+              0.06
+            ],
+            [
+              0.54,
+              -0.39,
+              0.65
+            ],
+            [
+              0.6,
+              -0.39,
+              0.65
+            ],
+            [
+              0.6,
+              0.39,
+              0.65
+            ],
+            [
+              0.54,
+              0.39,
+              0.65
+            ]
+          ],
+          "faces": [
+            [
+              0,
+              3,
+              2,
+              1
+            ],
+            [
+              4,
+              5,
+              6,
+              7
+            ],
+            [
+              0,
+              1,
+              5,
+              4
+            ],
+            [
+              1,
+              2,
+              6,
+              5
+            ],
+            [
+              2,
+              3,
+              7,
+              6
+            ],
+            [
+              3,
+              0,
+              4,
+              7
+            ],
+            [
+              8,
+              11,
+              10,
+              9
+            ],
+            [
+              12,
+              13,
+              14,
+              15
+            ],
+            [
+              8,
+              9,
+              13,
+              12
+            ],
+            [
+              9,
+              10,
+              14,
+              13
+            ],
+            [
+              10,
+              11,
+              15,
+              14
+            ],
+            [
+              11,
+              8,
+              12,
+              15
+            ],
+            [
+              16,
+              19,
+              18,
+              17
+            ],
+            [
+              20,
+              21,
+              22,
+              23
+            ],
+            [
+              16,
+              17,
+              21,
+              20
+            ],
+            [
+              17,
+              18,
+              22,
+              21
+            ],
+            [
+              18,
+              19,
+              23,
+              22
+            ],
+            [
+              19,
+              16,
+              20,
+              23
+            ],
+            [
+              24,
+              27,
+              26,
+              25
+            ],
+            [
+              28,
+              29,
+              30,
+              31
+            ],
+            [
+              24,
+              25,
+              29,
+              28
+            ],
+            [
+              25,
+              26,
+              30,
+              29
+            ],
+            [
+              26,
+              27,
+              31,
+              30
+            ],
+            [
+              27,
+              24,
+              28,
+              31
+            ],
+            [
+              32,
+              35,
+              34,
+              33
+            ],
+            [
+              36,
+              37,
+              38,
+              39
+            ],
+            [
+              32,
+              33,
+              37,
+              36
+            ],
+            [
+              33,
+              34,
+              38,
+              37
+            ],
+            [
+              34,
+              35,
+              39,
+              38
+            ],
+            [
+              35,
+              32,
+              36,
+              39
+            ]
+          ],
+          "location": null,
+          "rotation": null,
+          "scale": null,
+          "color": null,
+          "material": "",
+          "collection": "ForgeMCP_WoodenBox",
+          "source": "",
+          "bone": "",
+          "node": "",
+          "socket": "",
+          "value": null,
+          "data_path": "location",
+          "frame": 1,
+          "fps": 30,
+          "frame_start": 1,
+          "frame_end": 250,
+          "shader_nodes": [],
+          "shader_links": [],
+          "bones": []
+        },
+        {
+          "op": "assign_material",
+          "name": "Wooden_Box",
+          "vertices": [],
+          "faces": [],
+          "location": null,
+          "rotation": null,
+          "scale": null,
+          "color": null,
+          "material": "ForgeMCP_Wood",
+          "collection": "",
+          "source": "",
+          "bone": "",
+          "node": "",
+          "socket": "",
+          "value": null,
+          "data_path": "location",
+          "frame": 1,
+          "fps": 30,
+          "frame_start": 1,
+          "frame_end": 250,
+          "shader_nodes": [],
+          "shader_links": [],
+          "bones": []
+        }
+      ],
+      "saves_file": false,
+      "material_edits": [],
+      "recovery": "Failed batches remove newly created datablocks and restore touched objects, material defaults, and scene timing."
+    }
+  },
+  "apply": {
+    "ok": true,
+    "session_id": "blender-26920",
+    "data": {
+      "state": "completed",
+      "operations": [
+        {
+          "op": "create_collection",
+          "name": "ForgeMCP_WoodenBox",
+          "state": "completed"
+        },
+        {
+          "op": "create_material",
+          "name": "ForgeMCP_Wood",
+          "state": "completed"
+        },
+        {
+          "op": "create_mesh",
+          "name": "Wooden_Box",
+          "state": "completed"
+        },
+        {
+          "op": "assign_material",
+          "name": "Wooden_Box",
+          "state": "completed"
+        }
+      ],
+      "objects": [
+        {
+          "name": "Wooden_Box",
+          "type": "MESH",
+          "location": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_euler": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rotation_mode": "XYZ",
+          "scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "collections": [
+            "ForgeMCP_WoodenBox"
+          ],
+          "materials": [
+            "ForgeMCP_Wood"
+          ],
+          "modifiers": [],
+          "mesh": {
+            "vertices": 40,
+            "edges": 60,
+            "faces": 30
+          },
+          "action": null
+        }
+      ],
+      "saved": false,
+      "materials": [
+        {
+          "name": "ForgeMCP_Wood",
+          "library": null,
+          "users": 1,
+          "diffuse_color": [
+            0.41999998688697815,
+            0.1899999976158142,
+            0.054999999701976776,
+            1.0
+          ],
+          "use_nodes": true,
+          "nodes": [
+            {
+              "id": "Coordinates",
+              "type": "ShaderNodeTexCoord",
+              "operation": null,
+              "blend_type": null,
+              "location": [
+                -800.0,
+                0.0
+              ],
+              "inputs": [],
+              "outputs": [
+                {
+                  "name": "Generated",
+                  "identifier": "Generated",
+                  "type": "VECTOR",
+                  "linked": true,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Normal",
+                  "identifier": "Normal",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "UV",
+                  "identifier": "UV",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Object",
+                  "identifier": "Object",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Camera",
+                  "identifier": "Camera",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Window",
+                  "identifier": "Window",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Reflection",
+                  "identifier": "Reflection",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                }
+              ],
+              "sockets_truncated": false
+            },
+            {
+              "id": "GrainStretch",
+              "type": "ShaderNodeVectorMath",
+              "operation": "MULTIPLY",
+              "blend_type": null,
+              "location": [
+                -600.0,
+                0.0
+              ],
+              "inputs": [
+                {
+                  "name": "Vector",
+                  "identifier": "Vector",
+                  "type": "VECTOR",
+                  "linked": true,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Vector",
+                  "identifier": "Vector_001",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    3.0,
+                    55.0,
+                    55.0
+                  ]
+                },
+                {
+                  "name": "Vector",
+                  "identifier": "Vector_002",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Scale",
+                  "identifier": "Scale",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.0
+                }
+              ],
+              "outputs": [
+                {
+                  "name": "Vector",
+                  "identifier": "Vector",
+                  "type": "VECTOR",
+                  "linked": true,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Value",
+                  "identifier": "Value",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                }
+              ],
+              "sockets_truncated": false
+            },
+            {
+              "id": "WoodGrain",
+              "type": "ShaderNodeTexNoise",
+              "operation": null,
+              "blend_type": null,
+              "location": [
+                -400.0,
+                0.0
+              ],
+              "inputs": [
+                {
+                  "name": "Vector",
+                  "identifier": "Vector",
+                  "type": "VECTOR",
+                  "linked": true,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "W",
+                  "identifier": "W",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Scale",
+                  "identifier": "Scale",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 2.5
+                },
+                {
+                  "name": "Detail",
+                  "identifier": "Detail",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 3.0
+                },
+                {
+                  "name": "Roughness",
+                  "identifier": "Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.699999988079071
+                },
+                {
+                  "name": "Lacunarity",
+                  "identifier": "Lacunarity",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 2.0
+                },
+                {
+                  "name": "Offset",
+                  "identifier": "Offset",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Gain",
+                  "identifier": "Gain",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.0
+                },
+                {
+                  "name": "Distortion",
+                  "identifier": "Distortion",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                }
+              ],
+              "outputs": [
+                {
+                  "name": "Factor",
+                  "identifier": "Fac",
+                  "type": "VALUE",
+                  "linked": true,
+                  "default": 0.0
+                },
+                {
+                  "name": "Color",
+                  "identifier": "Color",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929,
+                    1.0
+                  ]
+                }
+              ],
+              "sockets_truncated": false
+            },
+            {
+              "id": "WoodColors",
+              "type": "ShaderNodeMixRGB",
+              "operation": null,
+              "blend_type": "MIX",
+              "location": [
+                -180.0,
+                0.0
+              ],
+              "inputs": [
+                {
+                  "name": "Factor",
+                  "identifier": "Fac",
+                  "type": "VALUE",
+                  "linked": true,
+                  "default": 0.5
+                },
+                {
+                  "name": "Color1",
+                  "identifier": "Color1",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    0.07500000298023224,
+                    0.02500000037252903,
+                    0.00800000037997961,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Color2",
+                  "identifier": "Color2",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    0.41999998688697815,
+                    0.1899999976158142,
+                    0.054999999701976776,
+                    1.0
+                  ]
+                }
+              ],
+              "outputs": [
+                {
+                  "name": "Color",
+                  "identifier": "Color",
+                  "type": "RGBA",
+                  "linked": true,
+                  "default": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929,
+                    1.0
+                  ]
+                }
+              ],
+              "sockets_truncated": false
+            },
+            {
+              "id": "GrainBump",
+              "type": "ShaderNodeBump",
+              "operation": null,
+              "blend_type": null,
+              "location": [
+                -160.0,
+                -240.0
+              ],
+              "inputs": [
+                {
+                  "name": "Strength",
+                  "identifier": "Strength",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.18000000715255737
+                },
+                {
+                  "name": "Distance",
+                  "identifier": "Distance",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.00800000037997961
+                },
+                {
+                  "name": "Filter Width",
+                  "identifier": "Filter Width",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.10000000149011612
+                },
+                {
+                  "name": "Height",
+                  "identifier": "Height",
+                  "type": "VALUE",
+                  "linked": true,
+                  "default": 1.0
+                },
+                {
+                  "name": "Normal",
+                  "identifier": "Normal",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                }
+              ],
+              "outputs": [
+                {
+                  "name": "Normal",
+                  "identifier": "Normal",
+                  "type": "VECTOR",
+                  "linked": true,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                }
+              ],
+              "sockets_truncated": false
+            },
+            {
+              "id": "WoodSurface",
+              "type": "ShaderNodeBsdfPrincipled",
+              "operation": null,
+              "blend_type": null,
+              "location": [
+                80.0,
+                0.0
+              ],
+              "inputs": [
+                {
+                  "name": "Base Color",
+                  "identifier": "Base Color",
+                  "type": "RGBA",
+                  "linked": true,
+                  "default": [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Metallic",
+                  "identifier": "Metallic",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Roughness",
+                  "identifier": "Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.6200000047683716
+                },
+                {
+                  "name": "IOR",
+                  "identifier": "IOR",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.5
+                },
+                {
+                  "name": "Alpha",
+                  "identifier": "Alpha",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.0
+                },
+                {
+                  "name": "Thin Wall",
+                  "identifier": "Thin Wall",
+                  "type": "BOOLEAN",
+                  "linked": false,
+                  "default": false
+                },
+                {
+                  "name": "Normal",
+                  "identifier": "Normal",
+                  "type": "VECTOR",
+                  "linked": true,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Weight",
+                  "identifier": "Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Diffuse Roughness",
+                  "identifier": "Diffuse Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Subsurface Weight",
+                  "identifier": "Subsurface Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Subsurface Radius",
+                  "identifier": "Subsurface Radius",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    0.20000000298023224,
+                    0.10000000149011612
+                  ]
+                },
+                {
+                  "name": "Subsurface Scale",
+                  "identifier": "Subsurface Scale",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.004999999888241291
+                },
+                {
+                  "name": "Subsurface IOR",
+                  "identifier": "Subsurface IOR",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.399999976158142
+                },
+                {
+                  "name": "Subsurface Anisotropy",
+                  "identifier": "Subsurface Anisotropy",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Specular IOR Level",
+                  "identifier": "Specular IOR Level",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.5
+                },
+                {
+                  "name": "Specular Tint",
+                  "identifier": "Specular Tint",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Anisotropic",
+                  "identifier": "Anisotropic",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Anisotropic Rotation",
+                  "identifier": "Anisotropic Rotation",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Tangent",
+                  "identifier": "Tangent",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Transmission Weight",
+                  "identifier": "Transmission Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Coat Weight",
+                  "identifier": "Coat Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Coat Roughness",
+                  "identifier": "Coat Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.029999999329447746
+                },
+                {
+                  "name": "Coat IOR",
+                  "identifier": "Coat IOR",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.5
+                },
+                {
+                  "name": "Coat Tint",
+                  "identifier": "Coat Tint",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Coat Normal",
+                  "identifier": "Coat Normal",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Sheen Weight",
+                  "identifier": "Sheen Weight",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Sheen Roughness",
+                  "identifier": "Sheen Roughness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.5
+                },
+                {
+                  "name": "Sheen Tint",
+                  "identifier": "Sheen Tint",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Emission Color",
+                  "identifier": "Emission Color",
+                  "type": "RGBA",
+                  "linked": false,
+                  "default": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ]
+                },
+                {
+                  "name": "Emission Strength",
+                  "identifier": "Emission Strength",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Thin Film Thickness",
+                  "identifier": "Thin Film Thickness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                },
+                {
+                  "name": "Thin Film IOR",
+                  "identifier": "Thin Film IOR",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 1.3300000429153442
+                }
+              ],
+              "outputs": [
+                {
+                  "name": "BSDF",
+                  "identifier": "BSDF",
+                  "type": "SHADER",
+                  "linked": true
+                }
+              ],
+              "sockets_truncated": false
+            },
+            {
+              "id": "Output",
+              "type": "ShaderNodeOutputMaterial",
+              "operation": null,
+              "blend_type": null,
+              "location": [
+                400.0,
+                0.0
+              ],
+              "inputs": [
+                {
+                  "name": "Surface",
+                  "identifier": "Surface",
+                  "type": "SHADER",
+                  "linked": true
+                },
+                {
+                  "name": "Volume",
+                  "identifier": "Volume",
+                  "type": "SHADER",
+                  "linked": false
+                },
+                {
+                  "name": "Displacement",
+                  "identifier": "Displacement",
+                  "type": "VECTOR",
+                  "linked": false,
+                  "default": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                },
+                {
+                  "name": "Thickness",
+                  "identifier": "Thickness",
+                  "type": "VALUE",
+                  "linked": false,
+                  "default": 0.0
+                }
+              ],
+              "outputs": [],
+              "sockets_truncated": false
+            }
+          ],
+          "links": [
+            {
+              "from_node": "Coordinates",
+              "from_socket": "Generated",
+              "to_node": "GrainStretch",
+              "to_socket": "Vector",
+              "valid": true
+            },
+            {
+              "from_node": "GrainStretch",
+              "from_socket": "Vector",
+              "to_node": "WoodGrain",
+              "to_socket": "Vector",
+              "valid": true
+            },
+            {
+              "from_node": "WoodGrain",
+              "from_socket": "Fac",
+              "to_node": "WoodColors",
+              "to_socket": "Fac",
+              "valid": true
+            },
+            {
+              "from_node": "WoodColors",
+              "from_socket": "Color",
+              "to_node": "WoodSurface",
+              "to_socket": "Base Color",
+              "valid": true
+            },
+            {
+              "from_node": "WoodGrain",
+              "from_socket": "Fac",
+              "to_node": "GrainBump",
+              "to_socket": "Height",
+              "valid": true
+            },
+            {
+              "from_node": "GrainBump",
+              "from_socket": "Normal",
+              "to_node": "WoodSurface",
+              "to_socket": "Normal",
+              "valid": true
+            },
+            {
+              "from_node": "WoodSurface",
+              "from_socket": "BSDF",
+              "to_node": "Output",
+              "to_socket": "Surface",
+              "valid": true
+            }
+          ],
+          "object_users": [
+            "Wooden_Box"
+          ],
+          "total_object_users": 1,
+          "object_users_truncated": false,
+          "total_nodes": 7,
+          "total_links": 7,
+          "truncated": false
+        }
+      ],
+      "preserved_datablocks": []
+    }
+  },
+  "object": {
+    "ok": true,
+    "session_id": "blender-26920",
+    "data": {
+      "name": "Wooden_Box",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_mode": "XYZ",
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collections": [
+        "ForgeMCP_WoodenBox"
+      ],
+      "materials": [
+        "ForgeMCP_Wood"
+      ],
+      "modifiers": [],
+      "mesh": {
+        "vertices": 40,
+        "edges": 60,
+        "faces": 30
+      },
+      "action": null
+    }
+  },
+  "material": {
+    "ok": true,
+    "session_id": "blender-26920",
+    "data": {
+      "name": "ForgeMCP_Wood",
+      "library": null,
+      "users": 1,
+      "diffuse_color": [
+        0.41999998688697815,
+        0.1899999976158142,
+        0.054999999701976776,
+        1.0
+      ],
+      "use_nodes": true,
+      "nodes": [
+        {
+          "id": "Coordinates",
+          "type": "ShaderNodeTexCoord",
+          "operation": null,
+          "blend_type": null,
+          "location": [
+            -800.0,
+            0.0
+          ],
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Generated",
+              "identifier": "Generated",
+              "type": "VECTOR",
+              "linked": true,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "Normal",
+              "identifier": "Normal",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "UV",
+              "identifier": "UV",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "Object",
+              "identifier": "Object",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "Camera",
+              "identifier": "Camera",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "Window",
+              "identifier": "Window",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "Reflection",
+              "identifier": "Reflection",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          ],
+          "sockets_truncated": false
+        },
+        {
+          "id": "GrainStretch",
+          "type": "ShaderNodeVectorMath",
+          "operation": "MULTIPLY",
+          "blend_type": null,
+          "location": [
+            -600.0,
+            0.0
+          ],
+          "inputs": [
+            {
+              "name": "Vector",
+              "identifier": "Vector",
+              "type": "VECTOR",
+              "linked": true,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "Vector",
+              "identifier": "Vector_001",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                3.0,
+                55.0,
+                55.0
+              ]
+            },
+            {
+              "name": "Vector",
+              "identifier": "Vector_002",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "Scale",
+              "identifier": "Scale",
+              "type": "VALUE",
+              "linked": false,
+              "default": 1.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Vector",
+              "identifier": "Vector",
+              "type": "VECTOR",
+              "linked": true,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "Value",
+              "identifier": "Value",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            }
+          ],
+          "sockets_truncated": false
+        },
+        {
+          "id": "WoodGrain",
+          "type": "ShaderNodeTexNoise",
+          "operation": null,
+          "blend_type": null,
+          "location": [
+            -400.0,
+            0.0
+          ],
+          "inputs": [
+            {
+              "name": "Vector",
+              "identifier": "Vector",
+              "type": "VECTOR",
+              "linked": true,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "W",
+              "identifier": "W",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Scale",
+              "identifier": "Scale",
+              "type": "VALUE",
+              "linked": false,
+              "default": 2.5
+            },
+            {
+              "name": "Detail",
+              "identifier": "Detail",
+              "type": "VALUE",
+              "linked": false,
+              "default": 3.0
+            },
+            {
+              "name": "Roughness",
+              "identifier": "Roughness",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.699999988079071
+            },
+            {
+              "name": "Lacunarity",
+              "identifier": "Lacunarity",
+              "type": "VALUE",
+              "linked": false,
+              "default": 2.0
+            },
+            {
+              "name": "Offset",
+              "identifier": "Offset",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Gain",
+              "identifier": "Gain",
+              "type": "VALUE",
+              "linked": false,
+              "default": 1.0
+            },
+            {
+              "name": "Distortion",
+              "identifier": "Distortion",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Factor",
+              "identifier": "Fac",
+              "type": "VALUE",
+              "linked": true,
+              "default": 0.0
+            },
+            {
+              "name": "Color",
+              "identifier": "Color",
+              "type": "RGBA",
+              "linked": false,
+              "default": [
+                0.800000011920929,
+                0.800000011920929,
+                0.800000011920929,
+                1.0
+              ]
+            }
+          ],
+          "sockets_truncated": false
+        },
+        {
+          "id": "WoodColors",
+          "type": "ShaderNodeMixRGB",
+          "operation": null,
+          "blend_type": "MIX",
+          "location": [
+            -180.0,
+            0.0
+          ],
+          "inputs": [
+            {
+              "name": "Factor",
+              "identifier": "Fac",
+              "type": "VALUE",
+              "linked": true,
+              "default": 0.5
+            },
+            {
+              "name": "Color1",
+              "identifier": "Color1",
+              "type": "RGBA",
+              "linked": false,
+              "default": [
+                0.07500000298023224,
+                0.02500000037252903,
+                0.00800000037997961,
+                1.0
+              ]
+            },
+            {
+              "name": "Color2",
+              "identifier": "Color2",
+              "type": "RGBA",
+              "linked": false,
+              "default": [
+                0.41999998688697815,
+                0.1899999976158142,
+                0.054999999701976776,
+                1.0
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "identifier": "Color",
+              "type": "RGBA",
+              "linked": true,
+              "default": [
+                0.800000011920929,
+                0.800000011920929,
+                0.800000011920929,
+                1.0
+              ]
+            }
+          ],
+          "sockets_truncated": false
+        },
+        {
+          "id": "GrainBump",
+          "type": "ShaderNodeBump",
+          "operation": null,
+          "blend_type": null,
+          "location": [
+            -160.0,
+            -240.0
+          ],
+          "inputs": [
+            {
+              "name": "Strength",
+              "identifier": "Strength",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.18000000715255737
+            },
+            {
+              "name": "Distance",
+              "identifier": "Distance",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.00800000037997961
+            },
+            {
+              "name": "Filter Width",
+              "identifier": "Filter Width",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.10000000149011612
+            },
+            {
+              "name": "Height",
+              "identifier": "Height",
+              "type": "VALUE",
+              "linked": true,
+              "default": 1.0
+            },
+            {
+              "name": "Normal",
+              "identifier": "Normal",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Normal",
+              "identifier": "Normal",
+              "type": "VECTOR",
+              "linked": true,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          ],
+          "sockets_truncated": false
+        },
+        {
+          "id": "WoodSurface",
+          "type": "ShaderNodeBsdfPrincipled",
+          "operation": null,
+          "blend_type": null,
+          "location": [
+            80.0,
+            0.0
+          ],
+          "inputs": [
+            {
+              "name": "Base Color",
+              "identifier": "Base Color",
+              "type": "RGBA",
+              "linked": true,
+              "default": [
+                0.800000011920929,
+                0.800000011920929,
+                0.800000011920929,
+                1.0
+              ]
+            },
+            {
+              "name": "Metallic",
+              "identifier": "Metallic",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Roughness",
+              "identifier": "Roughness",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.6200000047683716
+            },
+            {
+              "name": "IOR",
+              "identifier": "IOR",
+              "type": "VALUE",
+              "linked": false,
+              "default": 1.5
+            },
+            {
+              "name": "Alpha",
+              "identifier": "Alpha",
+              "type": "VALUE",
+              "linked": false,
+              "default": 1.0
+            },
+            {
+              "name": "Thin Wall",
+              "identifier": "Thin Wall",
+              "type": "BOOLEAN",
+              "linked": false,
+              "default": false
+            },
+            {
+              "name": "Normal",
+              "identifier": "Normal",
+              "type": "VECTOR",
+              "linked": true,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "Weight",
+              "identifier": "Weight",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Diffuse Roughness",
+              "identifier": "Diffuse Roughness",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Subsurface Weight",
+              "identifier": "Subsurface Weight",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Subsurface Radius",
+              "identifier": "Subsurface Radius",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                1.0,
+                0.20000000298023224,
+                0.10000000149011612
+              ]
+            },
+            {
+              "name": "Subsurface Scale",
+              "identifier": "Subsurface Scale",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.004999999888241291
+            },
+            {
+              "name": "Subsurface IOR",
+              "identifier": "Subsurface IOR",
+              "type": "VALUE",
+              "linked": false,
+              "default": 1.399999976158142
+            },
+            {
+              "name": "Subsurface Anisotropy",
+              "identifier": "Subsurface Anisotropy",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Specular IOR Level",
+              "identifier": "Specular IOR Level",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.5
+            },
+            {
+              "name": "Specular Tint",
+              "identifier": "Specular Tint",
+              "type": "RGBA",
+              "linked": false,
+              "default": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            {
+              "name": "Anisotropic",
+              "identifier": "Anisotropic",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Anisotropic Rotation",
+              "identifier": "Anisotropic Rotation",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Tangent",
+              "identifier": "Tangent",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "Transmission Weight",
+              "identifier": "Transmission Weight",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Coat Weight",
+              "identifier": "Coat Weight",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Coat Roughness",
+              "identifier": "Coat Roughness",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.029999999329447746
+            },
+            {
+              "name": "Coat IOR",
+              "identifier": "Coat IOR",
+              "type": "VALUE",
+              "linked": false,
+              "default": 1.5
+            },
+            {
+              "name": "Coat Tint",
+              "identifier": "Coat Tint",
+              "type": "RGBA",
+              "linked": false,
+              "default": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            {
+              "name": "Coat Normal",
+              "identifier": "Coat Normal",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "Sheen Weight",
+              "identifier": "Sheen Weight",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Sheen Roughness",
+              "identifier": "Sheen Roughness",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.5
+            },
+            {
+              "name": "Sheen Tint",
+              "identifier": "Sheen Tint",
+              "type": "RGBA",
+              "linked": false,
+              "default": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            {
+              "name": "Emission Color",
+              "identifier": "Emission Color",
+              "type": "RGBA",
+              "linked": false,
+              "default": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ]
+            },
+            {
+              "name": "Emission Strength",
+              "identifier": "Emission Strength",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Thin Film Thickness",
+              "identifier": "Thin Film Thickness",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            },
+            {
+              "name": "Thin Film IOR",
+              "identifier": "Thin Film IOR",
+              "type": "VALUE",
+              "linked": false,
+              "default": 1.3300000429153442
+            }
+          ],
+          "outputs": [
+            {
+              "name": "BSDF",
+              "identifier": "BSDF",
+              "type": "SHADER",
+              "linked": true
+            }
+          ],
+          "sockets_truncated": false
+        },
+        {
+          "id": "Output",
+          "type": "ShaderNodeOutputMaterial",
+          "operation": null,
+          "blend_type": null,
+          "location": [
+            400.0,
+            0.0
+          ],
+          "inputs": [
+            {
+              "name": "Surface",
+              "identifier": "Surface",
+              "type": "SHADER",
+              "linked": true
+            },
+            {
+              "name": "Volume",
+              "identifier": "Volume",
+              "type": "SHADER",
+              "linked": false
+            },
+            {
+              "name": "Displacement",
+              "identifier": "Displacement",
+              "type": "VECTOR",
+              "linked": false,
+              "default": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "name": "Thickness",
+              "identifier": "Thickness",
+              "type": "VALUE",
+              "linked": false,
+              "default": 0.0
+            }
+          ],
+          "outputs": [],
+          "sockets_truncated": false
+        }
+      ],
+      "links": [
+        {
+          "from_node": "Coordinates",
+          "from_socket": "Generated",
+          "to_node": "GrainStretch",
+          "to_socket": "Vector",
+          "valid": true
+        },
+        {
+          "from_node": "GrainStretch",
+          "from_socket": "Vector",
+          "to_node": "WoodGrain",
+          "to_socket": "Vector",
+          "valid": true
+        },
+        {
+          "from_node": "WoodGrain",
+          "from_socket": "Fac",
+          "to_node": "WoodColors",
+          "to_socket": "Fac",
+          "valid": true
+        },
+        {
+          "from_node": "WoodColors",
+          "from_socket": "Color",
+          "to_node": "WoodSurface",
+          "to_socket": "Base Color",
+          "valid": true
+        },
+        {
+          "from_node": "WoodGrain",
+          "from_socket": "Fac",
+          "to_node": "GrainBump",
+          "to_socket": "Height",
+          "valid": true
+        },
+        {
+          "from_node": "GrainBump",
+          "from_socket": "Normal",
+          "to_node": "WoodSurface",
+          "to_socket": "Normal",
+          "valid": true
+        },
+        {
+          "from_node": "WoodSurface",
+          "from_socket": "BSDF",
+          "to_node": "Output",
+          "to_socket": "Surface",
+          "valid": true
+        }
+      ],
+      "object_users": [
+        "Wooden_Box"
+      ],
+      "total_object_users": 1,
+      "object_users_truncated": false,
+      "total_nodes": 7,
+      "total_links": 7,
+      "truncated": false
+    }
+  }
+}

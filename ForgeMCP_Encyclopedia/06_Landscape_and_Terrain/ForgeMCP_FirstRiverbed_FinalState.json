@@ -1,0 +1,241 @@
+{
+  "timestamp": "2026-10-23T19:33:43.268Z",
+  "project": {
+    "ok": true,
+    "session_id": "unreal-22604",
+    "data": {
+      "project_name": "ForgeMCPDev",
+      "project_file": "G:/ForgeMCP/ForgeMCPDev.uproject",
+      "engine_version": "5.6.1-44394996+++UE5+Release-5.6",
+      "level": "/Game/Levels/L_City_World_Master.L_City_World_Master",
+      "play_in_editor": false
+    }
+  },
+  "dirty": {
+    "ok": true,
+    "session_id": "unreal-22604",
+    "data": {
+      "inventory_scope": "Loaded UPackage objects in the current Editor process only.",
+      "inventory_id": "85E5EC8F49C2039D2D6D12BF0344A997",
+      "snapshot_lifetime_seconds": 60,
+      "current_level_package": "/Game/Levels/L_City_World_Master",
+      "proposed_target_map_path": "",
+      "packages_inspected": 1244,
+      "inventory_complete": true,
+      "snapshot_limit_reached": false,
+      "dirty_loaded_packages_observed": 2,
+      "total_dirty_loaded_packages": 2,
+      "offset": 0,
+      "limit": 50,
+      "returned_count": 2,
+      "has_more_observed_results": false,
+      "next_offset": null,
+      "packages": [
+        {
+          "package_name": "/Script/SlateCore",
+          "package_path": "/Script/SlateCore",
+          "is_dirty": true,
+          "is_transient_package": false,
+          "package_flags": 16,
+          "package_newly_created": false,
+          "package_contains_map": false,
+          "package_contains_map_data": false,
+          "package_compiled_in": true,
+          "classification": "engine_script",
+          "package_category": "engine_script",
+          "package_domain": "engine_script",
+          "script_package_candidate": true,
+          "classification_basis": "script_package_compiled_in_loaded_engine_module",
+          "classification_complete": true,
+          "ownership_scan_complete": true,
+          "associated_object_count_scanned": 116,
+          "associated_actor_count": 0,
+          "external_actor_count": 0,
+          "contains_external_actor": false,
+          "engine_script_provenance_verified": true,
+          "unresolved_engine_script_package": false,
+          "unresolved_project_content_package": false,
+          "target_map_path": "",
+          "target_map_path_namespace_match": false,
+          "target_map_association_basis": "not_determined_from_package_path",
+          "project_membership_determined": true,
+          "belongs_to_test_project": true,
+          "is_current_level_package": false,
+          "associated_with_current_level_determined": true,
+          "associated_with_current_level": false,
+          "associated_actor_determined": false,
+          "associated_actor_path": null,
+          "associated_objects": [
+            {
+              "object_name": "SlateWidgetStyleAsset",
+              "object_path": "/Script/SlateCore.SlateWidgetStyleAsset",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "FontBulkData",
+              "object_path": "/Script/SlateCore.FontBulkData",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "FontFaceInterface",
+              "object_path": "/Script/SlateCore.FontFaceInterface",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "FontProviderInterface",
+              "object_path": "/Script/SlateCore.FontProviderInterface",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            }
+          ],
+          "associated_objects_truncated": true,
+          "associated_objects_sample_truncated": true,
+          "external_actor_namespace_candidate": false
+        },
+        {
+          "package_name": "/Script/UnrealEd",
+          "package_path": "/Script/UnrealEd",
+          "is_dirty": true,
+          "is_transient_package": false,
+          "package_flags": 80,
+          "package_newly_created": false,
+          "package_contains_map": false,
+          "package_contains_map_data": false,
+          "package_compiled_in": true,
+          "classification": "engine_script",
+          "package_category": "engine_script",
+          "package_domain": "engine_script",
+          "script_package_candidate": true,
+          "classification_basis": "script_package_compiled_in_loaded_engine_module",
+          "classification_complete": true,
+          "ownership_scan_complete": true,
+          "associated_object_count_scanned": 1233,
+          "associated_actor_count": 4,
+          "external_actor_count": 0,
+          "contains_external_actor": false,
+          "engine_script_provenance_verified": true,
+          "unresolved_engine_script_package": false,
+          "unresolved_project_content_package": false,
+          "target_map_path": "",
+          "target_map_path_namespace_match": false,
+          "target_map_association_basis": "not_determined_from_package_path",
+          "project_membership_determined": true,
+          "belongs_to_test_project": true,
+          "is_current_level_package": false,
+          "associated_with_current_level_determined": true,
+          "associated_with_current_level": false,
+          "associated_actor_determined": false,
+          "associated_actor_path": null,
+          "associated_objects": [
+            {
+              "object_name": "EditorInteractiveToolsContext",
+              "object_path": "/Script/UnrealEd.EditorInteractiveToolsContext",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "ModeManagerInteractiveToolsContext",
+              "object_path": "/Script/UnrealEd.ModeManagerInteractiveToolsContext",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "EditorWorldExtension",
+              "object_path": "/Script/UnrealEd.EditorWorldExtension",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            },
+            {
+              "object_name": "ActorFactory",
+              "object_path": "/Script/UnrealEd.ActorFactory",
+              "class_path": "/Script/CoreUObject.Class",
+              "is_actor": false
+            }
+          ],
+          "associated_objects_truncated": true,
+          "associated_objects_sample_truncated": true,
+          "external_actor_namespace_candidate": false
+        }
+      ],
+      "inspection_errors": [],
+      "unloaded_package_note": "Packages absent from the loaded UObject inventory were not inspected and are not classified as clean.",
+      "page_consistency_note": "All pages with this inventory_id use copied records from one game-thread scan; request remaining pages within snapshot_lifetime_seconds.",
+      "read_only": true,
+      "snapshot_id": "85E5EC8F49C2039D2D6D12BF0344A997"
+    }
+  },
+  "authorization": {
+    "ok": true,
+    "session_id": "unreal-22604",
+    "data": {
+      "authorization_origin": "adopted_existing_landscape",
+      "session_id": "unreal-22604",
+      "editor_pid": 22604,
+      "project_file": "G:/ForgeMCP/ForgeMCPDev.uproject",
+      "world_path": "/Game/Levels/L_City_World_Master",
+      "actor_path": "/Game/Levels/L_City_World_Master.L_City_World_Master:PersistentLevel.Landscape_UAID_701CE7E46087BA0D03_2100287295",
+      "landscape_guid": "BD45FDD94EC2A29617B50794F2DE4E9D",
+      "world_partition": true,
+      "potentially_adoptable": true,
+      "readiness_blocker": "",
+      "checkpoint_source_clean": true,
+      "target_layer_exists": true,
+      "target_layer_ready": true,
+      "target_layer_locked": false,
+      "target_layer_visible": true,
+      "requires_layer_setup": false,
+      "local_editor_confirmation_required": true,
+      "backup_required": true,
+      "backup_scope_readable": true,
+      "backup_scope_blocker": "",
+      "backup_source_file_count": 23,
+      "setup_affects_entire_selected_landscape": false,
+      "read_only": true,
+      "requests": [
+        {
+          "adoption_id": "6025F70A4D50AAA3EE2CCBB7ADD0C0EF",
+          "approved": true,
+          "revoked": false,
+          "used": true,
+          "expires_at_unix": 1792739841,
+          "expired": true,
+          "backup_root": "G:/ForgeMCP/Saved/ForgeLandscapeAdoption/6025F70A4D50AAA3EE2CCBB7ADD0C0EF",
+          "actions": [
+            "setup_layer"
+          ],
+          "region": [
+            0,
+            0,
+            2040,
+            2040
+          ],
+          "checkpoint_files_present": true
+        },
+        {
+          "adoption_id": "9633FCA74828A98705B0DBBF690F54A4",
+          "approved": true,
+          "revoked": false,
+          "used": true,
+          "expires_at_unix": 1792785276,
+          "expired": false,
+          "backup_root": "G:/ForgeMCP/Saved/ForgeLandscapeAdoption/9633FCA74828A98705B0DBBF690F54A4",
+          "actions": [
+            "apply_heightmap"
+          ],
+          "region": [
+            1054,
+            1066,
+            1086,
+            1074
+          ],
+          "checkpoint_files_present": true
+        }
+      ]
+    }
+  },
+  "user_camera_confirmation": "Camera helper completed",
+  "screenshot": "G:/ForgeMCP/Saved/FirstRiverbed_VerifiedCloseup.jpg"
+}

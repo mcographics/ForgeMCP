@@ -15,6 +15,8 @@ class FForgeLandscape
         TWeakObjectPtr<ALandscape> Actor;
         TSharedPtr<FJsonObject> Request;
         FString Fingerprint;
+        FString AdoptionId;
+        FString SessionExpectedAfter;
         FTransform Transform = FTransform::Identity;
         FGuid Layer;
         FIntRect Bounds, EditBounds;
@@ -25,6 +27,14 @@ class FForgeLandscape
         FString TargetMapFilename;
         FString TargetExternalActorsRoot;
         FString TargetExternalObjectsRoot;
+        FString ExistingWorldAuthorizationId;
+        FString ExistingWorldAuthorizationSessionId;
+        FString ExistingWorldAuthorizationProjectFile;
+        FString ExistingWorldAuthorizationPackage;
+        FString ExistingWorldPackageFingerprint;
+        TSet<FString> ExistingWorldAuthorizationActions;
+        int64 ExistingWorldAuthorizationExpiresAtUnix = 0;
+        bool bHasExistingWorldAuthorization = false;
         double Expires = 0;
     };
     struct FJob
@@ -34,6 +44,8 @@ class FForgeLandscape
         int32 NextRow = 0;
         double NextTime = 0, MaxStageMs = 0;
         bool bHeightReadbackValidated = false;
+        bool bSessionResultLogged = false;
+        FString SessionRecoveryManifest;
     };
     struct FLoader
     {
@@ -50,8 +62,10 @@ class FForgeLandscape
     TMap<FString, FPlan> Previews;
     TMap<FString, FJob> Jobs;
     TMap<FString, FLoader> Loaders;
+    TMap<FString, FGuid> AuthorizedExistingWorldLandscapes;
     TWeakObjectPtr<UWorld> LastWorld;
     bool bWorldTransitionInProgress = false;
+    void FinishEditSessionJob(FJob& Job);
 public:
     bool PrepareForWorldTransition(UWorld* OutgoingWorld, FString& OutError);
     bool Handle(const FString& Command, const TSharedRef<FJsonObject>& Args,

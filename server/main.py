@@ -24,6 +24,13 @@ from server.core.connections import BridgeError, ConnectionManager
 from server.core.dirty_packages import DirtyPackageInspectionRequest
 from server.core.knowledge import search_api
 from server.core.landscape import LandscapeRequest
+from server.core.landscape_adoption import LandscapeAdoptionRequest
+from server.core.landscape_authorization import existing_world_landscape_authorization
+from server.core.landscape_edit_session import (
+    LandscapeEditSessionReference,
+    LandscapeEditSessionRequest,
+    LandscapeHeightRegionRequest,
+)
 from server.core.level_creation import EmptyOpenWorldCreations, EmptyOpenWorldRequest
 from server.core.levels import CurrentLevelSaves, LevelSaves
 from server.core.materials import (
@@ -631,12 +638,86 @@ async def unreal_inspect_dirty_packages(
     return {**result, "data": normalized_data}
 
 
+@mcp.tool(annotations=READ_ONLY)
+async def unreal_landscape_adoption_preflight(request: LandscapeAdoptionRequest,
+                                            session_id: str) -> dict[str, Any]:
+    """Read adoption eligibility, preparation and local approval state; never approve or write."""
+    return await connections.dispatch("unreal", "landscape_adoption_preflight", session_id,
+                                      {"request": request.model_dump()})
+
+
+@mcp.tool(annotations=PREVIEW)
+async def unreal_request_landscape_adoption(request: LandscapeAdoptionRequest,
+                                          session_id: str) -> dict[str, Any]:
+    """Register a pending request only. A human must approve in the local Editor console.
+
+    No grant, checkpoint, layer, height or project file is created by this request.
+    """
+    return await connections.dispatch("unreal", "landscape_adoption_request", session_id,
+                                      {"request": request.model_dump()})
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def unreal_read_landscape_height_region(
+    request: LandscapeHeightRegionRequest, session_id: str,
+) -> dict[str, Any]:
+    """Read up to 32,768 native edit-layer height samples, row-major in local centimeters.
+
+    Requires exact inspected actor/layer GUID and loaded region. This is layer data,
+    not composed terrain or collision data, and does not confer write permission.
+    """
+    return await connections.dispatch("unreal", "landscape_read_region", session_id,
+                                      {"request": request.model_dump()})
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def unreal_landscape_edit_session_preflight(
+    request: LandscapeEditSessionRequest, session_id: str,
+) -> dict[str, Any]:
+    """Inspect exact editing-session eligibility; no grant or Landscape writes."""
+    return await connections.dispatch("unreal", "landscape_edit_session_preflight", session_id,
+                                      {"request": request.model_dump()})
+
+
+@mcp.tool(annotations=PREVIEW)
+async def unreal_request_landscape_edit_session(
+    request: LandscapeEditSessionRequest, session_id: str,
+) -> dict[str, Any]:
+    """Request one local owner approval for multiple bounded native sculpts (default 2h).
+
+    Native Forge.Landscape.ApproveEditSession opens a local identity/scope dialog.
+    No operation, layer creation, remote approval, save or automatic restore occurs here.
+    """
+    return await connections.dispatch("unreal", "landscape_edit_session_request", session_id,
+                                      {"request": request.model_dump()})
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def unreal_landscape_edit_session_status(
+    request: LandscapeEditSessionReference, session_id: str,
+) -> dict[str, Any]:
+    """Inspect an editing session's expiry, revocation and operation recovery records."""
+    return await connections.dispatch("unreal", "landscape_edit_session_status", session_id,
+                                      request.model_dump())
+
+
+@mcp.tool(annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=False,
+                                     idempotentHint=True, openWorldHint=False))
+async def unreal_revoke_landscape_edit_session(
+    request: LandscapeEditSessionReference, session_id: str,
+) -> dict[str, Any]:
+    """Revoke immediately; running work stops before its next batch, without undo/restore."""
+    return await connections.dispatch("unreal", "landscape_edit_session_revoke", session_id,
+                                      request.model_dump())
+
+
 @mcp.tool(annotations=PREVIEW)
 async def unreal_preview_landscape(request: LandscapeRequest, session_id: str) -> dict[str, Any]:
     """Preview native terrain work with bounded regions and resource checks.
 
-    create creates a new disposable map; create_in_place is restricted natively to the
-    approved saved Phase6C Open World test map with World Partition already initialized.
+    create creates a new disposable map. create_in_place requires a host-configured,
+    exact session/project/world grant for an existing World Partition map. The private
+    authorization claim is injected by this server and is not part of the MCP schema.
     Regions use inclusive vertex coordinates. Heights are actor-local cm; raise/lower use absolute magnitude and radial
     cosine falloff. Generate uses deterministic sine terrain; coastline uses an X ramp.
     UE 5.6 Landscape subsection sizes and one- or two-subsection components are accepted.
@@ -647,19 +728,33 @@ async def unreal_preview_landscape(request: LandscapeRequest, session_id: str) -
     region to be loaded and available. The approved Phase6C Open World map permits
     load_region only; unload_region remains restricted to the disposable Landscape
     test-map root. Edit Layer heights are edited independently of the composite.
-    Save/reload are explicit; WP saves back up the map and loaded external
-    Landscape actor packages before writing.
+    Save/reload are explicit. Authorized existing-world creation remains unsaved
+    until a separate save preview; that save backs up the target map and its
+    World Partition external actor/object namespaces, then saves only the target
+    world and the new Landscape-owned packages with a post-save write-scope audit.
     """
-    return await connections.dispatch("unreal", "landscape_preview", session_id,
-                                      {"request": request.model_dump()})
+    args: dict[str, Any] = {"request": request.model_dump()}
+    if request.action != "create":
+        authorization = existing_world_landscape_authorization(
+            session_id,
+            request.action,
+            request.map_path or None,
+            required=request.action == "create_in_place",
+        )
+        if authorization is not None:
+            args["_forge_landscape_authorization"] = authorization
+    return await connections.dispatch("unreal", "landscape_preview", session_id, args)
 
 
 @mcp.tool(annotations=MUTATION)
 async def unreal_apply_landscape(preview_id: str, confirmation: str,
                                 session_id: str) -> dict[str, Any]:
     """Consume a reviewed preview. Edits return a job ID; poll until terminal state."""
-    return await connections.dispatch("unreal", "landscape_apply", session_id,
-                                      {"preview_id": preview_id, "confirmation": confirmation})
+    args: dict[str, Any] = {"preview_id": preview_id, "confirmation": confirmation}
+    authorization = existing_world_landscape_authorization(session_id)
+    if authorization is not None:
+        args["_forge_landscape_authorization"] = authorization
+    return await connections.dispatch("unreal", "landscape_apply", session_id, args)
 
 
 @mcp.tool(annotations=READ_ONLY)
@@ -677,8 +772,11 @@ async def unreal_cancel_landscape_job(job_id: str, confirmation: str,
     Terrain cancellation does not roll back already applied rows; its raw height backup
     remains available. Loader cancellation releases only that session's editor adapter.
     """
-    return await connections.dispatch("unreal", "landscape_job_cancel", session_id,
-                                      {"job_id": job_id, "confirmation": confirmation})
+    args: dict[str, Any] = {"job_id": job_id, "confirmation": confirmation}
+    authorization = existing_world_landscape_authorization(session_id)
+    if authorization is not None:
+        args["_forge_landscape_authorization"] = authorization
+    return await connections.dispatch("unreal", "landscape_job_cancel", session_id, args)
 
 
 @mcp.tool(annotations=PREVIEW)
@@ -1666,11 +1764,12 @@ def main():
         backupCount=2,
         encoding="utf-8",
     )
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(levelname)s %(name)s %(message)s",
-        handlers=[logging.StreamHandler(), file_log],
-    )
+    # FastMCP configured the root logger during module import, so a second
+    # basicConfig call would silently leave this diagnostic file unattached.
+    file_log.setFormatter(logging.Formatter("%(levelname)s %(name)s %(message)s"))
+    root_log = logging.getLogger()
+    root_log.addHandler(file_log)
+    root_log.setLevel(logging.INFO)
     mcp.run(transport="stdio")
 
 

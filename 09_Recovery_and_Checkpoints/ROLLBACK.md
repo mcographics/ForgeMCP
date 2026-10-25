@@ -1,0 +1,5 @@
+# Rollback plan — do not execute automatically
+
+Current official installation remains at G:\Program Files\EpicGames\UE_5.6\Engine\Plugins\Marketplace\Forge, descriptor 0.2.16-alpha.1. The exact prior plugin tree is preserved under rollback/Forge-0.2.16-alpha.1. The pre-consolidation tracked Python connection files are preserved byte-for-byte in rollback/main-source-head.zip from Git HEAD.
+
+Before any later deployment, stop only the relevant safe test Editor after confirming all dirty packages and receiving owner authorization. Back up the then-current official plugin tree again and verify every baseline hash. To roll back a later deployment, restore the preserved plugin tree only while no process has its binaries loaded, restore the prior host source or environment, and verify descriptor/DLL hashes and a fresh read-only connection. Never close, save or discard A7K41 or production work as part of this plan.

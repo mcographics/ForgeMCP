@@ -60,15 +60,87 @@ def test_landscape_creation_preview_reports_structured_write_scope_and_unknowns(
 
 def test_landscape_apply_checks_disposable_marker_dirty_state_and_destinations_before_world_transition():
     source = LANDSCAPE_SOURCE.read_text(encoding="utf-8")
-    create_start = source.index('if(Action==TEXT("create") || Action==TEXT("create_in_place"))')
+    apply_command = source.index('if(Command != TEXT("landscape_apply"))')
+    create_start = source.index(
+        'if(Action==TEXT("create") || Action==TEXT("create_in_place"))', apply_command
+    )
     map_transition = source.index("GEditor->CreateNewMapForEditing(false,bWorldPartition)", create_start)
     apply_guard = source.index("IsAuthorizedDisposableProject(DisposableBlockReason)", create_start)
-    dirty_guard = source.index("ForgeDirtyPackages::InspectLandscapeApplyPreflight(", create_start)
+    dirty_guard = source.index(
+        "ForgeDirtyPackages::InspectLandscapeApplyPreflight(\n                W, true, DirtyPolicy)",
+        create_start,
+    )
     destination_guard = source.index("CheckCreateDestinationsAbsent(P.TargetMapPackage", create_start)
     assert create_start < apply_guard < dirty_guard < destination_guard < map_transition
     assert 'TEXT("landscape_safety_gate_blocked")' in source
     assert 'TEXT("dirty_packages_block_apply")' in source
-    assert 'TEXT("in_place_creation_disabled")' in source
+    assert 'TEXT("existing_world_authorization_required")' in source
+    assert 'TEXT("existing_world_authorization_stale")' in source
+
+
+def test_existing_world_landscape_grant_is_default_deny_exact_and_host_injected():
+    source = LANDSCAPE_SOURCE.read_text(encoding="utf-8")
+    host_auth = (Path(__file__).resolve().parents[1] / "server" / "core" / "landscape_authorization.py").read_text(encoding="utf-8")
+    assert 'TEXT("_forge_landscape_authorization")' in source
+    assert 'TEXT("session_id")' in source
+    assert 'TEXT("project_file")' in source
+    assert 'TEXT("world_path")' in source
+    assert 'TEXT("expires_at_unix")' in source
+    assert "WorldPackage != World->GetOutermost()->GetName()" in source
+    assert "CanonicalPath(ProjectFile).Equals(CanonicalPath(FPaths::GetProjectFilePath())" in source
+    assert "ParsedActions.Contains(RequiredAction)" in source
+    assert "Path != W->GetOutermost()->GetName()" in source
+    assert "ExistingWorldPartitionConfiguration(W)" in source
+    assert 'existing_world_landscape_authorization(' in host_auth
+    assert 'required=request.action == "create_in_place"' in (Path(__file__).resolve().parents[1] / "server" / "main.py").read_text(encoding="utf-8")
+    assert "create_in_place" in host_auth and 'return None' in host_auth
+
+
+def test_existing_world_apply_is_unsaved_until_explicit_scoped_save():
+    source = LANDSCAPE_SOURCE.read_text(encoding="utf-8")
+    assert 'TEXT("created_unsaved")' in source
+    assert 'TEXT("explicit_save_required")' in source
+    assert "HasOnlyExpectedDirtyLandscapePackages" in source
+    assert "ForgeDirtyPackages::InspectLandscapeApplyPreflight(W, false, DirtyPolicy)" in source
+    assert "BackupExistingWorldWriteScope" in source
+    assert "SaveExistingWorldLandscapePackages" in source
+    assert "ValidateExistingWorldWriteScope" in source
+    assert 'TEXT("existing_world_write_scope_failed")' in source
+    assert 'TEXT("dirty_package_scope_rejected")' in source
+
+
+def test_existing_world_sculpting_is_bound_to_the_created_landscape_and_fresh_grant():
+    source = LANDSCAPE_SOURCE.read_text(encoding="utf-8")
+    assert "ReadExistingWorldAuthorization(Args, W, Action, PreviewGrant)" in source
+    assert "AuthorizedExistingWorldLandscapes.Find(PreviewGrant.Id)" in source
+    assert 'TEXT("landscape_outside_authorized_scope")' in source
+    assert "P.ExistingWorldAuthorizationId != ApplyGrant.Id" in source
+    assert "P.ExistingWorldAuthorizationExpiresAtUnix != ApplyGrant.ExpiresAtUnix" in source
+    assert "!ApplyGrant.Allows(Action)" in source
+    assert "CurrentScopeFingerprint != P.ExistingWorldPackageFingerprint" in source
+
+
+def test_existing_world_creation_keeps_disposable_map_workflow_and_dirty_guards():
+    source = LANDSCAPE_SOURCE.read_text(encoding="utf-8")
+    assert 'if (!TestMap(Path) || FPackageName::DoesPackageExist(Path) || FindPackage(nullptr,*Path))' in source
+    assert 'if (!SafeCreateSourceWorld(W))' in source
+    assert "FEditorFileUtils::SaveLevel(W->PersistentLevel,Filename)" in source
+    assert "ForgeDirtyPackages::InspectLandscapeApplyPreflight(W, false, DirtyPolicy)" in source
+    assert "ForgeDirtyPackages::InspectLandscapeApplyPreflight(\n                W, true, DirtyPolicy)" in source
+
+
+def test_existing_world_save_fails_closed_around_backup_and_package_scope():
+    source = LANDSCAPE_SOURCE.read_text(encoding="utf-8")
+    for contract in (
+        "BackupExistingWorldWriteScope(W, L, BackupRoot, Snapshot, BackupError)",
+        'TEXT("existing_world_backup_failed")',
+        "SaveExistingWorldLandscapePackages(W, L, SaveError)",
+        'TEXT("existing_world_package_save_failed")',
+        "ValidateExistingWorldWriteScope(W, Snapshot, WriteScopeError)",
+        'TEXT("existing_world_write_scope_failed")',
+        "AuthorizedExistingWorldLandscapes.Empty()",
+    ):
+        assert contract in source
 
 
 def test_dirty_inventory_uses_authoritative_categories_and_separates_sample_truncation():
