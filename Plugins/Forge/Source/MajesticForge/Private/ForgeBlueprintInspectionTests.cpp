@@ -135,6 +135,20 @@ bool FForgeBlueprintLargeInspectionTest::RunTest(const FString& Parameters)
     Condition->DefaultValue = Condition->DefaultValue == TEXT("true") ? TEXT("false") : TEXT("true");
     TestFalse(TEXT("Changed pin default rejects stale pin cursor"), Inspector.Handle(TEXT("blueprint_node_inspect"), NodeArgs, Stale, Code, Message));
     TestEqual(TEXT("Stale pin rejection is explicit"), Code, FString(TEXT("stale_cursor")));
+
+    NodeArgs->RemoveField(TEXT("pin_cursor"));
+    const FGuid OriginalGuid = Branches[3]->NodeGuid;
+    Branches[3]->NodeGuid = Branches[0]->NodeGuid;
+    TestFalse(TEXT("Individual node inspection rejects duplicate GUIDs"), Inspector.Handle(TEXT("blueprint_node_inspect"), NodeArgs, Stale, Code, Message));
+    TestEqual(TEXT("Duplicate GUID rejection is explicit"), Code, FString(TEXT("unstable_node_identity")));
+    Branches[3]->NodeGuid = OriginalGuid;
+
+    auto* NestedGraph = NewObject<UEdGraph>(Graph, FName(*Graph->GetName()));
+    NestedGraph->Schema = UEdGraphSchema_K2::StaticClass();
+    Graph->SubGraphs.Add(NestedGraph);
+    Args->RemoveField(TEXT("cursor"));
+    TestFalse(TEXT("Graph selection rejects duplicate graph names"), Inspector.Handle(TEXT("blueprint_graph_page"), Args, Stale, Code, Message));
+    TestEqual(TEXT("Ambiguous graph rejection is explicit"), Code, FString(TEXT("ambiguous_graph")));
     return true;
 }
 

@@ -24,6 +24,7 @@ from server.core.blueprint_inspection import (
     BlueprintGraphPageRequest,
     BlueprintNodeInspectRequest,
 )
+from server.core.blueprint_patches import BlueprintGraphPatchRequest
 from server.core.collision import CollisionQueryRequest
 from server.core.connection_monitor import connection_monitor_lifespan
 from server.core.connections import BridgeError, ConnectionManager
@@ -1310,6 +1311,42 @@ async def unreal_trace_blueprint_execution(
     return await connections.dispatch(
         "unreal", "blueprint_graph_trace", session_id,
         request.model_dump(exclude_none=True),
+    )
+
+
+@mcp.tool(annotations=PREVIEW)
+async def unreal_preview_blueprint_graph_patch(
+    request: BlueprintGraphPatchRequest, session_id: str
+) -> dict[str, Any]:
+    """Preview scoped moves, primitive defaults and explicit links in one existing K2 graph.
+
+    Requires an exact inspected asset/graph, stable node/pin IDs, a compiled clean baseline,
+    and an existing disk package. No whole-Blueprint snapshot is required. Existing links
+    must be explicitly disconnected before replacement. The preview records exact targeted
+    before-values and original package hashes; unsupported structural operations are rejected.
+    """
+    return await connections.dispatch(
+        "unreal", "blueprint_patch_preview", session_id, {"request": request.model_dump()}
+    )
+
+
+@mcp.tool(annotations=MUTATION)
+async def unreal_apply_blueprint_graph_patch(
+    preview_id: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")],
+    confirmation: Annotated[str, Field(pattern=r"^[0-9a-f]{32}$")],
+    session_id: str,
+) -> dict[str, Any]:
+    """Apply an exact authorized graph patch once, with verified package backup and compile.
+
+    Requires the user's authorization for this reviewed asset and change set. confirmation
+    must equal preview_id. Read state, stage flags, compiler diagnostics and rollback results.
+    Unsafe restoration stops for the owner; disk backup restoration is never automatic.
+    A successful in-memory apply does not save, independently reload, or establish runtime
+    behavior. Never retry a timeout automatically.
+    """
+    return await connections.dispatch(
+        "unreal", "blueprint_patch_apply", session_id,
+        {"preview_id": preview_id, "confirmation": confirmation},
     )
 
 

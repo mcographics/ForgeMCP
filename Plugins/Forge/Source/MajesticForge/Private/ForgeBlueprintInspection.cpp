@@ -195,23 +195,35 @@ bool LoadBlueprint(const FString& AssetPath, UBlueprint*& Blueprint, FString& Er
     return true;
 }
 
-UEdGraph* FindGraph(UBlueprint* Blueprint, const FString& Name)
+UEdGraph* FindGraph(UBlueprint* Blueprint, const FString& Name, bool& bAmbiguous)
 {
+    bAmbiguous = false;
     if (!Blueprint || Name.IsEmpty() || Name.Len() > 128) return nullptr;
     TArray<UEdGraph*> Graphs;
     Blueprint->GetAllGraphs(Graphs);
+    UEdGraph* Found = nullptr;
     for (UEdGraph* Graph : Graphs)
-        if (Graph && Graph->GetName() == Name) return Graph;
-    return nullptr;
+        if (Graph && Graph->GetName() == Name)
+        {
+            if (Found) { bAmbiguous = true; return nullptr; }
+            Found = Graph;
+        }
+    return Found;
 }
 
-UEdGraphNode* FindNode(UEdGraph* Graph, const FString& GuidText)
+UEdGraphNode* FindNode(UEdGraph* Graph, const FString& GuidText, bool& bAmbiguous)
 {
+    bAmbiguous = false;
     FGuid Guid;
     if (!Graph || !FGuid::Parse(GuidText, Guid) || !Guid.IsValid()) return nullptr;
+    UEdGraphNode* Found = nullptr;
     for (UEdGraphNode* Node : Graph->Nodes)
-        if (Node && Node->NodeGuid == Guid) return Node;
-    return nullptr;
+        if (Node && Node->NodeGuid == Guid)
+        {
+            if (Found) { bAmbiguous = true; return nullptr; }
+            Found = Node;
+        }
+    return Found;
 }
 
 FString NodeFunctionName(const UEdGraphNode* Node)
@@ -303,7 +315,9 @@ JObject PinInfo(const UEdGraphPin* Pin)
     Result->SetStringField(TEXT("default_value"), Default.Left(4096));
     Result->SetBoolField(TEXT("default_value_truncated"), Default.Len() > 4096);
     Result->SetStringField(TEXT("default_object_path"), Pin->DefaultObject ? Pin->DefaultObject->GetPathName() : FString());
-    Result->SetStringField(TEXT("default_text"), Pin->DefaultTextValue.ToString().Left(4096));
+    const FString DefaultText = Pin->DefaultTextValue.ToString();
+    Result->SetStringField(TEXT("default_text"), DefaultText.Left(4096));
+    Result->SetBoolField(TEXT("default_text_truncated"), DefaultText.Len() > 4096);
     Result->SetBoolField(TEXT("orphaned"), Pin->bOrphanedPin);
     Result->SetBoolField(TEXT("unresolved"), Pin->PinType.PinCategory.IsNone());
 
@@ -461,25 +475,25 @@ bool FForgeBlueprintInspection::Handle(const FString& Command, const TSharedRef<
     if (Command == TEXT("blueprint_capabilities"))
     {
         if (!Args->Values.IsEmpty()) return Fail(TEXT("invalid_arguments"), TEXT("This capability registry takes no arguments."));
-        Data->SetStringField(TEXT("registry_version"), TEXT("1"));
+        Data->SetStringField(TEXT("registry_version"), TEXT("2"));
         Data->SetStringField(TEXT("blueprint_scope"), TEXT("Native graph inspection implementation; live acceptance is required before production mutation work."));
         TArray<TSharedPtr<FJsonValue>> Entries;
         struct FCapability { const TCHAR* Name; const TCHAR* State; const TCHAR* Details; };
         const TArray<FCapability> Capabilities{
-            {TEXT("graph_list"), TEXT("PARTIAL"), TEXT("Implemented; native runtime acceptance pending. Oversized graph lists fail explicitly.")},
-            {TEXT("node_guid_pagination"), TEXT("PARTIAL"), TEXT("Implemented with revision-checked cursors; 1000-node native test execution pending.")},
-            {TEXT("node_pin_inspection"), TEXT("PARTIAL"), TEXT("Implemented with bounded pin pages; native runtime acceptance pending.")},
+            {TEXT("graph_list"), TEXT("PARTIAL"), TEXT("Graph metadata readback; oversized graph lists fail explicitly and do not yet have their own cursor.")},
+            {TEXT("node_guid_pagination"), TEXT("PARTIAL"), TEXT("Deterministic revision-checked cursors with explicit page/byte limits; invalid or ambiguous identities are reported.")},
+            {TEXT("node_pin_inspection"), TEXT("PARTIAL"), TEXT("Bounded pin pages; an oversized single pin detail fails explicitly.")},
             {TEXT("node_reflected_properties"), TEXT("PARTIAL"), TEXT("Capped at 256 properties and 4096 characters per value; truncation is explicit.")},
-            {TEXT("connection_readback"), TEXT("PARTIAL"), TEXT("Implemented with stable endpoint IDs; native runtime acceptance pending.")},
-            {TEXT("execution_trace"), TEXT("PARTIAL"), TEXT("Implemented within one graph; native runtime acceptance pending.")},
+            {TEXT("connection_readback"), TEXT("PARTIAL"), TEXT("Stable endpoint IDs and reciprocal/direction diagnostics; this is not a complete dependency validator.")},
+            {TEXT("execution_trace"), TEXT("PARTIAL"), TEXT("Execution traversal within one graph, with explicit depth and node limits.")},
             {TEXT("function_macro_reference_readback"), TEXT("PARTIAL"), TEXT("Target references are reported; cross-graph execution is not merged.")},
             {TEXT("graph_mutation"), TEXT("PARTIAL"), TEXT("Legacy bounded node allowlist and full-asset snapshot remain in use.")},
-            {TEXT("scoped_change_journal"), TEXT("UNSUPPORTED"), TEXT("Not implemented; whole-asset snapshot limits still apply to legacy edits.")},
+            {TEXT("scoped_change_journal"), TEXT("PARTIAL"), TEXT("Windows existing normal-K2 graph adapter: move, primitive defaults, explicit connect/disconnect; separate verified package backup. Its own runtime acceptance is required. Legacy recipes retain their old snapshot limits.")},
             {TEXT("component_template_mutation"), TEXT("PARTIAL"), TEXT("Legacy support covers SCS mobility and static-mesh material slots.")},
             {TEXT("Blueprint_component_Niagara_system_assignment"), TEXT("UNSUPPORTED"), TEXT("Not implemented.")},
             {TEXT("Blueprint_asset_save_reload"), TEXT("UNSUPPORTED"), TEXT("Existing edit apply does not save or independently reload.")},
             {TEXT("animation_blueprint_and_rig_graphs"), TEXT("UNSUPPORTED"), TEXT("No dedicated mutation adapter is registered.")},
-            {TEXT("native_runtime_acceptance"), TEXT("BLOCKED"), TEXT("Requires execution in the intended authorized Editor session.")}
+            {TEXT("native_runtime_acceptance"), TEXT("PARTIAL"), TEXT("Validation is recorded per binary, feature and session in dated evidence. This support registry is not an automatic test-status feed.")}
         };
         for (const auto& Capability : Capabilities)
         {
@@ -523,7 +537,9 @@ bool FForgeBlueprintInspection::Handle(const FString& Command, const TSharedRef<
 
     FString GraphName;
     if (!Args->TryGetStringField(TEXT("graph_name"), GraphName)) return Fail(TEXT("invalid_arguments"), TEXT("graph_name is required."));
-    UEdGraph* Graph = FindGraph(Blueprint, GraphName);
+    bool bAmbiguousGraph = false;
+    UEdGraph* Graph = FindGraph(Blueprint, GraphName, bAmbiguousGraph);
+    if (bAmbiguousGraph) return Fail(TEXT("ambiguous_graph"), TEXT("More than one graph has this name; this API cannot select it safely by name."));
     if (!Graph) return Fail(TEXT("graph_not_found"), TEXT("The exact graph name was not found on this Blueprint."));
 
     if (Command == TEXT("blueprint_graph_page"))
@@ -640,7 +656,7 @@ bool FForgeBlueprintInspection::Handle(const FString& Command, const TSharedRef<
             if (Utf8Bytes(Serialize(Page)) <= MaxResponseBytes || Count <= 1) break;
             --Count;
         } while (Count > 0);
-        if (Count == 1 && Utf8Bytes(Serialize(Page)) > MaxResponseBytes)
+        if (Utf8Bytes(Serialize(Page)) > MaxResponseBytes)
             return Fail(TEXT("node_summary_too_large"), TEXT("A single node summary exceeds the response budget; inspect it individually."));
 
         if (Page->GetBoolField(TEXT("has_more")))
@@ -666,7 +682,9 @@ bool FForgeBlueprintInspection::Handle(const FString& Command, const TSharedRef<
             FMath::FloorToDouble(PageSizeValue) != PageSizeValue || PageSizeValue < 1 || PageSizeValue > MaxPinPageSize))
             return Fail(TEXT("invalid_arguments"), TEXT("pin_page_size must be an integer from 1 through 128."));
         const int32 PageSize = static_cast<int32>(PageSizeValue);
-        UEdGraphNode* Node = FindNode(Graph, GuidText);
+        bool bAmbiguousNode = false;
+        UEdGraphNode* Node = FindNode(Graph, GuidText, bAmbiguousNode);
+        if (bAmbiguousNode) return Fail(TEXT("unstable_node_identity"), TEXT("More than one node has this NodeGuid; individual inspection is ambiguous."));
         if (!Node) return Fail(TEXT("node_not_found"), TEXT("The exact NodeGuid was not found in this graph."));
         const FString Fingerprint = GraphFingerprint(Graph);
         FPinCursor Snapshot;
@@ -738,7 +756,7 @@ bool FForgeBlueprintInspection::Handle(const FString& Command, const TSharedRef<
             if (Utf8Bytes(Serialize(Page)) <= MaxResponseBytes || Count <= 1) break;
             --Count;
         } while (Count > 0);
-        if (Count == 1 && Utf8Bytes(Serialize(Page)) > MaxResponseBytes)
+        if (Utf8Bytes(Serialize(Page)) > MaxResponseBytes)
             return Fail(TEXT("pin_detail_too_large"), TEXT("A single pin detail exceeds the response budget; its linked endpoints or defaults are unusually large."));
         if (Page->GetBoolField(TEXT("has_more_pins")))
         {
@@ -767,7 +785,9 @@ bool FForgeBlueprintInspection::Handle(const FString& Command, const TSharedRef<
         if (!FMath::IsFinite(DepthValue) || FMath::FloorToDouble(DepthValue) != DepthValue || DepthValue < 0 || DepthValue > 32 ||
             !FMath::IsFinite(LimitValue) || FMath::FloorToDouble(LimitValue) != LimitValue || LimitValue < 1 || LimitValue > 512)
             return Fail(TEXT("invalid_arguments"), TEXT("depth must be 0-32 and node_limit must be 1-512."));
-        UEdGraphNode* Start = FindNode(Graph, StartGuid);
+        bool bAmbiguousNode = false;
+        UEdGraphNode* Start = FindNode(Graph, StartGuid, bAmbiguousNode);
+        if (bAmbiguousNode) return Fail(TEXT("unstable_node_identity"), TEXT("More than one node has this NodeGuid; execution traversal is ambiguous."));
         if (!Start) return Fail(TEXT("node_not_found"), TEXT("The exact start NodeGuid was not found in this graph."));
 
         struct FQueuedNode { UEdGraphNode* Node; int32 Depth; };

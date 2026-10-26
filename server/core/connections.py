@@ -106,6 +106,8 @@ COMMANDS = {
         "blueprint_graph_page",
         "blueprint_node_inspect",
         "blueprint_graph_trace",
+        "blueprint_patch_preview",
+        "blueprint_patch_apply",
         "mesh_import_preview",
         "mesh_import_apply",
         "mesh_replace_preview",

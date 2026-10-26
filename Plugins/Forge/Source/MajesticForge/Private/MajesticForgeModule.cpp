@@ -52,6 +52,7 @@
 #include "ForgeLevels.h"
 #include "ForgeBlueprintEdits.h"
 #include "ForgeBlueprintInspection.h"
+#include "ForgeBlueprintPatches.h"
 #include "ForgeMeshImport.h"
 #include "ForgeMaterials.h"
 #include "ForgeMaterialInstances.h"
@@ -117,6 +118,7 @@ class FMajesticForgeModule : public IModuleInterface
     FForgeLevels LevelAutomation;
     FForgeBlueprintEdits BlueprintEdits;
     FForgeBlueprintInspection BlueprintInspection;
+    FForgeBlueprintPatches BlueprintPatches;
     FForgeMeshImport MeshImporter;
     FForgeMaterials MaterialAutomation;
     FForgeMaterialInstances MaterialInstanceAutomation;
@@ -471,6 +473,8 @@ class FMajesticForgeModule : public IModuleInterface
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_graph_page")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_node_inspect")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_graph_trace")));
+            Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_patch_preview")));
+            Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_patch_apply")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("mesh_import_preview")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("mesh_import_apply")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("mesh_replace_preview")));
@@ -852,6 +856,12 @@ class FMajesticForgeModule : public IModuleInterface
             auto Args = ValidatedArgs ? ValidatedArgs->ToSharedRef() : MakeShared<FJsonObject>();
             if (!BlueprintEdits.Handle(Command, Args, Data, Code, Message)) return Fail(Code, Message);
         }
+        else if (Command == TEXT("blueprint_patch_preview") || Command == TEXT("blueprint_patch_apply"))
+        {
+            FString Code, Message;
+            auto Args = ValidatedArgs ? ValidatedArgs->ToSharedRef() : MakeShared<FJsonObject>();
+            if (!BlueprintPatches.Handle(Command, Args, Data, Code, Message)) return Fail(Code, Message);
+        }
         else if (Command == TEXT("blueprint_capabilities") || Command == TEXT("blueprint_graph_list") ||
             Command == TEXT("blueprint_graph_page") || Command == TEXT("blueprint_node_inspect") ||
             Command == TEXT("blueprint_graph_trace"))
@@ -1076,6 +1086,7 @@ class FMajesticForgeModule : public IModuleInterface
         LevelAutomation.Reset();
         BlueprintEdits.Reset();
         BlueprintInspection.Reset();
+        BlueprintPatches.Reset();
         MeshImporter.Reset();
         MaterialAutomation.Reset();
         MaterialInstanceAutomation.Reset();

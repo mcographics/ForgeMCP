@@ -1,0 +1,75 @@
+{
+  "title": "Scoped Blueprint journal activation - build passed, startup blocked",
+  "date": "2026-10-26",
+  "timezone": "America/Toronto",
+  "status": "BLOCKED_BEFORE_NATIVE_TEST_EXECUTION",
+  "scope": "Additional owner-approved close, binary backup, full build and single reopen of the same ForgeMCPDev project; only the two named Blueprint tests queued.",
+  "preflight": {
+    "engine_version": "5.6.1-44394996+++UE5+Release-5.6",
+    "level": "/Game/Levels/TestArea.TestArea",
+    "pie": false,
+    "loaded_packages_inspected": 1311,
+    "inventory_complete": true,
+    "dirty_project_content_packages": 0,
+    "dirty_engine_script_packages": [
+      "/Script/SlateCore"
+    ]
+  },
+  "preservation": {
+    "binary_backup_files": 10,
+    "binary_backup_bytes": 83225281,
+    "sha256_verified": true,
+    "compiled_source_snapshot_files": 11,
+    "codex_config_hashes_unchanged": true,
+    "content_files_before": 2798,
+    "content_files_after": 2798,
+    "added": 0,
+    "modified": 0,
+    "deleted": 0,
+    "content_manifest_before_sha256": "46CE5DBE1D16EB6F1BA0305041915328E76F9D0C0A3C3C3096BEE8AC962B6328",
+    "content_manifest_after_sha256": "46CE5DBE1D16EB6F1BA0305041915328E76F9D0C0A3C3C3096BEE8AC962B6328"
+  },
+  "build": {
+    "target": "ForgeMCPDevEditor",
+    "result": "Succeeded",
+    "actions": 37,
+    "total_execution_seconds": 347.76,
+    "exit_code": 0,
+    "native_dll_sha256": "C6C71E9BF4568747AEC408E17A8FA3DC43EF66CFA15398978812400D68FCA6DA"
+  },
+  "activation": {
+    "normal_shutdown": true,
+    "initial_20_second_wait_expired": true,
+    "normal_exit_observed_after_approximately_seconds": 26.5,
+    "forced_termination": false,
+    "reopen_attempts": 1,
+    "result": "Editor startup assertion; no connected Editor remains",
+    "assertion": "ModuleManager.IsModuleLoaded(ModuleName)",
+    "unloaded_module": "LevelEditor",
+    "stack_frame": "UE::Editor::Outliner::FTedsOutlinerModule::StartupModule()",
+    "source_location": "TedsOutlinerModule.cpp:109",
+    "native_automation_report_created": false,
+    "tests_executed": 0,
+    "queued_tests_not_run": [
+      "ForgeMCP.BlueprintInspection.LargeGraphPaginationAndTrace",
+      "ForgeMCP.BlueprintPatches.ScopedPrimitiveJournal"
+    ],
+    "fixture_created": false,
+    "additional_launch": false,
+    "automatic_restore_or_recovery": false,
+    "engine_or_project_reconfiguration": false
+  },
+  "validation_correction": "The initial PowerShell comparison nested the parsed baseline array and reported an invalid baseline count of one. The complete original SHA-256 manifests were independently compared using Node: 2798 unique file records match exactly. The invalid helper output is retained in local evidence.",
+  "acceptance": {
+    "earlier_1001_node_inspection_test": "Historical PASS from the previous successful activation, not rerun here",
+    "journal_native_behavior": "NOT RUN",
+    "journal_failure_rollback_refusal": "NOT RUN",
+    "two_patch_tools_in_owning_client": "NOT EXPOSED",
+    "save_independent_reload_Niagara_runtime": "NOT PASSED",
+    "production_ViperBP": "UNTOUCHED / NO-GO"
+  },
+  "evidence_receipts": {
+    "lifecycle_sha256": "5E6FED13D5574D5161D2884068E266E066E2EBCDDB0B4C38AEBB17FCBFFCC308",
+    "integrity_audit_sha256": "315841D309EF1E83117BF41E90900BECBD5A3613A8E10E03596A7D5778032000"
+  }
+}

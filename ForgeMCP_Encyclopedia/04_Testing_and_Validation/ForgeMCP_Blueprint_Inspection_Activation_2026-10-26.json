@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-26",
+  "scope": "Inspection phase native activation and automation; remaining infrastructure incomplete",
+  "source_baseline": "dceb5e1e plus inspection hardening",
+  "original_editor_pid": 20136,
+  "reopened_editor_pid": 15036,
+  "native_session_id": "unreal-15036",
+  "project_file": "G:\\Unreal Engine Projects\\ForgeMCP\\ForgeMCPDev.uproject",
+  "level": "/Game/Levels/TestArea.TestArea",
+  "official_engine": "5.6.1-44394996",
+  "full_editor_target_build": "PASS",
+  "backed_up_binary_file_count": 10,
+  "backup_sha256_verified": true,
+  "configuration_hashes_unchanged": true,
+  "native_automation": {
+    "test": "ForgeMCP.BlueprintInspection.LargeGraphPaginationAndTrace",
+    "state": "Success",
+    "fixture_event_graph_nodes": 1001,
+    "errors": 0,
+    "warnings": 0,
+    "duration_seconds": 1.0242624282836914
+  },
+  "raw_evidence_relative_path": "Saved/ForgeBuild/BlueprintInspectionActivation-20261026T012939",
+  "lifecycle_manifest_sha256": "64C1C85F24AD4275DBB07F610C644FAA83FB3BB8874E39553289A18AC48BC395",
+  "module_binary_sha256": "A56EAB1256F1101C060A09E041099A87FB2047D973B37D88F71271D5E39EB003",
+  "production_blueprint_mutations_performed": false,
+  "saved_blueprint_reload_verification": "NOT RUN",
+  "remaining_gate": "Scoped editing, Niagara, explicit save/reload, complete fixture regression, and production readiness remain outstanding"
+}
