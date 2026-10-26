@@ -51,6 +51,7 @@
 #include "ForgeDirtyPackages.h"
 #include "ForgeLevels.h"
 #include "ForgeBlueprintEdits.h"
+#include "ForgeBlueprintInspection.h"
 #include "ForgeMeshImport.h"
 #include "ForgeMaterials.h"
 #include "ForgeMaterialInstances.h"
@@ -74,6 +75,7 @@ class FMajesticForgeModule : public IModuleInterface
     // Keep aligned with server/core/connections.py MAX_REQUEST so bounded
     // 32,768-sample Landscape heightmap chunks can cross the native bridge.
     static constexpr int32 MaxRequestBytes = 512 * 1024;
+    static constexpr int32 MaxResponseBytes = 1024 * 1024;
     // Bounded requests and replies can span many editor ticks. Keep a finite
     // total lifetime while dropping stalled clients sooner.
     static constexpr double MaxClientLifetimeSeconds = 60.0;
@@ -114,6 +116,7 @@ class FMajesticForgeModule : public IModuleInterface
     FForgeCollisionQueries CollisionQueries;
     FForgeLevels LevelAutomation;
     FForgeBlueprintEdits BlueprintEdits;
+    FForgeBlueprintInspection BlueprintInspection;
     FForgeMeshImport MeshImporter;
     FForgeMaterials MaterialAutomation;
     FForgeMaterialInstances MaterialInstanceAutomation;
@@ -339,6 +342,25 @@ class FMajesticForgeModule : public IModuleInterface
         return Text;
     }
 
+    static TSharedRef<FJsonObject> TransportFailure(const FString& RequestId, const TCHAR* Code, const TCHAR* Message)
+    {
+        auto Result = MakeShared<FJsonObject>();
+        Result->SetStringField(TEXT("request_id"), RequestId.Left(128));
+        Result->SetBoolField(TEXT("ok"), false);
+        auto Error = MakeShared<FJsonObject>();
+        Error->SetStringField(TEXT("code"), Code);
+        Error->SetStringField(TEXT("message"), Message);
+        Result->SetObjectField(TEXT("error"), Error);
+        return Result;
+    }
+
+    static FString ResponseRequestId(const TSharedRef<FJsonObject>& Object)
+    {
+        FString RequestId;
+        Object->TryGetStringField(TEXT("request_id"), RequestId);
+        return RequestId;
+    }
+
     void Destroy(FSocket*& Socket)
     {
         if (Socket)
@@ -444,6 +466,11 @@ class FMajesticForgeModule : public IModuleInterface
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("current_level_save_apply")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_edit_preview")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_edit_apply")));
+            Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_capabilities")));
+            Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_graph_list")));
+            Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_graph_page")));
+            Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_node_inspect")));
+            Capabilities.Add(MakeShared<FJsonValueString>(TEXT("blueprint_graph_trace")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("mesh_import_preview")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("mesh_import_apply")));
             Capabilities.Add(MakeShared<FJsonValueString>(TEXT("mesh_replace_preview")));
@@ -825,6 +852,14 @@ class FMajesticForgeModule : public IModuleInterface
             auto Args = ValidatedArgs ? ValidatedArgs->ToSharedRef() : MakeShared<FJsonObject>();
             if (!BlueprintEdits.Handle(Command, Args, Data, Code, Message)) return Fail(Code, Message);
         }
+        else if (Command == TEXT("blueprint_capabilities") || Command == TEXT("blueprint_graph_list") ||
+            Command == TEXT("blueprint_graph_page") || Command == TEXT("blueprint_node_inspect") ||
+            Command == TEXT("blueprint_graph_trace"))
+        {
+            FString Code, Message;
+            auto Args = ValidatedArgs ? ValidatedArgs->ToSharedRef() : MakeShared<FJsonObject>();
+            if (!BlueprintInspection.Handle(Command, Args, Data, Code, Message)) return Fail(Code, Message);
+        }
         else if (Command == TEXT("mesh_import_preview") || Command == TEXT("mesh_import_apply") ||
             Command == TEXT("mesh_replace_preview") || Command == TEXT("mesh_replace_apply") || Command == TEXT("mesh_info"))
         {
@@ -908,7 +943,15 @@ class FMajesticForgeModule : public IModuleInterface
                     {
                         FString Response = Json(ReplyObject) + TEXT("\n");
                         FTCHARToUTF8 Encoded(*Response);
-                        if (Encoded.Length() > 1024 * 1024) Done = true;
+                        if (Encoded.Length() > MaxResponseBytes)
+                        {
+                            const TSharedRef<FJsonObject> TooLarge = TransportFailure(ResponseRequestId(ReplyObject),
+                                TEXT("response_too_large"), TEXT("The native response exceeded the bridge byte limit. Use a smaller page or a targeted inspection."));
+                            Response = Json(TooLarge) + TEXT("\n");
+                            FTCHARToUTF8 FailureEncoded(*Response);
+                            if (FailureEncoded.Length() > MaxResponseBytes) Done = true;
+                            else Client.Output.Append(reinterpret_cast<const uint8*>(FailureEncoded.Get()), FailureEncoded.Length());
+                        }
                         else Client.Output.Append(reinterpret_cast<const uint8*>(Encoded.Get()), Encoded.Length());
                     }
                 }
@@ -923,11 +966,22 @@ class FMajesticForgeModule : public IModuleInterface
                     FUTF8ToTCHAR Converted(reinterpret_cast<const ANSICHAR*>(Client.Input.GetData()), Newline);
                     bool bUnexpectedDefer = false;
                     const FString RequestText(Converted.Length(), Converted.Get());
-                    FString Response = Json(Reply(RequestText, true, Client.ScreenshotRequestedFrame, bUnexpectedDefer)) + TEXT("\n");
+                    TSharedRef<FJsonObject> ReplyObject = Reply(RequestText, true, Client.ScreenshotRequestedFrame, bUnexpectedDefer);
+                    FString Response = Json(ReplyObject) + TEXT("\n");
                     Client.Started = Client.LastActivity = FPlatformTime::Seconds();
                     Client.bScreenshotPending = false;
                     FTCHARToUTF8 Encoded(*Response);
-                    if (bUnexpectedDefer || Encoded.Length() > 1024 * 1024) Done = true;
+                    if (bUnexpectedDefer || Encoded.Length() > MaxResponseBytes)
+                    {
+                        const TSharedRef<FJsonObject> TooLarge = TransportFailure(ResponseRequestId(ReplyObject),
+                            bUnexpectedDefer ? TEXT("unexpected_deferred_response") : TEXT("response_too_large"),
+                            bUnexpectedDefer ? TEXT("The native handler deferred a non-screenshot response unexpectedly.") :
+                                TEXT("The native response exceeded the bridge byte limit. Use a smaller page or a targeted inspection."));
+                        Response = Json(TooLarge) + TEXT("\n");
+                        FTCHARToUTF8 FailureEncoded(*Response);
+                        if (FailureEncoded.Length() > MaxResponseBytes) Done = true;
+                        else Client.Output.Append(reinterpret_cast<const uint8*>(FailureEncoded.Get()), FailureEncoded.Length());
+                    }
                     else Client.Output.Append(reinterpret_cast<const uint8*>(Encoded.Get()), Encoded.Length());
                 }
             }
@@ -1021,6 +1075,7 @@ class FMajesticForgeModule : public IModuleInterface
         LandscapeAutomation.Reset();
         LevelAutomation.Reset();
         BlueprintEdits.Reset();
+        BlueprintInspection.Reset();
         MeshImporter.Reset();
         MaterialAutomation.Reset();
         MaterialInstanceAutomation.Reset();

@@ -18,6 +18,12 @@ from pydantic import Field
 from server.core.actors import ActorDeletePreview, ActorPropertyEdit
 from server.core.assets import AssetPropertyEdit
 from server.core.blender_creative import BlenderCreativeRequest, BlenderTarget
+from server.core.blueprint_inspection import (
+    BlueprintExecutionTraceRequest,
+    BlueprintGraphListRequest,
+    BlueprintGraphPageRequest,
+    BlueprintNodeInspectRequest,
+)
 from server.core.collision import CollisionQueryRequest
 from server.core.connection_monitor import connection_monitor_lifespan
 from server.core.connections import BridgeError, ConnectionManager
@@ -1255,6 +1261,55 @@ async def unreal_inspect_blueprint(asset_path: str, session_id: str) -> dict[str
     """Inspect Blueprint members/graphs/status and bounded Widget Blueprint template trees/bindings."""
     return await connections.dispatch(
         "unreal", "blueprint_info", session_id, {"asset_path": asset_path}
+    )
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def unreal_blueprint_capabilities(session_id: str) -> dict[str, Any]:
+    """Return the native adapter capability registry for Blueprint inspection and edits."""
+    return await connections.dispatch("unreal", "blueprint_capabilities", session_id, {})
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def unreal_list_blueprint_graphs(
+    request: BlueprintGraphListRequest, session_id: str
+) -> dict[str, Any]:
+    """List every graph on an exact Blueprint asset with graph type and exact node count."""
+    return await connections.dispatch(
+        "unreal", "blueprint_graph_list", session_id, request.model_dump()
+    )
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def unreal_page_blueprint_graph(
+    request: BlueprintGraphPageRequest, session_id: str
+) -> dict[str, Any]:
+    """Read a deterministic, revision-checked page of nodes from one Blueprint graph."""
+    return await connections.dispatch(
+        "unreal", "blueprint_graph_page", session_id,
+        request.model_dump(exclude_none=True),
+    )
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def unreal_inspect_blueprint_node(
+    request: BlueprintNodeInspectRequest, session_id: str
+) -> dict[str, Any]:
+    """Inspect one node's reflected properties, pins, defaults, links and integrity flags."""
+    return await connections.dispatch(
+        "unreal", "blueprint_node_inspect", session_id,
+        request.model_dump(exclude_none=True),
+    )
+
+
+@mcp.tool(annotations=READ_ONLY)
+async def unreal_trace_blueprint_execution(
+    request: BlueprintExecutionTraceRequest, session_id: str
+) -> dict[str, Any]:
+    """Trace execution links from one exact node within one graph and bounded depth."""
+    return await connections.dispatch(
+        "unreal", "blueprint_graph_trace", session_id,
+        request.model_dump(exclude_none=True),
     )
 
 
