@@ -12,6 +12,7 @@ The latest [October 24 terrain acceptance audit](../14_Saved/ForgeMCP_0.2.17_Ter
 ## Navigation
 
 - [Latest Development Updates](Latest_Development_Updates.md)
+- [Codex Blender skills integration — 2026-10-29](../03_Development_Reports/ForgeMCP_Blender_Skills_Codex_Integration_2026-10-29.md)
 - [Development timeline](ForgeMCP_Development_Timeline.md)
 - [Recovery checkpoint history](Recovery_Checkpoint_History.md) and [hashed inventory](Recovery_Checkpoint_Inventory.json)
 - [Test results](ForgeMCP_Test_Results.md), [known issues](ForgeMCP_Known_Issues.md), and [version history](ForgeMCP_Version_History.md)

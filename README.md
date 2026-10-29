@@ -94,6 +94,18 @@ workflows do not provide real-time synchronization. See the
 [round-trip workflow](ForgeMCP_Encyclopedia/13_Reference_Documents/Roundtrip_Workflow.md), and
 [Landscape edit sessions](docs/landscape_edit_sessions.md).
 
+### Codex Blender production skills
+
+This repository includes 94 Blender art-direction and production skills in
+[`.agents/skills`](.agents/skills), plus the ForgeMCP bridge skill. Codex discovers
+repository skills from this project-local directory
+([Codex documentation](https://learn.chatgpt.com/docs/customization/overview)). Start
+with `blender-director` to route a production request, then use `forgemcp-blender` to
+inspect the active scene and map authorized work to the current ForgeMCP tools.
+The imported skills guide planning and art direction; they do not add Blender
+adapter capabilities. Upstream attribution and the MIT license are in
+[`LICENSES/blender-skills-notice.md`](LICENSES/blender-skills-notice.md).
+
 ### Start with inspection
 
 | Tool | Purpose |

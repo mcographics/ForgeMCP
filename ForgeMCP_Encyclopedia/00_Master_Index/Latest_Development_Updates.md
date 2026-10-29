@@ -3,6 +3,10 @@
 Date: October 26, 2026
 Development status: Active development; acceptance is specific to each evidence gate.
 
+## October 29, 2026 — Blender production skills integrated into Codex
+
+The [integration report](../03_Development_Reports/ForgeMCP_Blender_Skills_Codex_Integration_2026-10-29.md) adds the complete 94-skill Blender Skills pack by Arjun Shukla (`@arjun988`) to the repository's Codex project skills, with the upstream MIT notice and source commit retained. A ForgeMCP bridge skill maps production guidance to supported typed tools and documents session identity, preview/apply, read-back, persistence, render, export, and visual evidence boundaries. Codex now lists the project-local skills. This is a prompt and documentation integration only: no Blender adapter or MCP implementation changed, and no additional runtime capability is claimed.
+
 ## October 26, 2026 — Inspection passed; journal build passed, startup acceptance blocked
 
 [Latest progress and acceptance matrix](../03_Development_Reports/ForgeMCP_Blueprint_Progress_Update_2026-10-26.md) records the current evidence boundary. The owning Codex MCP connection and exact ForgeMCPDev identity were verified after the project-folder move. One explicitly approved normal close, binary backup, full build and reopen completed on UE 5.6.1.

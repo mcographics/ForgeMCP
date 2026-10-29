@@ -24,6 +24,11 @@ execution, and high-impact operations need explicit task authorization and suita
 preview/transaction/backup behavior. Do not alter open scenes to validate an adapter.
 Preserve unrelated project plugins, preferences, assets, and local files.
 
+Codex Blender production skills live under `.agents/skills`. Use `blender-director`
+for production planning and `forgemcp-blender` for execution through ForgeMCP's
+current typed tools. The ForgeMCP capability map overrides upstream MCP assumptions;
+never substitute another Blender MCP server or arbitrary `bpy` execution.
+
 Run Python tests/lint and compile the editor target after relevant changes. Distinguish
 unit tests, MCP subprocess tests, live editor probes, interactive UI validation, and
 client configuration. Document remaining acceptance steps honestly. Do not publish

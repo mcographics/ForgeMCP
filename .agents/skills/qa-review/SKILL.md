@@ -1,0 +1,93 @@
+---
+name: qa-review
+description: Production QA gate for Blender assets using ForgeMCP structural inspection and validation checklists, with visual review only when an actual image is available.
+license: MIT
+metadata:
+  author: https://github.com/arjun988
+  version: "1.0.0"
+  domain: blender
+  role: specialist
+  triggers: QA, quality assurance, review, validation, checklist, screenshot review, ship check, art review
+  related-skills: asset-optimization, export-pipeline, blender-director, lookdev
+---
+
+# QA Review
+
+Evidence-backed review. Checklist gate. Explicit ship / no-ship / visual review pending.
+
+## When to Use
+
+- Before export or handoff
+- After major modeling/lookdev milestones
+- Reference-match final compare
+- Periodic scene health checks
+
+## Workflow
+
+```
+Gather brief budgets → Inspect available scene data → Review images when available → Run checklists
+  → List defects (severity) → Fix or reject → Re-verify → Verdict
+```
+
+## Visual evidence
+
+Suggested images, when they can be supplied or opened for review:
+
+1. 3/4 hero angle
+2. Ortho or profile if proportion-critical
+3. Wireframe or poly overview (optional but useful)
+4. Material/light beauty
+5. Versus reference (if a reference task)
+
+Use ForgeMCP inspection for structural checks. Claim visual review only when an actual
+render or screenshot was available; ForgeMCP does not expose viewport screenshot
+capture, and render-job status alone does not prove appearance.
+
+## Checklists (load as needed)
+
+- `../references/validation-checklist.md`
+- `../references/visual-match-checklist.md` (reference tasks)
+- `../references/naming-conventions.md`
+- `../references/polycount-budgets.md`
+
+## Defect Severity
+
+| Level | Meaning |
+|-------|---------|
+| Blocker | Wrong scale, broken normals, fails budget badly |
+| Major | Silhouette/readability issues, bad pivots |
+| Minor | Naming, minor shading, small gaps |
+| Note | Optional polish |
+
+## Verdict Template
+
+```markdown
+## QA Verdict: [Asset]
+
+**Result:** SHIP / SHIP WITH NOTES / NO-SHIP
+**Budgets:** [tris/textures] vs target
+**Images reviewed:** [listed, or "not available; visual review pending"]
+**Blockers:** ...
+**Majors:** ...
+**Minors:** ...
+**Next actions:** ...
+```
+
+## Constraints
+
+### MUST DO
+- Give explicit verdict
+- Base visual claims on images actually reviewed
+- Mark visual review pending when no image is available
+- Re-check after fixes before flipping to SHIP
+
+### MUST NOT DO
+- Claim a visual pass without reviewing an image
+- Ignore budget overruns without approval
+
+## Reference Guide
+
+| Topic | Reference | Load When |
+|-------|-----------|----------|
+| Qa Verdict Template | `references/qa-verdict-template.md` | When needed |
+| Screenshot Angles | `references/screenshot-angles.md` | When needed |
