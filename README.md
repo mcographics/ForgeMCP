@@ -96,15 +96,21 @@ workflows do not provide real-time synchronization. See the
 
 ### Codex Blender production skills
 
-This repository includes 94 Blender art-direction and production skills in
-[`.agents/skills`](.agents/skills), plus the ForgeMCP bridge skill. Codex discovers
-repository skills from this project-local directory
+ForgeMCP includes the 94-skill Blender production pack and its supporting references
+from [Blender Skills](https://github.com/arjun988/blender-skills) by
+[Arjun Shukla (`@arjun988`)](https://github.com/arjun988). The imported snapshot is
+pinned to [upstream commit `8f778d2405a214b508d4c7d80742be8e43acdd52`](https://github.com/arjun988/blender-skills/commit/8f778d2405a214b508d4c7d80742be8e43acdd52).
+The original skills are under [`.agents/skills`](.agents/skills). The upstream MIT
+license and attribution are preserved in [`LICENSES/blender-skills-notice.md`](LICENSES/blender-skills-notice.md)
+and [`LICENSES/blender-skills-MIT.txt`](LICENSES/blender-skills-MIT.txt).
+
+Codex discovers repository skills from this project-local directory
 ([Codex documentation](https://learn.chatgpt.com/docs/customization/overview)). Start
-with `blender-director` to route a production request, then use `forgemcp-blender` to
-inspect the active scene and map authorized work to the current ForgeMCP tools.
-The imported skills guide planning and art direction; they do not add Blender
-adapter capabilities. Upstream attribution and the MIT license are in
-[`LICENSES/blender-skills-notice.md`](LICENSES/blender-skills-notice.md).
+with `blender-director` to route a production request, then use the ForgeMCP-authored
+[`forgemcp-blender` bridge skill](.agents/skills/forgemcp-blender/SKILL.md) and
+[capability map](.agents/skills/references/forgemcp-capability-map.md) to inspect the
+active scene and map authorized work to the current ForgeMCP tools. The imported skills
+guide planning and art direction; they do not add Blender adapter capabilities.
 
 ### Start with inspection
 
